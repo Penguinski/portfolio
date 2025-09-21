@@ -1,0 +1,973 @@
+/* {
+    outline: 1px solid rgb(85, 255, 0) !important; 
+}
+*/
+
+body {
+    font-family: 'JetBrains Mono', monospace !important;
+    background-image: url('../elementi/sfondo.svg'); 
+    background-repeat: repeat;
+    margin: 0;
+    padding: 0;
+    animation: moveBackground 20s linear infinite; /* Applica l'animazione allo sfondo */
+    animation-direction: alternate;
+   /* font-size: clamp(14px, 1.5vw, 18px); /* Adatta la dimensione del testo principale */
+}
+
+@keyframes moveBackground {
+    0% {
+        background-position: 0 0; /* Inizio in alto a sinistra */
+    }
+    100% {
+        background-position: 100% 100%; /* Fine in basso a destra */
+    }
+}
+
+.container-rosso {
+    width: 90%; /* Riduce la larghezza per aggiungere margini */
+    max-width: 1200px;
+    margin: 49px auto; /* Mantiene il margine automatico per centrare */
+    padding: 0 /*20px*/;
+    background-color: #FF5B23;
+}
+
+.container-giallo {
+    width: 90%;
+    max-width: 1200px;
+    margin: 49px auto;
+    padding: 0 /*20px*/;
+    background-color: #F3BB06;
+}
+
+.container-azzurro {
+    width: 90%;
+    max-width: 1200px;
+    margin: 49px auto;
+    padding: 0 /*20px*/;
+    background-color: #AFE6ED;
+}
+
+.container-blu {
+    background-color: #5FC97A !important; /* nuovo verde in palette */
+    width: 90%;
+    max-width: 1200px;
+    margin: 49px auto;
+    padding: 0 /*20px*/;
+    color: #111; /* testo nero per tutto il contenuto del container-blu */
+}
+
+/* Rimuovi override colore bianco per testo e link nel container-blu */
+/* RIMOSSI: .container-blu .titolo, .container-blu .testo, ecc. */
+
+/* Per la mobile nav menu di extra.html (sfondo blu) --> ora verde */
+.mobile-nav-menu[data-section="blu"] a,
+.mobile-nav-menu[data-section="blu"] {
+    color: #111 !important;
+}
+
+/* Hover verde per il tasto EXTRA nel menu hamburger */
+.mobile-nav-menu[data-section="blu"] a:hover {
+    background: #5FC97A !important;
+    color: #fff !important;
+}
+
+
+.container-viola {
+    width: 90%;
+    max-width: 1200px;
+    margin: 49px auto;
+    padding: 0 /*20px*/;
+    background-color: #DCB8FF;
+}
+
+
+
+
+
+.navigazione {
+    /*background-image: url(../elementi/barra.png);
+    background-repeat: no-repeat;  */
+    background-size: cover; /* L'immagine occupa tutta la larghezza dell'elemento */
+    image-rendering: pixelated;
+    padding-top: 20px; /* Rimuove il padding superiore */
+    padding-bottom: 5%; /* Mantiene il padding inferiore */
+    display: flex;
+    flex-wrap: nowrap; /* Impedisce il wrapping per mantenere i bottoni sulla stessa riga */
+    gap: 0; /* Rimuove lo spazio tra i bottoni */
+    position: relative;
+    font-family: 'Jersey 25';
+    position: relative; /*Per posizionare i contorni */
+  /*  padding: -22px; /* Rimuove il padding */
+  /*  margin-left: -22px;  */
+  /*  margin-right: -20px;
+    justify-content: space-between; /* Distribuisce i bottoni uniformemente */
+    
+    
+}
+
+.navigazione a {
+    text-decoration: none;
+    
+    color: black;
+    font-weight: 500;
+    font-size: 18pt;
+    line-height: 0.8;
+    text-align: center;
+    padding: 15px;
+    margin: 0px;
+    margin-top: -22px; /* margine superiore per toccare il bordo del contenitore */
+    
+   /* clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%); /* trapezio per i bottoni centrali */
+    margin-right: -100px; /* Sovrappone i bottoni di 10 pixel sull'asse x */
+  /*  z-index: 1; /* Imposta un livello di sovrapposizione */
+   
+    outline: none; 
+  /*  border: 2px solid black; 
+  /*  border-bottom: none; 
+   /* position: relative; /* Per posizionare il contorno interno */
+    display: flex;
+ /*   justify-content: center;*/
+  /*  align-items: center;*/
+    padding: 0;
+    margin: 0;
+    
+}
+
+/*
+.name {
+    font-size: 3rem;
+    line-height: 1.1;
+    margin: 2rem 0;
+    text-transform: uppercase;
+}
+
+.description {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+    
+}
+*/
+
+.border-container {
+    border: 2px solid black;
+    /*padding: 20px;*/
+}
+
+
+
+.rettangolo {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/*.navigazione a {
+    background-color: #ff9999; 
+    height: 50px; 
+} */
+
+.titolo {
+   /* background-color: #99ccff;*/
+    height: 150px;
+    font-family: 'Jersey 25';
+    font-size: clamp(36px, 5vw, 72px); /* Dimensione del titolo responsive */
+    line-height: 0.9;
+    text-align: left; 
+    font-weight: 700;
+    
+}
+
+.window-title {
+    font-family: 'Jersey 25';
+    font-size: clamp(24px, 4vw, 48px);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.window-body {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(14px, 2vw, 18px);
+    line-height: 1.5;
+    padding: 20px;
+    display: none !important;
+    background-color: #E2E2E2; /* Colore del rettangolo inferiore */
+    text-align: left;
+    height: auto; /* Adatta l'altezza al contenuto */
+    border: black 2px solid; /* Bordo del rettangolo inferiore */
+    justify-content: space-between; /* Spazio tra testo e immagine */
+}
+
+.window-body[data-visible="true"] {
+    display: flex !important;
+    flex-direction: column;
+}
+
+.has-media-rows .window-body .text-content {
+    margin-bottom: 1rem;
+}
+
+.window-media-vertical {
+    float: left;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-right: 1.5rem;
+    margin-bottom: 1rem;
+    max-width: 45%;
+}
+.window-media-vertical img,
+.window-media-vertical video {
+    max-width: 100%;
+    border-radius: 0;
+    object-fit: cover;
+}
+@media (max-width: 768px) {
+    .window-media-vertical {
+        float: none;
+        max-width: 100%;
+        margin-right: 0;
+    }
+}
+
+.logo-media-vertical {
+    max-width: 80%;
+}
+.logo-img {
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* Custom selection color: black highlight, white text */
+::selection {
+    background: #000;
+    color: #fff;
+}
+
+/* Media Rows (Only on pages with .has-media-rows) */
+.has-media-rows .window-media {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    margin-top: 1rem;
+}
+
+.has-media-rows .window-media img,
+.has-media-rows .window-media video {
+    max-height: 120px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    background: #fafafa;
+    object-fit: cover;
+}
+
+.has-media-rows .window-media video {
+    max-width: 180px;
+}
+
+
+.window-header {
+    cursor: pointer;
+    padding: 1rem;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.window-header:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.testo {
+   /* background-color: #99ff99; */
+    height: 150px; 
+    margin-bottom: 10px;
+    font-size: clamp(12px, 1.5vw, 16px); /* Dimensione del testo responsive */
+}
+/*
+.btn-about {
+    background-color: #FF5B23; 
+}
+
+.btn-work {
+    background-color: #F3BB06; 
+}
+
+.btn-process {
+    background-color: #AFE6ED; 
+}
+
+.btn-extra {
+    background-color: #5465FF; 
+}
+
+.btn-contact {
+    background-color: #DCB8FF; 
+}
+*/
+
+/* nasconde la navbar su schermi piccoli */
+
+/* --- Hamburger Menu & Mobile Nav Styles --- */
+.hamburger-icon {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 0 !important;
+  cursor: pointer;
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1001;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.08);
+}
+
+.mobile-nav-menu {
+  border-radius: 0 !important;
+}
+
+.hamburger-icon span {
+  display: block;
+  height: 4px;
+  width: 28px;
+  background: #000;
+  margin: 5px 0;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+.mobile-nav-menu {
+  display: none;
+  flex-direction: column;
+  position: fixed;
+  top: 65px;
+  right: 18px;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  z-index: 1000;
+  min-width: 180px;
+  padding: 0.5em 0;
+}
+.mobile-nav-menu a {
+  padding: 1em 1.5em;
+  color: #000;
+  text-decoration: none;
+  border-bottom: 1px solid #eee;
+  font-family: 'Jersey 25', sans-serif;
+  font-size: 1.1em;
+  text-align: left;
+  transition: background 0.2s;
+}
+.mobile-nav-menu a:last-child {
+  border-bottom: none;
+}
+.mobile-nav-menu a:hover {
+  background: #f3bb06;
+  color: #fff;
+}
+@media screen and (max-width: 768px) {
+  .hamburger-icon {
+    display: flex !important;
+  }
+  .mobile-nav-menu.open {
+    display: flex !important;
+  }
+  .navigazione {
+    display: none !important;
+  }
+}
+
+/* Section-specific mobile nav hover colors */
+.mobile-nav-menu[data-section="rosso"] a:hover {
+  background: #FF5B23;
+  color: #fff;
+}
+.mobile-nav-menu[data-section="giallo"] a:hover {
+  background: #F3BB06;
+  color: #fff;
+}
+.mobile-nav-menu[data-section="azzurro"] a:hover {
+  background: #AFE6ED;
+  color: #000;
+}
+.mobile-nav-menu[data-section="blu"] a:hover {
+  background: #5465FF;
+  color: #fff;
+}
+.mobile-nav-menu[data-section="viola"] a:hover {
+  background: #DCB8FF;
+  color: #000;
+}
+
+/* Hamburger and mobile menu styles injected above */
+
+.main-content img {
+    max-width: 200px;
+    height: auto;
+    display: block;
+    mix-blend-mode: multiply; /*moltiplica l'immagine con lo sfondo*/
+    margin-right: 0; 
+    
+}
+
+.main-content  {
+    vertical-align: top;
+    padding-top: 10px; 
+    padding-left: 20px;
+    padding-right: 20px;
+}
+/*
+.main-content .row {
+    display: flex;
+    align-items: center; /* Allinea il titolo e l'immagine verticalmente */
+/*}*/
+
+.window-header {
+    background-color: #CCC; /* Colore del rettangolo superiore */
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    font-family: 'Jersey 25';
+    font-size: 64px;
+    font-weight: bold;
+    height: 100px; /* Altezza del rettangolo superiore */
+    border-width:2px 2px 1px 2px; /* Bordo del rettangolo superiore */
+    border-style: solid;;
+    
+}
+
+.window-title {
+    margin-left: 10px; 
+    font-weight: 700;
+    
+}
+
+.window-close {
+    margin-right: 10px; 
+    font-weight: bold;
+    color: black;
+}
+
+.text-content {
+    flex: 1; /* Occupa lo spazio disponibile per il testo */
+    margin-right: 20px; /* Spazio tra il testo e l'immagine */
+    word-break: break-all; /* Forza il ritorno a capo per le stringhe lunghe */
+}
+
+.image-content img {
+    max-width: 150px; 
+    height: auto;
+    display: block;
+}
+
+img[src$=".svg"] {
+    transition: filter 0.1s ease-in-out; 
+}
+
+img[src$=".jpg"] {
+    transition: filter 0.1s ease-out; 
+}
+
+img[src$=".png"] {
+    transition: filter 0.1s ease-out; 
+}
+
+img[src$=".svg"]:hover {
+    filter: brightness(500%); /* Inverte i colori dell'immagine al passaggio del mouse */
+    /* Inverte i colori dell'immagine al passaggio del mouse */
+    z-index: 1; /* Porta l'immagine in primo piano al passaggio del mouse */
+}
+
+img[src$=".jpg"]:hover {
+    filter: invert(100%); /* Inverte i colori dell'immagine al passaggio del mouse */
+    /* Inverte i colori dell'immagine al passaggio del mouse */
+    z-index: 1; /* Porta l'immagine in primo piano al passaggio del mouse */
+}
+img[src$=".png"]:hover {
+    filter: invert(100%); /* Inverte i colori dell'immagine al passaggio del mouse */
+    /* Inverte i colori dell'immagine al passaggio del mouse */
+    z-index: 1; /* Porta l'immagine in primo piano al passaggio del mouse */
+}
+
+.ombra {
+
+    box-shadow: 10px 10px  rgba(28, 28, 28, 0.9) ; /* Effetto ombra solida*/
+    margin-bottom: 60px; /* Aggiunge spazio sotto al container */
+}
+
+a:hover {
+    color: rgb(255, 255, 255);
+  
+    z-index: 30; /* Porta il bottone in primo piano al passaggio del mouse */
+}
+
+.nav-svg {
+    width: 102%; /* L'SVG occupa tutta la larghezza del contenitore */
+  /*  height: auto; /* Mantiene le proporzioni */
+    display: block;
+    margin-top: -8%;
+    transform: scale(1.0);  /* Scala l'SVG */
+    transform-origin: bottom; /* Scala dal basso */
+    
+    
+}
+
+.nav-button {
+    position: relative;
+    display: flex;
+    flex-direction: column; /* Posiziona il testo sopra l'SVG */
+    align-items: center;
+    text-align: center;
+    border-left: 1px solid black; 
+    border-bottom: 2px solid black; 
+    
+}
+
+.nav-button.active {
+    z-index: 20; /* Porta il bottone attivo in primo piano */
+  /*  border-bottom: 0px solid black; /* Rimuove il bordo inferiore */
+}
+
+.nav-text {
+    position: absolute;
+    top: 50%; /* Centra verticalmente il testo */
+    left: 50%; /* Centra orizzontalmente il testo */
+    transform: translate(-50%, -120%); /* Sistema il posizionamento */
+    font-size: clamp(12px, 2vw, 28px); /* Adatta la dimensione del testo nei bottoni di navigazione */
+    font-weight: bold;
+    color: black;
+    pointer-events: none; /* Rende il testo non cliccabile */
+    z-index: 10;
+}
+
+/* Titolo EXTRA nella navbar torna nero come gli altri */
+.navigazione .nav-button[href="extra.html"] .nav-text,
+.navigazione .nav-button.active[href="extra.html"] .nav-text {
+    color: #111 !important;
+}
+
+/* Mobile nav menu: link EXTRA torna nero come gli altri */
+.mobile-nav-menu a[href="extra.html"] {
+    color: #111 !important;
+}
+
+
+.nav-text.cp {
+    top: 50%; /* Allineato con gli altri testi della navigazione */
+}
+
+
+.nav-button:nth-child(1) .nav-svg {
+    transform: translate(10%, 0) scale(1.2);
+    z-index: 10;
+}
+.nav-button:nth-child(2) .nav-svg {
+    transform: translate(0%, 0) scale(1.2);
+    z-index: 9;
+}
+.nav-button:nth-child(3) .nav-svg {
+    transform: translate(0%, 0) scale(1.2);
+    z-index: 8;
+}
+.nav-button:nth-child(4) .nav-svg {
+    transform: translate(0%, 0) scale(1.2);
+    z-index: 7;
+    filter: hue-rotate(250deg) saturate(0.5) brightness(1.6); /* Ottimizzato per ottenere #5FC97A */
+}
+
+/* Se usi SVG inline puoi anche fare:
+.nav-button:nth-child(4) .nav-svg {
+    fill: #5FC97A !important;
+}
+*/
+
+/* Forza effetto hover brightness anche su EXTRA */
+.nav-button:nth-child(4):hover .nav-svg {
+    filter: brightness(5) !important;
+}
+
+.nav-button:nth-child(5) .nav-svg {
+    transform: translate(-10%, 0) scale(1.2);
+    z-index: 6;
+}
+
+/* ========== STILI SLOT MACHINE ========== */
+
+/* Contenitore principale della slot machine.
+   Se vuoi che sia centrato, applica al suo contenitore genitore (quello già presente nel tuo HTML)
+   proprietà come: display: flex; flex-direction: column; align-items: center; */
+   .slot-wrapper {
+    position: relative;
+    background-color: transparent;
+    box-shadow: inset 0 0 1px rgba(0,0,0,0.8);
+    border: 2px solid #444;
+    padding: 40px 30px;
+    margin-bottom: 20px; /* Aggiunge spazio prima del pulsante */
+}
+
+.slot-container {
+    position: relative;
+    perspective: 1000px;
+    z-index: 2; /* I rulli stanno sopra le particelle */
+}
+
+.slot {
+    display: flex;
+    justify-content: center; /* Centra i rulli orizzontalmente */
+    gap: 15px;
+    padding: 15px;
+    background: #E2E2E2; /* Stesso grigio del window-body */
+    border: 2px solid #000; /* Bordo nero spesso 2px per uniformità */
+    width: max-content;           /* Larghezza pari ai contenuti + padding */
+    margin-left: auto;            /* Centro il blocco nel contenitore */
+    margin-right: auto;           /* Centro il blocco nel contenitore */
+}
+
+.reel {
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #E2E2E2; /* Stesso grigio del window-body */
+    border: 2px solid #000; /* Bordo nero spesso 2px per uniformità */
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    transition: transform 0.3s ease-out;
+}
+
+.reel.spinning {
+    animation: spin-anim 0.1s linear infinite;
+}
+
+@keyframes spin-anim {
+    from { transform: translateY(-15px); }
+    to   { transform: translateY(15px); }
+}
+
+.reel img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#spinButton { /* Ho usato un ID per essere più specifico ed evitare conflitti */
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: 'Jersey 25', sans-serif;
+    border: 2px solid #000; /* Bordo nero 2px */
+    cursor: pointer;
+    color: #000; /* Testo nero */
+    background: #E2E2E2; /* Sfondo grigio come window-body */
+    box-shadow: 5px 5px rgba(28, 28, 28, 0.9); /* Ombra solida come window-body */
+    transition: none; /* Nessuna transizione per effetto istantaneo */
+    margin-top: 20px; /* Spazio sopra al bottone */
+}
+
+#spinButton:hover {
+    background: #AAA; /* Grigio più scuro al hover - contrasto più netto */
+    box-shadow: 2px 2px rgba(28, 28, 28, 0.9); /* Ombra più piccola e scattosa */
+    transform: translateY(1px); /* Piccolo movimento istantaneo */
+}
+
+#spinButton:active {
+    background: #999; /* Grigio molto scuro al click */
+    transform: translateY(3px); /* Movimento più netto verso il basso */
+    box-shadow: 1px 1px rgba(28, 28, 28, 0.9); /* Ombra minima per effetto "premuto" */
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    height: 30px;
+    font-family: 'Jersey 25', sans-serif; /* Font Jersey 25 */
+    color: #000; /* Testo nero */
+    text-shadow: none; /* Rimuovo il text-shadow bianco */
+}
+
+#particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1; /* Le particelle stanno sotto i rulli */
+}
+
+/* Stili per le emoji nei messaggi di risultato */
+.emoji {
+    display: inline-block;
+    border: 2px solid #000; /* Bordo nero 2px */
+    margin: 0 2px; /* Spazio tra emoji e testo */
+    padding: 2px; /* Padding interno */
+    background: #E2E2E2; /* Sfondo grigio */
+    font-style: normal; /* Assicura che non sia in corsivo */
+}
+
+/* ========== FINE STILI SLOT MACHINE ========== */
+
+/* ========== RESPONSIVE SLOT MACHINE ========== */
+
+/* Tablet e schermi medi (768px e meno) */
+@media (max-width: 768px) {
+    .slot-wrapper {
+        padding: 25px 15px;
+    }
+
+    .slot {
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .reel {
+        width: 70px;
+        height: 70px;
+    }
+
+    #spinButton {
+        padding: 12px 20px;
+        font-size: 1.3rem;
+    }
+
+    #result {
+        font-size: 1.5rem;
+    }
+}
+
+/* Schermi piccoli (600px e meno) */
+@media (max-width: 600px) {
+    .slot-wrapper {
+        padding: 15px 10px;
+    }
+
+    .slot {
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .reel {
+        width: 60px;
+        height: 60px;
+    }
+
+    #spinButton {
+        padding: 10px 15px;
+        font-size: 1.1rem;
+    }
+
+    #result {
+        font-size: 1.2rem;
+    }
+}
+
+/* Mobile piccolo (480px e meno) */
+@media (max-width: 480px) {
+    .slot-wrapper {
+        padding: 12px 8px;
+    }
+
+    .slot {
+        gap: 5px;
+        padding: 5px;
+    }
+
+    .reel {
+        width: 55px;
+        height: 55px;
+    }
+
+    #spinButton {
+        padding: 8px 12px;
+        font-size: 1rem;
+        margin-top: 15px;
+    }
+
+    #result {
+        font-size: 1rem;
+        margin-top: 15px;
+    }
+}
+
+/* Mobile molto piccolo (375px e meno) */
+@media (max-width: 375px) {
+    .slot-wrapper {
+        padding: 10px 8px;
+    }
+
+    .slot {
+        gap: 3px;
+        padding: 3px;
+    }
+
+    .reel {
+        width: 50px;
+        height: 50px;
+    }
+
+    #spinButton {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+        margin-top: 12px;
+    }
+
+    #result {
+        font-size: 0.9rem;
+        margin-top: 12px;
+    }
+}
+
+/* Stile per i container grigi in work.html */
+.window-body, .window-content {
+    white-space: normal !important;
+    word-break: normal !important;
+    word-wrap: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+    -webkit-hyphens: none !important;
+    -ms-hyphens: none !important;
+}
+
+/* Stili per il testo di contatto */
+.contact-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(14px, 2vw, 18px);
+    line-height: 1.8;
+    margin: 0;
+    word-break: break-word; /* Permette di andare a capo se necessario */
+    overflow-wrap: break-word; /* Gestisce parole troppo lunghe */
+}
+
+.contact-divider {
+    display: block;
+    text-align: center;
+    font-size: 1.2em;
+    color: #666;
+    margin: 10px 0;
+}
+
+/* Desktop: divisori lunghi */
+@media (min-width: 768px) {
+    .contact-divider::before {
+        content: "//////////////////////////////////////////////";
+    }
+}
+
+/* Mobile: divisori più corti */
+@media (max-width: 767px) {
+    .contact-divider::before {
+        content: "────────────";
+    }
+
+    .contact-text {
+        text-align: center;
+        padding: 10px;
+    }
+}
+
+/* ========== WORK IN PROGRESS ANIMATION ========== */
+
+.wip-container {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.wip-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+    color: #000;
+    margin-bottom: 30px;
+    text-transform: lowercase;
+}
+
+.loading-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.dot {
+    font-family: 'Jersey 25', sans-serif;
+    font-size: 3rem;
+    color: #000;
+    opacity: 0.3;
+    transition: all 0.3s ease;
+    display: inline-block;
+    transform: translateY(0);
+}
+
+/* Animazione per il primo puntino */
+.dot[data-dot="1"] {
+    animation: dotAnimation 2s infinite;
+}
+
+/* Animazione per il secondo puntino */
+.dot[data-dot="2"] {
+    animation: dotAnimation 2s infinite;
+    animation-delay: 0.5s;
+}
+
+/* Animazione per il terzo puntino */
+.dot[data-dot="3"] {
+    animation: dotAnimation 2s infinite;
+    animation-delay: 1s;
+}
+
+@keyframes dotAnimation {
+    0% {
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+    25% {
+        opacity: 1;
+        transform: translateY(-20px);
+    }
+    50% {
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0.3;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive per l'animazione */
+@media (max-width: 768px) {
+    .wip-text {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+
+    .dot {
+        font-size: 2.5rem;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .wip-text {
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .dot {
+        font-size: 2rem;
+        gap: 8px;
+    }
+
+    .loading-dots {
+        gap: 10px;
+    }
+}
