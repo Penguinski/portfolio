@@ -24,6 +24,17 @@ p, span, a, li {
 }
 
 
+@media (max-width: 768px) {
+  body {
+    min-height: 100vh;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    display: block !important;
+    position: relative;
+  }
+}
+
+
 /* === MODAL OVERLAY === */
 .modal-overlay {
     position: fixed;
@@ -810,6 +821,7 @@ body.work-page {
     z-index: 9998;
     pointer-events: none;
     /* niente mask, niente gradiente */
+      background: rgba(255,0,0,0.25);
   }
   .header-blur-band {
     position: fixed;
