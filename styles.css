@@ -1,0 +1,822 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.08em;
+}
+
+p, span, a, li {
+  letter-spacing: -0.06em;
+}
+
+
+/* === MODAL OVERLAY === */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20000;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.4s ease;
+    
+    /* BLUR DELLO SFONDO */
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* Modal attivo */
+.modal-overlay.active {
+    pointer-events: all;
+    opacity: 1;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* === PARAMETRI FACILMENTE MODIFICABILI === */
+:root {
+    /* Dimensioni delle card (1:1 ratio - quadrate) */
+    --card-size: 12vw;
+    
+    /* Raggi dell'ellisse DESKTOP (orizzontale) */
+    --ellipse-radius-x: 22vw;
+    --ellipse-radius-y: 11vh;
+    
+    /* Rotazione dell'ellisse DESKTOP (in gradi, positivo = orario) */
+    --ellipse-rotation: 30;
+    
+    /* Angoli arrotondati delle card */
+    --card-border-radius: 0.3vw;
+    
+    /* Velocità rotazione (millisecondi per giro completo) */
+    --rotation-duration: 20000;
+    
+    /* Direzione: 1 = oraria, -1 = antioraria */
+    --rotation-direction: 1;
+    
+    /* Parametri modal */
+    --modal-card-max-width: 80vw;
+    --modal-card-max-height: 80vh;
+
+    /* Parametri marquee */
+    --marquee-item-width: 280px;
+    --marquee-item-height: 180px;
+    --marquee-gap: 1rem;
+    --marquee-duration: 20s;
+    --marquee-distance: calc(var(--marquee-item-width) * 4 + var(--marquee-gap) * 4);
+
+    /* Padding orizzontale per work page */
+    --work-padding-inline: 4vw;
+}
+
+/* MOBILE: ellisse verticale */
+@media (max-width: 768px) {
+    :root {
+        --card-size: 23vw;
+        --ellipse-radius-x: 12vw;
+        --ellipse-radius-y: 25vh;
+        --ellipse-rotation: -30;
+        --card-border-radius: 0.5vw;
+        --modal-card-max-width: 90vw;
+        --modal-card-max-height: 70vh;
+        --marquee-item-width: 200px;
+        --marquee-item-height: 130px;
+        --marquee-gap: 0.8rem;
+        --marquee-duration: 15s;
+        --marquee-distance: calc(var(--marquee-item-width) * 4 + var(--marquee-gap) * 4);
+        --work-padding-inline: 6vw;
+    }
+}
+
+/* TABLET: dimensioni intermedie */
+@media (min-width: 769px) and (max-width: 1024px) {
+    :root {
+        --card-size: 14vw;
+        --ellipse-radius-x: 20vw;
+        --ellipse-radius-y: 16vh;
+        --ellipse-rotation: 30;
+        --card-border-radius: 0.3vw;
+        --marquee-item-width: 240px;
+        --marquee-item-height: 150px;
+        --marquee-distance: calc(var(--marquee-item-width) * 4 + var(--marquee-gap) * 4);
+    }
+}
+
+.carousel-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: filter 0.4s ease;
+}
+
+/* Sfoca il container quando modal è attivo */
+.carousel-container.blurred {
+    filter: blur(5px);
+}
+
+.carousel-circle {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.card {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: var(--card-size);
+    aspect-ratio: 1 / 1;
+    border-radius: var(--card-border-radius);
+    cursor: pointer;
+    overflow: visible;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Card in stato modal */
+.card.modal-active {
+    position: fixed !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 21000 !important;
+    
+    /* Dimensioni calcolate dinamicamente via JavaScript */
+    max-width: var(--modal-card-max-width);
+    max-height: var(--modal-card-max-height);
+    
+    /* Mantiene proporzioni naturali dell'immagine */
+    width: auto;
+    height: auto;
+    aspect-ratio: unset;
+    
+    /* Ombra per elevazione */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+    
+}
+
+/* Fallback per browser che non supportano aspect-ratio */
+@supports not (aspect-ratio: 1 / 1) {
+    .card {
+        height: var(--card-size);
+    }
+}
+
+/* === TESTO FISSO === */
+.fixed-text {
+    position: fixed;
+    top: 2vw;
+    left: 2vw;
+    z-index: 10000;
+    color: #000000;
+    pointer-events: none;
+}
+
+.fixed-text h1 {
+    font-size: clamp(32px, 5vw, 64px); /* Desktop: grande e impattante */
+    font-weight: 700;
+    margin-bottom: 0.1rem;
+    margin-top: 0.1rem;
+    line-height: 0.8;
+    transform: scaleX(1);
+    transform-origin: left center;
+    letter-spacing: -0.08em;
+}
+
+.fixed-text p {
+    font-size: clamp(16px, 2vw, 24px); /* Mai sotto 16px, ottimo per leggibilità */
+    font-weight: 400;
+    opacity: 0.8;
+    line-height: 1.0;
+    letter-spacing: -0.06em;
+    color: #696969;
+    margin-bottom: 2.5rem;
+}
+
+/* MOBILE: dimensioni ottimizzate */
+@media (max-width: 768px) {
+    .fixed-text {
+        top: 4vw;
+        left: 4vw;
+    }
+    
+    .fixed-text h1 {
+        font-size: clamp(28px, 8vw, 40px); /* Tra 28-40px come raccomandato */
+        line-height: 0.8;
+    }
+    
+    .fixed-text p {
+        font-size: clamp(16px, 4vw, 20px); /* Minimo 16px, mai più piccolo */
+        line-height: 1.6; /* Aumentato per mobile */
+    }
+}
+
+
+/* === TESTO IN BASSO A SINISTRA === */
+.bottom-text {
+  position: fixed;
+  bottom: 2vw;
+  left: 2vw;
+  z-index: 300;
+  color: #000000;
+  pointer-events: none;
+}
+
+.bottom-text h1 {
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  margin-top: 0.1rem;
+  line-height: 1.0;
+  transform: scaleX(1);
+  transform-origin: left center;
+  letter-spacing: -0.08em;
+}
+
+.bottom-text p {
+  font-size: clamp(16px, 2vw, 24px);
+  font-weight: 400;
+  opacity: 0.8;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+  color: #696969;
+}
+
+.bottom-text a {
+  pointer-events: all;
+}
+
+/* MOBILE: dimensioni ottimizzate */
+@media (max-width: 768px) {
+  .bottom-text {
+    bottom: 4vw;
+    left: 4vw;
+  }
+  
+  .bottom-text h1 {
+    font-size: clamp(28px, 8vw, 40px);
+    line-height: 0.8;
+  }
+  
+  .bottom-text p {
+    font-size: clamp(16px, 4vw, 20px);
+    line-height: 0.95;
+  }
+}
+
+.bt-link {
+  text-decoration: none;
+  transition: color 0.3s;
+  cursor: pointer;
+  opacity: 0.8;
+  font-weight: 400;
+  letter-spacing: -0.06em;
+}
+
+.bt-link:hover {
+  color: #ff4722;   /* Puoi mettere il viola desiderato */
+  text-decoration: none;
+  opacity: 1;
+}
+
+
+/* === DIDASCALIE CARD === */
+@font-face {
+  font-family: 'M+ M Type-1 Light';
+  src: url('https://fontlibrary.org/assets/fonts/m-m-type-1/77116fb55c3b9f06e5ec18c611206a854b0f0473/4bf8f5fe1d74c7f7fde3c72aa5b81b5e/MMType1Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+.card-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.2vw 1.5vw;
+  
+  /* Frosted Glass Effect */
+  background: rgba(224, 224, 224, 0.4);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  
+  color: #ffffff;
+  font-family: 'M+ M Type-1 Light', monospace;
+  font-weight: 300;
+  font-size: clamp(12px, 1.2vw, 18px);
+  line-height: 1.0;
+  text-align: left;
+  
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+  
+  /* Bordi arrotondati solo in basso */
+  border-radius: 0 0 var(--card-border-radius) var(--card-border-radius);
+}
+
+/* Didascalia visibile quando card è in modal */
+.card.modal-active .card-caption {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Responsive per mobile */
+@media (max-width: 768px) {
+  .card-caption {
+    font-size: clamp(10px, 3vw, 14px);
+    padding: 2.5vw 2vw;
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+  }
+}
+
+/* Responsive per tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .card-caption {
+    font-size: clamp(11px, 1.5vw, 16px);
+    padding: 1.8vw 2vw;
+  }
+}
+
+
+
+/* === LOGO ROTANTE CON ASTERISCO === */
+.logo-container {
+  position: fixed;
+  top: 2vw;
+  right: 2vw;
+  width: 6vw;
+  height: 6vw;
+  z-index: 100;
+  cursor: pointer;
+}
+
+.asterisk-img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  z-index: 2;
+  animation: rotate-asterisk 10s linear infinite;
+  
+  /* Previeni drag */
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.asterisk-img:hover {
+  mix-blend-mode: screen;
+  color:rgba(255, 0, 0, 0)
+}
+
+.rotating-logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  animation: rotate-clockwise 10s linear infinite;
+  
+  /* Previeni drag dell'immagine */
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: auto;
+}
+
+/* Rotazione per SVG work - normale */
+@keyframes rotate-clockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Rotazione per asterisco - con translate per centraggio */
+@keyframes rotate-asterisk {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Responsive per mobile */
+@media (max-width: 768px) {
+  .logo-container {
+    width: 12vw;
+    height: 12vw;
+    top: 4vw;
+    right: 4vw;
+  }
+}
+
+/* Responsive per tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .logo-container {
+    width: 6vw;
+    height: 6vw;
+    top: 3vw;
+    right: 3vw;
+  }
+}
+
+/* === WORK PAGE LAYOUT === */
+.work-container {
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 18vh var(--work-padding-inline) 10vh var(--work-padding-inline);
+  overflow-x: hidden;
+}
+
+.project {
+  display: grid;
+  grid-template-columns: 20% 35% 40%;
+  gap: 5%;
+  margin-bottom: 15vh;
+  align-items: start;
+}
+
+/* === FIX PER WORK PAGE === */
+
+/* Body per work page senza center alignment */
+body.work-page {
+  min-height: 100vh;
+  background: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+  display: block;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+/* META COLONNA SINISTRA */
+.project-meta h2 {
+  font-size: clamp(24px, 3vw, 42px);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 0.9;
+  letter-spacing: -0.08em;
+}
+
+.meta-info {
+  font-size: clamp(14px, 1.2vw, 18px);
+  line-height: 1.8;
+  color: #696969;
+  font-weight: 400;
+}
+
+.meta-label {
+  font-weight: 600;
+  color: #000;
+}
+
+.project-description {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* DESCRIZIONE CENTRALE */
+.project-description p {
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.5;
+  color: #333;
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
+  max-width: 100%;
+}
+
+/* MARQUEE VISUAL DESTRA */
+.project-visual {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.marquee-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--marquee-gap);
+  overflow: hidden;
+}
+
+.marquee-row {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  gap: var(--marquee-gap);
+}
+
+.marquee-content {
+  flex-shrink: 0;
+  display: flex;
+  gap: var(--marquee-gap);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.marquee-left .marquee-content {
+  animation: scroll-left var(--marquee-duration) linear infinite;
+}
+
+.marquee-right .marquee-content {
+  animation: scroll-right var(--marquee-duration) linear infinite;
+}
+
+.marquee-item {
+  flex-shrink: 0;
+  width: var(--marquee-item-width);
+  height: var(--marquee-item-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #e0e0e0;
+}
+
+.marquee-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* fondamentale! */
+  border-radius: 12px; /* opzionale, se vuoi lo stesso arrotondamento del div */
+  display: block;
+}
+
+/* Animazioni corrette - muovono esattamente la larghezza di UN set + gap */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-1 * var(--marquee-distance)));
+  }
+}
+
+@keyframes scroll-right {
+  0% {
+    transform: translateX(calc(-1 * var(--marquee-distance)));
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Pausa animazione su hover */
+.marquee-row:hover .marquee-content {
+  animation-play-state: paused;
+}
+
+/* === RESPONSIVE MOBILE === */
+@media (max-width: 1024px) {
+  /* LAYOUT GRID - AGGIUNTO */
+  .project {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 2rem 3rem;
+    margin-bottom: 10vh;
+  }
+
+  .project-meta {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .project-description {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .project-visual {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 2rem;
+  }
+
+  .project-meta h2 {
+    font-size: clamp(28px, 6vw, 38px);
+  }
+
+  .meta-info {
+    font-size: 16px;
+  }
+
+  .project-description p {
+    font-size: clamp(16px, 4vw, 18px);
+    line-height: 1.7;
+  }
+
+}
+
+@media (max-width: 768px) {
+  /* LAYOUT GRID - AGGIUNTO */
+  .project {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 2rem;
+  }
+
+  .project-meta {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .project-description {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .project-visual {
+    grid-column: 1;
+    grid-row: 3;
+    margin-top: 1.5rem;
+  }
+
+  .work-container {
+    padding: 14vh 0 8vh 0;
+  }
+
+  .project-meta,
+  .project-description {
+    padding-inline: var(--work-padding-inline);
+     box-sizing: border-box;
+  }
+
+  .project-visual {
+    margin-left: calc(-1 * var(--work-padding-inline));
+  }
+}
+
+
+
+/* === BANDA BLUR GRADUALE (SOLO BLUR, NO BIANCO) === */
+.header-blur-band {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* Altezza sufficiente per entrambi i testi + margine sotto */
+    height: calc(1vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 2vw + 28px); /* o aggiusta il valore */
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 9999;
+  pointer-events: none;
+  
+  /* RIMOSSO il background bianco - solo blur */
+  
+  /* Maschera per il blur graduale molto ripido */
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 68%,
+    rgba(0, 0, 0, 0.6) 75%,
+    rgba(0, 0, 0, 0.2) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 68%,
+    rgba(0, 0, 0, 0.6) 75%,
+    rgba(0, 0, 0, 0.2) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+  .header-blur-band {
+     height: calc(1vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px);
+  }
+}
+
+@media (max-width: 768px) {
+  .header-blur-band {
+     height: calc(4vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px);
+    
+    mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 65%,
+      rgba(0, 0, 0, 0.5) 80%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 65%,
+      rgba(0, 0, 0, 0.5) 80%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+}
+
+/* FIX MOBILE URGENTE */
+@media (max-width: 768px) {
+  * {
+    box-sizing: border-box !important;
+  }
+  
+  body.work-page {
+    max-width: 100vw !important;
+  }
+  
+  .work-container {
+    max-width: 100vw !important;
+  }
+  
+  .project-description {
+    max-width: calc(100vw - 12vw) !important;
+  }
+  
+  .project-description p {
+    max-width: 100% !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
+  }
+}
+
+.arrow-container {
+  position: fixed;
+  top: 1vw;
+  right: 2vw;
+  width: 6vw;
+  height: 6vw;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: none;
+  border-radius: 50%;
+  transition: opacity 0.2s, background 0.2s;
+  opacity: 0.95;
+}
+
+.arrow-container:hover {
+ /* opacity: 1;
+    filter: invert(100%);
+  background: rgba(0, 0, 0, 0.1);*/
+
+}
+
+.arrow-img {
+  width: 90%;
+  height: 90%;
+  display: block;
+}
+
+/* Mobile adaptation (se usi media query per .logo-container, copia anche qui): */
+@media (max-width: 768px) {
+  .arrow-container {
+    width: 12vw;
+    height: 12vw;
+    top: 3vw;
+    right: 4vw;
+  }
+}
