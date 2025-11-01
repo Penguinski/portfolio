@@ -243,6 +243,7 @@ p, span, a, li {
   z-index: 300;
   color: #000000;
   pointer-events: none;
+     width: calc(100vw - 4vw); /* Evita overflow laterale */
 }
 
 .bottom-text h1 {
@@ -274,6 +275,7 @@ p, span, a, li {
   .bottom-text {
     bottom: 4vw;
     left: 4vw;
+       width: calc(100vw - 8vw); /* margini uguali */
   }
   
   .bottom-text h1 {
