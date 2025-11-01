@@ -528,8 +528,12 @@ window.addEventListener('resize', () => {
 });
 
 window.addEventListener('load', () => {
-  // Assicurati che il DOM sia renderizzato e le dimensioni effettive del container siano disponibili
   setTimeout(() => {
     createCarousel();
-  }, 20); // 20ms per safety: consente al browser di layout il contenuto, specialmente su mobile
+    const el = document.querySelector('.bottom-text');
+    if (el) {
+      el.style.display = 'none';
+      el.style.display = '';
+    }
+  }, 30);
 });
