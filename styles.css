@@ -740,11 +740,20 @@ body.work-page {
 
 @media (max-width: 768px) {
   .header-blur-band {
-     height: calc(
-       4vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px
-       + env(safe-area-inset-top)
-     );
-    
+    /* Altezza che copre la safe-area notch */
+    height: calc(
+      4vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px 
+      + env(safe-area-inset-top)
+    );
+    width: 100vw; /* Sicuro di coprire tutto lo schermo */
+    left: 0;
+    top: 0;
+    position: fixed;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 9999;
+    pointer-events: none;
+
     mask-image: linear-gradient(
       to bottom,
       rgba(0, 0, 0, 1) 0%,
@@ -761,6 +770,7 @@ body.work-page {
     );
   }
 }
+
 
 /* FIX MOBILE URGENTE */
 @media (max-width: 768px) {
