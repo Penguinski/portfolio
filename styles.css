@@ -725,6 +725,8 @@ body.work-page {
     rgba(0, 0, 0, 0.2) 90%,
     rgba(0, 0, 0, 0) 100%
   );
+    padding-top: env(safe-area-inset-top);
+  box-sizing: content-box;
 }
 
 /* === RESPONSIVE === */
