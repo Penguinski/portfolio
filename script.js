@@ -527,6 +527,9 @@ window.addEventListener('resize', () => {
     containerHeight = container.offsetHeight;
 });
 
-// Inizializza il carosello al caricamento della pagina
-window.addEventListener('DOMContentLoaded', createCarousel);
-
+window.addEventListener('load', () => {
+  // Assicurati che il DOM sia renderizzato e le dimensioni effettive del container siano disponibili
+  setTimeout(() => {
+    createCarousel();
+  }, 20); // 20ms per safety: consente al browser di layout il contenuto, specialmente su mobile
+});
