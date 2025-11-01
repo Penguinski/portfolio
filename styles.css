@@ -738,7 +738,10 @@ body.work-page {
 
 @media (max-width: 768px) {
   .header-blur-band {
-     height: calc(4vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px);
+     height: calc(
+       4vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px
+       + env(safe-area-inset-top)
+     );
     
     mask-image: linear-gradient(
       to bottom,
