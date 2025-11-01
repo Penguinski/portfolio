@@ -798,6 +798,49 @@ body.work-page {
   }
 }
 
+@media (max-width: 768px) {
+  .notch-blur {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: env(safe-area-inset-top);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 9998;
+    pointer-events: none;
+    /* niente mask, niente gradiente */
+  }
+  .header-blur-band {
+    position: fixed;
+    top: env(safe-area-inset-top);
+    left: 0;
+    width: 100vw;
+    height: calc(
+      4vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 9999;
+    pointer-events: none;
+    mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 65%,
+      rgba(0, 0, 0, 0.5) 80%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 65%,
+      rgba(0, 0, 0, 0.5) 80%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+}
+
+
 .arrow-container {
   position: fixed;
   top: 1vw;
