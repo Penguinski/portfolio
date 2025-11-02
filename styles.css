@@ -712,7 +712,7 @@ body.work-page {
   }
   .meta-info {
     font-size: 14px;
-    line-height: 1.4;
+    line-height: 1.2;
   }
 }
 
@@ -725,7 +725,6 @@ body.work-page {
   left: 0;
   width: 100vw;
   height: calc(var(--header-blur-base) + var(--safe-top));
-  padding-top: var(--safe-top);
   box-sizing: border-box;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
