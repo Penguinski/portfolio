@@ -58,7 +58,7 @@ const carouselConfig = {
       image: 'resources/tictac.jpg',
       aspectRatio: 'auto',
       link: '#card2',
-      caption: 'Brochure per Tic Tac'
+      caption: 'Brochure for Tic Tac'
     },
     {
       image: 'resources/loghi.gif',

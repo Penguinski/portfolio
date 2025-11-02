@@ -96,6 +96,12 @@ p, span, a, li {
 
     /* Padding orizzontale per work page */
     --work-padding-inline: 4vw;
+
+    /* Safe area (iOS notch) */
+    --safe-top: env(safe-area-inset-top, 0px);
+
+    /* Altezza base della banda blur superiore (esclusa la safe area) */
+    --header-blur-base: calc(1vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 2vw + 28px);
 }
 
 /* MOBILE: ellisse verticale */
@@ -512,8 +518,8 @@ body.work-page {
 }
 
 .meta-info {
-  font-size: clamp(14px, 1.2vw, 18px);
-  line-height: 1.8;
+  font-size: clamp(12px, 1.2vw, 18px);
+  line-height: 1.4;
   color: #696969;
   font-weight: 400;
 }
@@ -521,6 +527,7 @@ body.work-page {
 .meta-label {
   font-weight: 600;
   color: #000;
+  
 }
 
 .project-description {
@@ -656,6 +663,7 @@ body.work-page {
 
   .meta-info {
     font-size: 16px;
+    line-height: 1.4;
   }
 
   .project-description p {
@@ -702,6 +710,10 @@ body.work-page {
   .project-visual {
     margin-left: calc(-1 * var(--work-padding-inline));
   }
+  .meta-info {
+    font-size: 14px;
+    line-height: 1.4;
+  }
 }
 
 
@@ -711,17 +723,15 @@ body.work-page {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  /* Altezza sufficiente per entrambi i testi + margine sotto */
-    height: calc(1vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 2vw + 28px); /* o aggiusta il valore */
+  width: 100vw;
+  height: calc(var(--header-blur-base) + var(--safe-top));
+  padding-top: var(--safe-top);
+  box-sizing: border-box;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   z-index: 9999;
   pointer-events: none;
-  
-  /* RIMOSSO il background bianco - solo blur */
-  
-  /* Maschera per il blur graduale molto ripido */
+
   mask-image: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 1) 0%,
@@ -738,50 +748,19 @@ body.work-page {
     rgba(0, 0, 0, 0.2) 90%,
     rgba(0, 0, 0, 0) 100%
   );
-    padding-top: env(safe-area-inset-top);
-  box-sizing: content-box;
 }
 
-/* === RESPONSIVE === */
 @media (max-width: 1024px) {
-  .header-blur-band {
-     height: calc(1vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px);
+  :root {
+    --header-blur-base: calc(1vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px);
   }
 }
 
 @media (max-width: 768px) {
-  .header-blur-band {
-    /* Altezza che copre la safe-area notch */
-    height: calc(
-      4vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px 
-      + env(safe-area-inset-top)
-    );
-    width: 100vw; /* Sicuro di coprire tutto lo schermo */
-    left: 0;
-    top: 0;
-    position: fixed;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    z-index: 9999;
-    pointer-events: none;
-
-    mask-image: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) 65%,
-      rgba(0, 0, 0, 0.5) 80%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) 65%,
-      rgba(0, 0, 0, 0.5) 80%,
-      rgba(0, 0, 0, 0) 100%
-    );
+  :root {
+    --header-blur-base: calc(4vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px);
   }
 }
-
 
 /* FIX MOBILE URGENTE */
 @media (max-width: 768px) {
@@ -811,44 +790,7 @@ body.work-page {
 
 @media (max-width: 768px) {
   .notch-blur {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: env(safe-area-inset-top);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    z-index: 9998;
-    pointer-events: none;
-    /* niente mask, niente gradiente */
-      background: rgba(255,0,0,0.25);
-  }
-  .header-blur-band {
-    position: fixed;
-    top: env(safe-area-inset-top);
-    left: 0;
-    width: 100vw;
-    height: calc(
-      4vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px
-    );
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    z-index: 9999;
-    pointer-events: none;
-    mask-image: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) 65%,
-      rgba(0, 0, 0, 0.5) 80%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 1) 65%,
-      rgba(0, 0, 0, 0.5) 80%,
-      rgba(0, 0, 0, 0) 100%
-    );
+    display: none;
   }
 }
 
@@ -878,8 +820,8 @@ body.work-page {
 }
 
 .arrow-img {
-  width: 90%;
-  height: 90%;
+  width: 80%;
+  height: 80%;
   display: block;
 }
 
