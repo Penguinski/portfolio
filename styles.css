@@ -23,6 +23,11 @@ p, span, a, li {
   letter-spacing: -0.06em;
 }
 
+html, body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 
 @media (max-width: 768px) {
   body {
