@@ -726,6 +726,7 @@ body.work-page {
   width: 100vw;
   height: calc(var(--header-blur-base) + var(--safe-top));
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.4); /* fondamentale su iOS Safari */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   z-index: 9999;
