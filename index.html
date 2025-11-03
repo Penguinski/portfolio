@@ -43,5 +43,15 @@
     
    <!-- <script src="script.js"></script> -->
     <script src="script.js" defer></script>
+    <script>
+if (document.body.classList.contains('home') && window.innerWidth <= 768) {
+  document.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+  }, {passive: false});
+}
+</script>
+</body>
+</html>
+
 </body>
 </html>
