@@ -39,19 +39,15 @@ html, body {
   }
 }
 
-/* Blocca scroll in home su mobile */
+/*Blocco scroll su mobile*/
+
 @media (max-width: 768px) {
   body.home {
-    height: 100vh;
+    height: 100vh;       /* Puoi togliere se vuoi risultati più consistenti, lasciando la dimensione naturale */
     width: 100vw;
     overflow: hidden !important;
-    position: fixed; /* evita che il contenuto si muova */
-    top: 0; left: 0; right: 0; bottom: 0;
     overscroll-behavior: none;
-    -webkit-overflow-scrolling: auto;
-    touch-action: none; /* blocca pan/zoom gestuali sul body */
   }
-
   html, body.home {
     max-height: 100vh;
     -webkit-text-size-adjust: 100% !important;
