@@ -39,21 +39,6 @@ html, body {
   }
 }
 
-/*Blocco scroll su mobile*/
-
-@media (max-width: 768px) {
-  body.home {
-    height: 100vh;       /* Puoi togliere se vuoi risultati più consistenti, lasciando la dimensione naturale */
-    width: 100vw;
-    overflow: hidden !important;
-    overscroll-behavior: none;
-  }
-  html, body.home {
-    max-height: 100vh;
-    -webkit-text-size-adjust: 100% !important;
-    text-size-adjust: 100% !important;
-  }
-}
 
 
 
