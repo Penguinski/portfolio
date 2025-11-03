@@ -39,6 +39,12 @@ html, body {
   }
 }
 
+@media (max-width: 768px) {
+  body.home {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+  }
+}
 
 
 
