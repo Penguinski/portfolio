@@ -838,6 +838,13 @@ body.work-page {
   display: block;
 }
 
+.arrow-img.flipped {
+  transform: scale(-1, 1);
+  /* Se vuoi ruotare di 180° usa: transform: rotate(180deg); */
+  /* Usa scale(-1,1) per riflessione orizzontale */
+}
+
+
 /* Mobile adaptation (se usi media query per .logo-container, copia anche qui): */
 @media (max-width: 768px) {
   .arrow-container {
