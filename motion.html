@@ -17,11 +17,10 @@
             width: 100%;
             max-width: 1800px;
             margin: 0 auto;
-            /* Padding coerente con work.html */
             padding: 18vh var(--work-padding-inline) 10vh;
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 2 colonne */
-            gap: 4vw; /* Spazio tra i video */
+            grid-template-columns: 1fr 1fr;
+            gap: 4vw;
         }
 
         .motion-item {
@@ -40,17 +39,18 @@
 
         .video-wrapper {
             width: 100%;
-            /* Aspect ratio adattabile o fisso (es. 16/9) */
             aspect-ratio: 16 / 9;
             background: #e0e0e0;
             border-radius: var(--card-border-radius, 6px);
             overflow: hidden;
             position: relative;
             transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            /* Fix per safari per rispettare il border radius col video */
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
         }
 
         .video-wrapper:hover {
-            transform: scale(1.01); /* Leggero zoom al passaggio del mouse */
+            transform: scale(1.01);
         }
 
         .video-wrapper video {
@@ -89,13 +89,13 @@
         /* Responsive per Mobile */
         @media (max-width: 768px) {
             .motion-container {
-                grid-template-columns: 1fr; /* 1 colonna su mobile */
+                grid-template-columns: 1fr;
                 gap: 3rem;
                 padding-top: 16vh;
             }
             
             .video-wrapper {
-                aspect-ratio: 4 / 3; /* Più alto su mobile per visibilità */
+                aspect-ratio: 4 / 3;
             }
         }
     </style>
@@ -111,56 +111,57 @@
 
     <div class="fixed-text">
         <h1>Alessandro Kosowski</h1>
-        <p>Motion Design</p> </div>
+        <p>Graphic Designer</p>
+    </div>
 
     <div class="motion-container">
         
         <div class="motion-item">
             <div class="video-wrapper">
-                <video autoplay loop muted playsinline poster="resources/placeholder.jpg">
-                    <source src="resources/clip1.mp4" type="video/mp4">
+                <video autoplay loop muted playsinline controlsList="nodownload" oncontextmenu="return false;" poster="resources/placeholder.jpg">
+                    <source src="resources/Colonna.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             </div>
             <div class="motion-info">
-                <span class="motion-title">Kinetic Typography</span>
+                <span class="motion-title">Colonna</span>
+                <span class="motion-tags">Cavalry · 2025</span>
+            </div>
+        </div>
+
+        <div class="motion-item">
+            <div class="video-wrapper">
+                <video autoplay loop muted playsinline controlsList="nodownload" oncontextmenu="return false;" poster="resources/placeholder.jpg">
+                    <source src="resources/IPRASE.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="motion-info">
+                <span class="motion-title">IPRASE</span>
                 <span class="motion-tags">After Effects · 2025</span>
             </div>
         </div>
 
         <div class="motion-item">
             <div class="video-wrapper">
-                <video autoplay loop muted playsinline poster="resources/placeholder.jpg">
-                    <source src="resources/clip2.mp4" type="video/mp4">
+                <video autoplay loop muted playsinline controlsList="nodownload" oncontextmenu="return false;" poster="resources/placeholder.jpg">
+                    <source src="resources/National Geographic.mp4" type="video/mp4">
                 </video>
             </div>
             <div class="motion-info">
-                <span class="motion-title">Logo Animation</span>
-                <span class="motion-tags">Cavalry · 2024</span>
+                <span class="motion-title">National Geographic</span>
+                <span class="motion-tags">After Effects · 2024</span>
             </div>
         </div>
 
         <div class="motion-item">
             <div class="video-wrapper">
-                <video autoplay loop muted playsinline poster="resources/placeholder.jpg">
-                    <source src="resources/clip3.mp4" type="video/mp4">
+                <video autoplay loop muted playsinline controlsList="nodownload" oncontextmenu="return false;" poster="resources/placeholder.jpg">
+                    <source src="resources/Showcase.mp4" type="video/mp4">
                 </video>
             </div>
             <div class="motion-info">
-                <span class="motion-title">3D Loop</span>
-                <span class="motion-tags">Blender · 2024</span>
-            </div>
-        </div>
-
-        <div class="motion-item">
-            <div class="video-wrapper">
-                <video autoplay loop muted playsinline poster="resources/placeholder.jpg">
-                    <source src="resources/clip4.mp4" type="video/mp4">
-                </video>
-            </div>
-            <div class="motion-info">
-                <span class="motion-title">Showreel Intro</span>
-                <span class="motion-tags">Mixed Media · 2025</span>
+                <span class="motion-title">Showcase</span>
+                <span class="motion-tags">Cavalry · 2025</span>
             </div>
         </div>
 
