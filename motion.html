@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>Motion - Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="resources/ico.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="resources/ico.ico" type="image/x-icon">
+</head>
+
+<body class="work-page">
+
+    <a href="index.html" class="arrow-container" title="Home">
+        <img src="resources/freccia.svg" alt="Back" class="arrow-img">
+    </a>
+
+    <div class="notch-blur"></div>
+    <div class="header-blur-band"></div>
+
+    <div class="fixed-text">
+        <h1>Alessandro Kosowski</h1>
+        <p>Graphic Designer</p>
+    </div>
+
+    <div class="nav-switch-container">
+        <a href="work.html" class="nav-pill">Selected Work</a>
+        <a href="#" class="nav-pill active">Motion</a>
+    </div>
+
+    <div class="motion-container">
+
+        <div class="motion-item">
+            <div class="video-wrapper">
+                <video autoplay loop muted playsinline controlsList="nodownload" oncontextmenu="return false;"
+                    poster="resources/placeholder.jpg">
+                    <source src="resources/video/Colonna.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="motion-info">
+                <span class="motion-title">Structural loop</span>
+                <span class="motion-tags">Cavalry · 2025</span>
+            </div>
+        </div>
+
+        <div class="motion-item">
+            <div class="video-wrapper">
+                <video autoplay loop muted playsinline controlsList="nodownload" oncontextmenu="return false;"
+                    poster="resources/placeholder.jpg">
+                    <source src="resources/video/IPRASE.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="motion-info">
+                <span class="motion-title">Logo IPRASE</span>
+                <span class="motion-tags">After Effects · 2025</span>
+            </div>
+        </div>
+
+        <div class="motion-item">
+            <div class="video-wrapper">
+                <video autoplay loop muted playsinline controlsList="nodownload" oncontextmenu="return false;"
+                    poster="resources/placeholder.jpg">
+                    <source src="resources/video/National Geographic.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="motion-info">
+                <span class="motion-title">Logo National Geographic</span>
+                <span class="motion-tags">After Effects · 2024</span>
+            </div>
+        </div>
+
+        <div class="motion-item">
+            <div class="video-wrapper">
+                <video autoplay loop muted playsinline controlsList="nodownload" oncontextmenu="return false;"
+                    poster="resources/placeholder.jpg">
+                    <source src="resources/video/Showcase.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="motion-info">
+                <span class="motion-title">Motion research</span>
+                <span class="motion-tags">Cavalry · 2025</span>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="cursor"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

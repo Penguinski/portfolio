@@ -1,0 +1,740 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+/* === FIX SCROLL PAGINE INTERNE === */
+body.work-page {
+  display: block !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  height: auto !important;
+  min-height: 100vh;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.08em;
+}
+
+p,
+span,
+a,
+li {
+  letter-spacing: -0.06em;
+}
+
+html,
+body {
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
+/* === PARAMETRI === */
+:root {
+  --card-size: 12vw;
+  --ellipse-radius-x: 22vw;
+  --ellipse-radius-y: 11vh;
+  --ellipse-rotation: 30;
+  --card-border-radius: 0.3vw;
+  --rotation-duration: 20000;
+  --rotation-direction: 1;
+  --modal-card-max-width: 80vw;
+  --modal-card-max-height: 80vh;
+
+  /* Parametri Layout */
+  --work-padding-inline: 4vw;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --header-blur-base: calc(1vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 2vw + 28px);
+}
+
+/* MEDIA QUERIES PER VARIABILI */
+@media (max-width: 768px) {
+  :root {
+    --card-size: 23vw;
+    --ellipse-radius-x: 12vw;
+    --ellipse-radius-y: 25vh;
+    --ellipse-rotation: -30;
+    --card-border-radius: 0.5vw;
+    --modal-card-max-width: 90vw;
+    --modal-card-max-height: 70vh;
+    --work-padding-inline: 6vw;
+    --header-blur-base: calc(4vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px);
+  }
+
+  body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    display: block !important;
+  }
+
+  body.home {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  :root {
+    --card-size: 14vw;
+    --ellipse-radius-x: 20vw;
+    --ellipse-radius-y: 16vh;
+    --header-blur-base: calc(1vw + clamp(32px, 5vw, 64px) + clamp(16px, 2vw, 24px) + 3vw + 28px);
+  }
+}
+
+/* === CAROUSEL CONTAINER === */
+.carousel-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: filter 0.4s ease;
+}
+
+.carousel-container.blurred {
+  filter: blur(5px);
+}
+
+.carousel-circle {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.card {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: var(--card-size);
+  aspect-ratio: 1 / 1;
+  border-radius: var(--card-border-radius);
+  cursor: pointer;
+  overflow: visible;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Fallback aspect-ratio */
+@supports not (aspect-ratio: 1 / 1) {
+  .card {
+    height: var(--card-size);
+  }
+}
+
+/* === MODAL OVERLAY === */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20000;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.modal-overlay.active {
+  pointer-events: all;
+  opacity: 1;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.card.modal-active {
+  position: fixed !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 21000 !important;
+  max-width: var(--modal-card-max-width);
+  max-height: var(--modal-card-max-height);
+  width: auto;
+  height: auto;
+  aspect-ratio: unset;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* === DIDASCALIE CARD === */
+@font-face {
+  font-family: 'M+ M Type-1 Light';
+  src: url('https://fontlibrary.org/assets/fonts/m-m-type-1/77116fb55c3b9f06e5ec18c611206a854b0f0473/4bf8f5fe1d74c7f7fde3c72aa5b81b5e/MMType1Light.ttf') format('truetype');
+}
+
+.card-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.2vw 1.5vw;
+  background: rgba(224, 224, 224, 0.4);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  color: #ffffff;
+  font-family: 'M+ M Type-1 Light', monospace;
+  font-weight: 300;
+  font-size: clamp(12px, 1.2vw, 18px);
+  line-height: 1.0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+  border-radius: 0 0 var(--card-border-radius) var(--card-border-radius);
+}
+
+.card.modal-active .card-caption {
+  opacity: 1;
+  pointer-events: all;
+}
+
+@media (max-width: 768px) {
+  .card-caption {
+    font-size: clamp(10px, 3vw, 14px);
+    padding: 2.5vw 2vw;
+  }
+}
+
+/* === TESTO FISSO (HOME e WORK) === */
+.fixed-text {
+  position: fixed;
+  top: 2vw;
+  left: 2vw;
+  z-index: 10000;
+  color: #000000;
+  pointer-events: none;
+}
+
+.fixed-text h1 {
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 700;
+  margin: 0.1rem 0;
+  line-height: 0.8;
+  letter-spacing: -0.08em;
+  pointer-events: auto;
+}
+
+.fixed-text p {
+  font-size: clamp(16px, 2vw, 24px);
+  font-weight: 400;
+  opacity: 0.8;
+  line-height: 1.0;
+  color: #696969;
+}
+
+/* === BOTTOM TEXT (HOME) === */
+.bottom-text {
+  position: fixed;
+  bottom: 2vw;
+  left: 2vw;
+  z-index: 300;
+  width: calc(100vw - 4vw);
+  pointer-events: none;
+  color: #000000;
+}
+
+.bottom-text p {
+  font-size: clamp(16px, 2vw, 24px);
+  font-weight: 400;
+  opacity: 0.8;
+  line-height: 0.9;
+  color: #696969;
+}
+
+.bottom-text a {
+  pointer-events: all;
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.bottom-text a:hover {
+  color: #ff4722;
+  opacity: 1;
+}
+
+/* === FRECCIA BACK === */
+.arrow-container {
+  position: fixed;
+  top: 1vw;
+  right: 2vw;
+  width: 6vw;
+  height: 6vw;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  opacity: 0.95;
+}
+
+.arrow-img {
+  width: 80%;
+  height: 80%;
+  display: block;
+}
+
+.arrow-img.flipped {
+  transform: scale(-1, 1);
+}
+
+/* === NUOVO SWITCH NAVIGAZIONE (FLOATING DOCK) === */
+.nav-switch-container {
+  position: fixed;
+  bottom: 3vh;
+  /* Galleggia in basso */
+  left: 50%;
+  transform: translateX(-50%);
+  /* Centrato perfettamente */
+  z-index: 12000;
+  /* Sopra a tutto */
+
+  display: inline-flex;
+  background: rgba(240, 240, 240, 0.9);
+  /* Leggera trasparenza */
+  backdrop-filter: blur(10px);
+  /* Effetto vetro moderno */
+  -webkit-backdrop-filter: blur(10px);
+
+  padding: 5px;
+  border-radius: 100px;
+  gap: 4px;
+
+  /* Ombra delicata per staccarlo dal fondo */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.nav-pill {
+  text-decoration: none;
+  font-size: 14px;
+  /* Dimensione fissa leggibile */
+  font-weight: 500;
+  color: #696969;
+  padding: 8px 20px;
+  /* Un po' più comodo da cliccare */
+  border-radius: 100px;
+  transition: all 0.3s ease;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.nav-pill:hover {
+  color: #000;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.nav-pill.active {
+  background: #000000;
+  color: #ffffff;
+  cursor: default;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* MOBILE ADJUSTMENT */
+@media (max-width: 768px) {
+  .nav-switch-container {
+    bottom: 4vh;
+    /* Un po' più su per evitare la barra home di iOS */
+    padding: 4px;
+  }
+
+  .nav-pill {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
+
+/* ============================================
+   === WORK PAGE LAYOUT (EDITORIAL STICKY) ===
+   ============================================ */
+
+.work-container {
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  /* IMPORTANTE: overflow-x hidden qui ROMPE lo sticky. Non metterlo. */
+  padding: 22vh var(--work-padding-inline) 10vh;
+}
+
+.project {
+  display: grid;
+  grid-template-columns: 35% 60%;
+  /* Layout Asimmetrico */
+  gap: 5%;
+  margin-bottom: 20vh;
+  align-items: start;
+  position: relative;
+}
+
+/* COLONNA INFO (STICKY) */
+.project-info {
+  position: sticky;
+  top: 25vh;
+  /* Punto di ancoraggio */
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  height: fit-content;
+}
+
+.project-meta h2 {
+  font-size: clamp(24px, 3vw, 42px);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 0.9;
+  letter-spacing: -0.08em;
+  color: #000;
+}
+
+.meta-info {
+  font-size: clamp(12px, 1.2vw, 18px);
+  line-height: 1.5;
+  color: #696969;
+  font-weight: 400;
+}
+
+.meta-label {
+  font-weight: 600;
+  color: #000;
+  margin-right: 0.3rem;
+}
+
+.project-description p {
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.5;
+  color: #333;
+  font-weight: 400;
+  max-width: 90%;
+}
+
+/* COLONNA VISUAL (SCROLL) */
+.project-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.project-visual img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+}
+
+.double-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.double-grid img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+}
+
+
+/* === BANDA BLUR === */
+.header-blur-band {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(var(--header-blur-base) + var(--safe-top));
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 9999;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+.notch-blur {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 35px;
+  border-radius: 0 0 18px 18px;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  display: none;
+  /* Disattivato di default se non serve */
+}
+
+
+/* ============================================
+   === RESPONSIVE MOBILE (MAX 900PX) ===
+   ============================================ */
+@media (max-width: 900px) {
+
+  /* Adattamenti Generali */
+  .fixed-text {
+    top: 4vw;
+    left: 4vw;
+  }
+
+  .fixed-text h1 {
+    font-size: clamp(28px, 8vw, 40px);
+  }
+
+  .nav-switch-container {
+    margin-top: 0.8rem;
+    padding: 3px;
+  }
+
+  .nav-pill {
+    padding: 6px 14px;
+    font-size: 14px;
+  }
+
+  .bottom-text {
+    bottom: 4vw;
+    left: 4vw;
+    width: calc(100vw - 8vw);
+  }
+
+  .bottom-text p {
+    font-size: clamp(16px, 4vw, 20px);
+    line-height: 0.95;
+  }
+
+  .arrow-container {
+    width: 12vw;
+    height: 12vw;
+    top: 3vw;
+    right: 4vw;
+  }
+
+  /* Layout Work Mobile */
+  .work-container {
+    padding: 14vh var(--work-padding-inline) 8vh;
+    /* Overflow hidden su mobile ok per evitare scroll laterale */
+    overflow-x: hidden;
+  }
+
+  .project {
+    grid-template-columns: 1fr;
+    /* Colonna singola */
+    gap: 2rem;
+    margin-bottom: 15vh;
+  }
+
+  .project-info {
+    position: static;
+    /* Disattiva Sticky su mobile */
+    margin-bottom: 1rem;
+  }
+
+  .project-description p {
+    max-width: 100%;
+  }
+
+  /* Fix allineamento visivo */
+  .project-visual {
+    margin-left: 0;
+    /* Reset margini negativi */
+    width: 100%;
+    gap: 1rem;
+  }
+
+  .double-grid {
+    gap: 1rem;
+  }
+}
+
+/* ============================================
+   === MOTION PAGE STYLES ===
+   ============================================ */
+
+.motion-container {
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  /* Padding bottom aumentato per spazio switch */
+  padding: 18vh var(--work-padding-inline) 15vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4vw;
+}
+
+.motion-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+/* Ritardo animazione per effetto cascata */
+.motion-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.motion-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.motion-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.motion-item:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.video-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #e0e0e0;
+  border-radius: var(--card-border-radius);
+  /* Usa variabile globale */
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* Fix per safari per rispettare il border radius col video */
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+
+.video-wrapper:hover {
+  transform: scale(1.01);
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.motion-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-left: 0.2rem;
+  padding-right: 0.2rem;
+}
+
+.motion-title {
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 600;
+  letter-spacing: -0.06em;
+  color: #000;
+}
+
+.motion-tags {
+  font-size: clamp(14px, 1.2vw, 16px);
+  color: #696969;
+  letter-spacing: -0.04em;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Motion per Mobile */
+@media (max-width: 768px) {
+  .motion-container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding-top: 16vh;
+    padding-bottom: 12vh;
+    /* Spazio per lo switch */
+  }
+
+  .video-wrapper {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* ============================================
+   === MOTION LIGHTBOX (DOM MOVE FIX) ===
+   ============================================ */
+
+/* Overlay sotto al video */
+.modal-overlay {
+  z-index: 20000;
+}
+
+/* Video attivo (quando è appeso al body) */
+.video-wrapper.lightbox-active {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 21005 !important;
+  /* Sicuramente sopra overlay */
+
+  /* Dimensioni espanse */
+  width: auto !important;
+  height: auto !important;
+  max-width: 90vw;
+  max-height: 90vh;
+  aspect-ratio: unset !important;
+  /* Sblocca le proporzioni */
+
+  margin: 0 !important;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+  background: #000;
+  cursor: zoom-out;
+}
+
+.video-wrapper.lightbox-active video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  /* Mostra tutto il video senza tagli */
+  max-height: 90vh;
+  max-width: 90vw;
+}
+
+/* Placeholder invisibile che tiene aperto lo spazio nella griglia */
+.grid-placeholder {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Transizioni fluide */
+.video-wrapper {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
