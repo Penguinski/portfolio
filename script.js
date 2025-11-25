@@ -674,7 +674,41 @@ function closeMotionLightbox(wrapper) {
   }, 400);
 }
 
+
 // Avvia la logica al caricamento
 window.addEventListener('DOMContentLoaded', initMotionLightbox);
 // Backup per caricamenti asincroni o cambi pagina
 window.addEventListener('load', initMotionLightbox);
+
+// ============================================
+// === SMART VIDEO LOADER (Performance Fix) ===
+// ============================================
+document.addEventListener("DOMContentLoaded", function() {
+  // Seleziona solo i video con la nostra classe speciale
+  var lazyVideos = [].slice.call(document.querySelectorAll("video.lazy-video"));
+
+  if ("IntersectionObserver" in window) {
+    var lazyVideoObserver = new IntersectionObserver(function(entries, observer) {
+      entries.forEach(function(video) {
+        if (video.isIntersecting) {
+          // Se il video entra nello schermo: carica e play
+          // Iteriamo sui figli <source> se necessario, o direttamente sul video
+          video.target.preload = "metadata"; 
+          video.target.play();
+        } else {
+          // Se esce: pausa per risparmiare risorse
+          video.target.pause();
+        }
+      });
+    });
+
+    lazyVideos.forEach(function(lazyVideo) {
+      lazyVideoObserver.observe(lazyVideo);
+    });
+  } else {
+    // Fallback per browser preistorici: falli partire tutti subito
+    lazyVideos.forEach(function(video) {
+        video.play();
+    });
+  }
+});
