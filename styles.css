@@ -183,8 +183,10 @@ body {
 
 /* === DIDASCALIE CARD === */
 @font-face {
-  font-family: 'M+ M Type-1 Light';
-  src: url('https://fontlibrary.org/assets/fonts/m-m-type-1/77116fb55c3b9f06e5ec18c611206a854b0f0473/4bf8f5fe1d74c7f7fde3c72aa5b81b5e/MMType1Light.ttf') format('truetype');
+ /* font-family: 'M+ M Type-1 Light';
+  src: url('https://fontlibrary.org/assets/fonts/m-m-type-1/77116fb55c3b9f06e5ec18c611206a854b0f0473/4bf8f5fe1d74c7f7fde3c72aa5b81b5e/MMType1Light.ttf') format('truetype');*/
+  font-family: 'Inter', sans-serif; /* <-- USA QUESTO */
+  font-weight: 300;
 }
 
 .card-caption {
@@ -197,7 +199,8 @@ body {
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
   color: #ffffff;
-  font-family: 'M+ M Type-1 Light', monospace;
+ /* font-family: 'M+ M Type-1 Light', monospace;*/
+  font-family: 'Inter', sans-serif; /* <-- USA QUESTO */
   font-weight: 300;
   font-size: clamp(12px, 1.2vw, 18px);
   line-height: 1.0;
