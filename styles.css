@@ -183,9 +183,10 @@ body {
 
 /* === DIDASCALIE CARD === */
 @font-face {
- /* font-family: 'M+ M Type-1 Light';
+  /* font-family: 'M+ M Type-1 Light';
   src: url('https://fontlibrary.org/assets/fonts/m-m-type-1/77116fb55c3b9f06e5ec18c611206a854b0f0473/4bf8f5fe1d74c7f7fde3c72aa5b81b5e/MMType1Light.ttf') format('truetype');*/
-  font-family: 'Inter', sans-serif; /* <-- USA QUESTO */
+  font-family: 'Inter', sans-serif;
+  /* <-- USA QUESTO */
   font-weight: 300;
 }
 
@@ -199,8 +200,9 @@ body {
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
   color: #ffffff;
- /* font-family: 'M+ M Type-1 Light', monospace;*/
-  font-family: 'Inter', sans-serif; /* <-- USA QUESTO */
+  /* font-family: 'M+ M Type-1 Light', monospace;*/
+  font-family: 'Inter', sans-serif;
+  /* <-- USA QUESTO */
   font-weight: 300;
   font-size: clamp(12px, 1.2vw, 18px);
   line-height: 1.0;
@@ -464,38 +466,57 @@ body {
   object-fit: cover;
 }
 
+/* ============================================
+   === SISTEMA NOTCH + BLUR (LOGICA CLAUDE) ===
+   ============================================ */
 
-/* === BANDA BLUR === */
+/* 1. IL "TAPPO" BIANCO (Riempie SOLO la safe area/notch) */
+.notch-blur {
+  display: block !important;
+  /* ERA "none" NEL TUO CODICE! */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  /* Altezza dinamica fornita dal browser */
+  height: env(safe-area-inset-top, 0px);
+  /* Colore bianco solido per coprire il contenuto che scorre sotto */
+  background-color: #ffffff;
+  z-index: 30000;
+  /* Sopra a tutto */
+  pointer-events: none;
+}
+
+/* 2. LA BANDA SFOCATA (Occupa altezza header + notch) */
 .header-blur-band {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
-  height: calc(var(--header-blur-base) + var(--safe-top));
+  /* Somma l'altezza base del tuo header + l'altezza del notch */
+  height: calc(var(--header-blur-base) + env(safe-area-inset-top, 0px));
+
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+
+  /* Sta sotto al tappo bianco (.notch-blur) ma sopra al contenuto */
   z-index: 9999;
   pointer-events: none;
+
+  /* Maschera per sfumare il bordo inferiore */
   mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
 
-.notch-blur {
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 180px;
-  height: 35px;
-  border-radius: 0 0 18px 18px;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
-  z-index: 9999;
-  display: none;
-  /* Disattivato di default se non serve */
+/* Assicurazione per Mobile: se env() fallisce o è 0, diamo un minimo */
+@media (max-width: 768px) {
+  .notch-blur {
+    /* Se il browser non supporta env(), non fa nulla (height 0) */
+    height: env(safe-area-inset-top, 0px);
+    display: block !important;
+  }
 }
-
 
 /* ============================================
    === RESPONSIVE MOBILE (MAX 900PX) ===
