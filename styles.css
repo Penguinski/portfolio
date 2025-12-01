@@ -112,9 +112,9 @@ body {
   transition: filter 0.4s ease;
 }
 
-.carousel-container.blurred {
+/*.carousel-container.blurred {
   filter: blur(5px);
-}
+}*/
 
 .carousel-circle {
   position: relative;
@@ -143,7 +143,7 @@ body {
   }
 }
 
-/* === MODAL OVERLAY === */
+/* === MODAL OVERLAY OTTIMIZZATO === */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -152,19 +152,32 @@ body {
   height: 100%;
   z-index: 20000;
   pointer-events: none;
+
+  /* STATO INIZIALE */
   opacity: 0;
-  transition: all 0.4s ease;
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
-  background-color: rgba(0, 0, 0, 0);
+  visibility: hidden;
+  /* Importante per non far lavorare la GPU quando è nascosto */
+
+  /* IL TRUCCO: Applichiamo subito il blur fisso, NON lo animiamo */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Un po' più scuro per contrasto */
+
+  /* ANIMIAMO SOLO L'OPACITÀ (Molto più leggero) */
+  transition: opacity 0.4s ease, visibility 0.4s step-end;
+  /* step-end su visibility serve a ritardare il hidden alla fine del fade-out */
+
+  /* Ottimizzazione Hardware */
+  will-change: opacity;
+  transform: translateZ(0);
 }
 
 .modal-overlay.active {
   pointer-events: all;
   opacity: 1;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background-color: rgba(0, 0, 0, 0.1);
+  visibility: visible;
+  transition: opacity 0.4s ease, visibility 0s step-start;
 }
 
 .card.modal-active {
@@ -196,7 +209,7 @@ body {
   left: 0;
   right: 0;
   padding: 1.2vw 1.5vw;
-  background: rgba(224, 224, 224, 0.4);
+  background: rgba(132, 132, 132, 0.505);
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
   color: #ffffff;
@@ -482,7 +495,7 @@ body {
   height: env(safe-area-inset-top, 0px);
   /* Colore bianco solido per coprire il contenuto che scorre sotto */
   background-color: #ffffff;
-  z-index: 30000;
+  z-index: 300000;
   /* Sopra a tutto */
   pointer-events: none;
 }
@@ -761,4 +774,58 @@ body {
 /* Transizioni fluide */
 .video-wrapper {
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* === MOTION LIGHTBOX MOBILE OPTIMIZATIONS === */
+@media (max-width: 768px) {
+
+  /* 1. RESETTAGGIO GENERALE PER IL VIDEO INTERNO (CRUCIALE) */
+  /* Questo sblocca il limite che impediva l'ingrandimento */
+  .video-wrapper.lightbox-active video {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    /* Rimuoviamo i limiti fissi che bloccavano tutto */
+  }
+
+  /* 2. VIDEO VERTICALI (Portiamo al 95% della larghezza schermo) */
+  .video-wrapper.lightbox-active {
+    width: 95vw !important;
+    /* Molto più largo */
+    max-width: none !important;
+    height: auto !important;
+    max-height: 85vh !important;
+    /* Limite altezza per non coprire i controlli */
+    aspect-ratio: unset !important;
+  }
+
+  /* 3. VIDEO ORIZZONTALI RUOTATI (Landscape) - FIX DIMENSIONE "TINY" */
+  .video-wrapper.lightbox-active.rotate-landscape {
+    /* Ruota e centra */
+    transform: translate(-50%, -50%) rotate(90deg) !important;
+
+    /* FORZIAMO LA GRANDEZZA: 
+       La larghezza del box (asse lungo) diventa l'80% dell'ALTEZZA del telefono (vh).
+       Questo costringe il video a diventare grande. */
+    width: 80vh !important;
+
+    /* L'altezza del box (asse corto) si adatta automaticamente */
+    height: auto !important;
+
+    /* Ma mettiamo un tetto per non farlo uscire dai bordi laterali del telefono */
+    max-height: 95vw !important;
+
+    /* Reset contorno */
+    background: transparent !important;
+    box-shadow: none !important;
+    -webkit-mask-image: none !important;
+
+    /* Rimuoviamo limiti standard */
+    max-width: none !important;
+  }
+
+  /* Ombra specifica per il video ruotato */
+  .video-wrapper.lightbox-active.rotate-landscape video {
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    border-radius: var(--card-border-radius);
+  }
 }

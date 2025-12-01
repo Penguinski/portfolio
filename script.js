@@ -258,7 +258,7 @@ async function openModal(cardElement, cardIndex, cardData) {
   const overlay = document.getElementById('modalOverlay');
   const container = document.getElementById('carouselContainer');
   overlay.classList.add('active');
-  container.classList.add('blurred');
+  /* container.classList.add('blurred');*/
 
   // ⭐ POSIZIONA LA CARD NELLA POSIZIONE CORRENTE (non centrata)
   cardElement.style.position = 'fixed';
@@ -369,7 +369,7 @@ function closeModal() {
     const overlay = document.getElementById('modalOverlay');
     const container = document.getElementById('carouselContainer');
     overlay.classList.remove('active');
-    container.classList.remove('blurred');
+    /* container.classList.remove('blurred');*/
 
     // Rimetti la card nel carosello
     const carousel = document.getElementById('carousel');
@@ -590,21 +590,19 @@ function openMotionLightbox(wrapper) {
   // 1. Misura posizione iniziale
   const rect = wrapper.getBoundingClientRect();
 
-  // 2. Crea il PLACEHOLDER (il buco nella griglia)
+  // 2. Crea il PLACEHOLDER
   const placeholder = document.createElement('div');
   placeholder.className = 'video-wrapper grid-placeholder';
   placeholder.style.width = rect.width + 'px';
   placeholder.style.height = rect.height + 'px';
 
-  // Inserisci placeholder al posto del video
   wrapper._originalParent.insertBefore(placeholder, wrapper);
   wrapper._placeholder = placeholder;
 
-  // 3. TELETRASPORTO: Sposta il wrapper nel BODY (fuori dalla griglia)
-  // Questo risolve il problema dello z-index sfocato
+  // 3. TELETRASPORTO nel BODY
   document.body.appendChild(wrapper);
 
-  // 4. Posiziona il wrapper esattamente dove era (sopra il placeholder)
+  // 4. Posiziona il wrapper dove era
   wrapper.style.position = 'fixed';
   wrapper.style.top = rect.top + 'px';
   wrapper.style.left = rect.left + 'px';
@@ -616,14 +614,37 @@ function openMotionLightbox(wrapper) {
   // Forza reflow
   void wrapper.offsetWidth;
 
-  // 5. Attiva l'animazione verso il centro
+  // === NUOVA LOGICA: ROTAZIONE SU MOBILE ===
+  // Controlliamo se siamo su mobile (< 768px)
+  const isMobile = window.innerWidth <= 768;
+
+  // Controlliamo le dimensioni reali del video (se disponibili)
+  // Se videoWidth > videoHeight è orizzontale (es. 1920x1080)
+  const isLandscape = video.videoWidth > video.videoHeight;
+
+  if (isMobile && isLandscape) {
+    wrapper.classList.add('rotate-landscape');
+  }
+  // =========================================
+
+  // 5. Attiva animazione
   requestAnimationFrame(() => {
     wrapper.classList.add('lightbox-active');
-    // Rimuovi stili inline per lasciare che il CSS gestisca la posizione centrale
+
+    // Pulizia stili inline per lasciare spazio al CSS
     wrapper.style.top = '';
     wrapper.style.left = '';
-    wrapper.style.width = '';
-    wrapper.style.height = '';
+
+    // IMPORTANTE: Se ruotiamo, forziamo le dimensioni via CSS, 
+    // altrimenti puliamo width/height per i video verticali
+    if (!(isMobile && isLandscape)) {
+      wrapper.style.width = '';
+      wrapper.style.height = '';
+    } else {
+      // Per i ruotati, puliamo comunque per far agire il CSS !important
+      wrapper.style.width = '';
+      wrapper.style.height = '';
+    }
   });
 
   // 6. Attiva Overlay e Video
@@ -643,6 +664,7 @@ function closeMotionLightbox(wrapper) {
 
   // 2. Rimuovi classe attiva
   wrapper.classList.remove('lightbox-active');
+  wrapper.classList.remove('rotate-landscape');
 
   // 3. Anima indietro verso il placeholder
   if (placeholder) {
@@ -683,17 +705,17 @@ window.addEventListener('load', initMotionLightbox);
 // ============================================
 // === SMART VIDEO LOADER (Performance Fix) ===
 // ============================================
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   // Seleziona solo i video con la nostra classe speciale
   var lazyVideos = [].slice.call(document.querySelectorAll("video.lazy-video"));
 
   if ("IntersectionObserver" in window) {
-    var lazyVideoObserver = new IntersectionObserver(function(entries, observer) {
-      entries.forEach(function(video) {
+    var lazyVideoObserver = new IntersectionObserver(function (entries, observer) {
+      entries.forEach(function (video) {
         if (video.isIntersecting) {
           // Se il video entra nello schermo: carica e play
           // Iteriamo sui figli <source> se necessario, o direttamente sul video
-          video.target.preload = "metadata"; 
+          video.target.preload = "metadata";
           video.target.play();
         } else {
           // Se esce: pausa per risparmiare risorse
@@ -702,13 +724,13 @@ document.addEventListener("DOMContentLoaded", function() {
       });
     });
 
-    lazyVideos.forEach(function(lazyVideo) {
+    lazyVideos.forEach(function (lazyVideo) {
       lazyVideoObserver.observe(lazyVideo);
     });
   } else {
     // Fallback per browser preistorici: falli partire tutti subito
-    lazyVideos.forEach(function(video) {
-        video.play();
+    lazyVideos.forEach(function (video) {
+      video.play();
     });
   }
 });
