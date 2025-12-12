@@ -1,20 +1,20 @@
-// CACHE GLOBALE - Aggiungi all'inizio del file
+// CACHE GLOBALE - Performance: caching
 let cachedValues = null;
 let cacheInvalidated = true;
+// Performance: pre-calcolo costanti
+const DEG_TO_RAD = Math.PI / 180;
 
 // === CURSORE CUSTOM (funziona su tutte le pagine) === 
-const cursor = document.querySelector('.cursor');
+const customCursorElement = document.querySelector('.custom-cursor') || document.querySelector('.cursor');
 
-if (cursor) {
+if (customCursorElement) {
   document.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
+    // PERFORMANCE: Use transform instead of left/top
+    customCursorElement.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
   });
 }
 
-
 function getResponsiveValues() {
-  // Ricalcola solo se necessario
   if (!cacheInvalidated && cachedValues) {
     return cachedValues;
   }
@@ -35,9 +35,14 @@ function getResponsiveValues() {
   return cachedValues;
 }
 
-// Invalida cache al resize
 window.addEventListener('resize', () => {
   cacheInvalidated = true;
+  cachedResponsiveValues = null;
+  const container = document.querySelector('.carousel-container');
+  if(container) {
+    containerWidth = container.offsetWidth;
+    containerHeight = container.offsetHeight;
+  }
 });
 
 
@@ -48,58 +53,17 @@ window.addEventListener('resize', () => {
 const carouselConfig = {
   numberOfCards: 8,
   cards: [
-    {
-      image: 'resources/manuale2.gif',
-      aspectRatio: 'auto',
-      link: '#card1',
-      caption: 'Hand typography'
-    },
-    {
-      image: 'resources/tictac.jpg',
-      aspectRatio: 'auto',
-      link: '#card2',
-      caption: 'Brochure for Tic Tac'
-    },
-    {
-      image: 'resources/loghi.gif',
-      aspectRatio: 'auto',
-      link: '#card3',
-      caption: 'Selection of logos'
-    },
-    {
-      image: 'resources/gatto funivia ig v2.jpg',
-      aspectRatio: 'auto',
-      link: '#card4',
-      caption: 'Illustration for social media'
-    },
-    {
-      image: 'resources/qreativa.gif',
-      aspectRatio: 'auto',
-      link: '#card5',
-      caption: 'Illustrations for a blog'
-    },
-    {
-      image: 'resources/shaun 9 edit.jpg',
-      aspectRatio: 'auto',
-      link: '#card6',
-      caption: '3D Character design - Shaun'
-    },
-    {
-      image: 'resources/ng.gif',
-      aspectRatio: 'auto',
-      link: '#card7',
-      caption: 'Logo animation'
-    },
-    {
-      image: 'resources/render 5 insta 9 16.jpg',
-      aspectRatio: 'auto',
-      link: '#card8',
-      caption: '3D Rendering'
-    }
+    { image: 'resources/manuale2.gif', aspectRatio: 'auto', link: '#card1', caption: 'Hand typography' },
+    { image: 'resources/tictac.jpg', aspectRatio: 'auto', link: '#card2', caption: 'Brochure for Tic Tac' },
+    { image: 'resources/loghi.gif', aspectRatio: 'auto', link: '#card3', caption: 'Selection of logos' },
+    { image: 'resources/gatto funivia ig v2.jpg', aspectRatio: 'auto', link: '#card4', caption: 'Illustration for social media' },
+    { image: 'resources/qreativa.gif', aspectRatio: 'auto', link: '#card5', caption: 'Illustrations for a blog' },
+    { image: 'resources/shaun 9 edit.jpg', aspectRatio: 'auto', link: '#card6', caption: '3D Character design - Shaun' },
+    { image: 'resources/ng.gif', aspectRatio: 'auto', link: '#card7', caption: 'Logo animation' },
+    { image: 'resources/render 5 insta 9 16.jpg', aspectRatio: 'auto', link: '#card8', caption: '3D Rendering' }
   ],
   startAngleOffset: -90
 };
-
 
 
 // ============================================
@@ -115,63 +79,22 @@ let isModalActive = false;
 // === VARIABILI PER DEFORMAZIONE ELLISSE ===
 let mouseInfluence = { x: 0, y: 0 };
 let targetMouseInfluence = { x: 0, y: 0 };
-const ELLIPSE_DEFORM_AMOUNT = 0.15; // 15% di deformazione massima
-const MOUSE_SMOOTHING = 0.08; // Easing per movimento fluido
+const ELLIPSE_DEFORM_AMOUNT = 0.15;
+const MOUSE_SMOOTHING = 0.08;
 
-
-// ============================================
-// === FUNZIONI CAROSELLO ===
-// ============================================
-// AGGIUNGI CACHE GLOBALE
+// AGGIUNGI CACHE GLOBALE CAROUSEL
 let cachedResponsiveValues = null;
 let lastWindowWidth = 0;
 let lastWindowHeight = 0;
 
-function getResponsiveValues() {
-  // Ricalcola solo se le dimensioni sono cambiate
-  if (cachedResponsiveValues &&
-    lastWindowWidth === window.innerWidth &&
-    lastWindowHeight === window.innerHeight) {
-    return cachedResponsiveValues;
-  }
-
-  const vw = window.innerWidth / 100;
-  const vh = window.innerHeight / 100;
-  const root = getComputedStyle(document.documentElement);
-
-  cachedResponsiveValues = {
-    radiusX: parseFloat(root.getPropertyValue('--ellipse-radius-x')) * vw,
-    radiusY: parseFloat(root.getPropertyValue('--ellipse-radius-y')) * vh,
-    rotationDuration: parseInt(root.getPropertyValue('--rotation-duration')),
-    rotationDirection: parseInt(root.getPropertyValue('--rotation-direction')),
-    ellipseRotation: parseFloat(root.getPropertyValue('--ellipse-rotation'))
-  };
-
-  lastWindowWidth = window.innerWidth;
-  lastWindowHeight = window.innerHeight;
-
-  return cachedResponsiveValues;
-}
-
-// Invalida la cache al resize
-window.addEventListener('resize', () => {
-  cachedResponsiveValues = null;
-  const container = document.querySelector('.carousel-container');
-  containerWidth = container.offsetWidth;
-  containerHeight = container.offsetHeight;
-});
-
-// === CALCOLA DEFORMAZIONE ELLISSE BASATA SU MOUSE ===
 function updateMouseInfluence() {
-  // Easing smooth verso il target
   mouseInfluence.x += (targetMouseInfluence.x - mouseInfluence.x) * MOUSE_SMOOTHING;
   mouseInfluence.y += (targetMouseInfluence.y - mouseInfluence.y) * MOUSE_SMOOTHING;
 }
 
-// === LISTENER MOVIMENTO MOUSE ===
 function initMouseEllipseDeformation() {
   document.addEventListener('mousemove', (e) => {
-    // Normalizza coordinate mouse da -1 a 1 (centro = 0)
+    // Normalizza da -1 a 1
     const normalizedX = (e.clientX / window.innerWidth) * 2 - 1;
     const normalizedY = (e.clientY / window.innerHeight) * 2 - 1;
 
@@ -181,10 +104,13 @@ function initMouseEllipseDeformation() {
 }
 
 function rotatePoint(x, y, angleDegrees) {
-  const angleRad = (angleDegrees * Math.PI) / 180;
-  const xRotated = x * Math.cos(angleRad) - y * Math.sin(angleRad);
-  const yRotated = x * Math.sin(angleRad) + y * Math.cos(angleRad);
-  return { x: xRotated, y: yRotated };
+  const angleRad = angleDegrees * DEG_TO_RAD;
+  const sin = Math.sin(angleRad);
+  const cos = Math.cos(angleRad);
+  return { 
+    x: x * cos - y * sin, 
+    y: x * sin + y * cos 
+  };
 }
 
 // ============================================
@@ -194,22 +120,15 @@ function rotatePoint(x, y, angleDegrees) {
 function getImageNaturalDimensions(imageUrl) {
   return new Promise((resolve) => {
     const img = new Image();
-    img.onload = () => {
-      resolve({ width: img.naturalWidth, height: img.naturalHeight });
-    };
-    img.onerror = () => {
-      resolve({ width: 1, height: 1 }); // Fallback 1:1
-    };
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.onerror = () => resolve({ width: 1, height: 1 });
     img.src = imageUrl;
   });
 }
 
 function calculateModalDimensions(aspectRatio, cardData) {
-  const maxWidth = parseInt(getComputedStyle(document.documentElement)
-    .getPropertyValue('--modal-card-max-width'));
-  const maxHeight = parseInt(getComputedStyle(document.documentElement)
-    .getPropertyValue('--modal-card-max-height'));
-
+  const maxWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--modal-card-max-width'));
+  const maxHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--modal-card-max-height'));
   const vw = window.innerWidth / 100;
   const vh = window.innerHeight / 100;
   const maxWidthPx = maxWidth * vw;
@@ -218,14 +137,10 @@ function calculateModalDimensions(aspectRatio, cardData) {
   let width, height;
 
   if (aspectRatio === 'auto' || !aspectRatio) {
-    // Usa dimensioni naturali dell'immagine (calcolate dinamicamente)
-    return 'auto'; // Gestito dinamicamente
+    return 'auto';
   } else if (aspectRatio.includes(':')) {
-    // Formato "16:9", "4:3", ecc.
     const [w, h] = aspectRatio.split(':').map(Number);
     const ratio = w / h;
-
-    // Calcola dimensioni mantenendo aspect ratio e limiti
     if (maxWidthPx / ratio <= maxHeightPx) {
       width = maxWidthPx;
       height = maxWidthPx / ratio;
@@ -234,11 +149,9 @@ function calculateModalDimensions(aspectRatio, cardData) {
       width = maxHeightPx * ratio;
     }
   } else {
-    // Fallback quadrato
     const size = Math.min(maxWidthPx, maxHeightPx);
     width = height = size;
   }
-
   return { width: Math.round(width), height: Math.round(height) };
 }
 
@@ -247,147 +160,179 @@ async function openModal(cardElement, cardIndex, cardData) {
   isModalActive = true;
   currentModalCard = cardElement;
 
-  // ⭐ SALVA LA POSIZIONE CORRENTE PRIMA DI SPOSTARE
+  // 1. Cattura stato corrente
   const rect = cardElement.getBoundingClientRect();
-  cardElement.dataset.originalLeft = rect.left + 'px';
-  cardElement.dataset.originalTop = rect.top + 'px';
   cardElement.dataset.originalWidth = rect.width + 'px';
   cardElement.dataset.originalHeight = rect.height + 'px';
+  
+  // Salva l'attuale transform per riferimento se servisse, ma lavoreremo con rect
+  const originalTransform = cardElement.style.transform; 
+  cardElement.dataset.originalTransform = originalTransform;
 
-  // Attiva overlay e blur
   const overlay = document.getElementById('modalOverlay');
-  const container = document.getElementById('carouselContainer');
   overlay.classList.add('active');
-  /* container.classList.add('blurred');*/
 
-  // ⭐ POSIZIONA LA CARD NELLA POSIZIONE CORRENTE (non centrata)
+  // 2. Prepara la card per la transizione
+  // La muoviamo nel DOM al body per evitare problemi di z-index o overflow
+  // Ma invece di usare top/left, usiamo transform per posizionarla esattamente dov'era
+  // Rispetto all'angolo in alto a sinistra (0,0)
+  
   cardElement.style.position = 'fixed';
-  cardElement.style.left = cardElement.dataset.originalLeft;
-  cardElement.style.top = cardElement.dataset.originalTop;
-  cardElement.style.width = cardElement.dataset.originalWidth;
-  cardElement.style.height = cardElement.dataset.originalHeight;
-  cardElement.style.transform = 'translate(-50%, -50%)';
+  cardElement.style.top = '0px';
+  cardElement.style.left = '0px';
+  // Impostiamo il transform iniziale per coincidere con la posizione visiva attuale
+  // Aggiungiamo translate(0,0) esplicitamente per sovrascrivere il translate(-50%, -50%) del loop se necessario
+  // Ma dato che abbiamo settato top:0 left:0, dobbiamo calcolare il translate assoluto
+  cardElement.style.transform = `translate3d(${rect.left}px, ${rect.top}px, 0)`;
+  
+  cardElement.style.width = rect.width + 'px';
+  cardElement.style.height = rect.height + 'px';
+  cardElement.style.zIndex = '21000';
 
-  // Sposta nel body
   document.body.appendChild(cardElement);
 
-  // ⭐ ATTENDI UN FRAME per permettere al browser di applicare gli stili
-  await new Promise(resolve => requestAnimationFrame(resolve));
+  // Forza reflow
+  void cardElement.offsetWidth;
 
-  // Aggiungi classe modal per attivare la transizione
-  cardElement.classList.add('modal-active');
-
-  // Calcola dimensioni modal
+  // 3. Calcola dimensioni target e posizione centrale
+  let targetW, targetH;
+  
+  // (Logica calcolo dimensioni uguale a prima)
   if (cardData.aspectRatio === 'auto') {
     try {
       const naturalDims = await getImageNaturalDimensions(cardData.image);
       const aspectRatio = naturalDims.width / naturalDims.height;
       const maxWidth = window.innerWidth * 0.8;
       const maxHeight = window.innerHeight * 0.8;
-
-      let width, height;
       if (maxWidth / aspectRatio <= maxHeight) {
-        width = maxWidth;
-        height = maxWidth / aspectRatio;
+        targetW = maxWidth;
+        targetH = maxWidth / aspectRatio;
       } else {
-        height = maxHeight;
-        width = maxHeight * aspectRatio;
+        targetH = maxHeight;
+        targetW = maxHeight * aspectRatio;
       }
-
-      cardElement.style.width = Math.round(width) + 'px';
-      cardElement.style.height = Math.round(height) + 'px';
     } catch (error) {
-      console.warn('Errore nel caricare dimensioni immagine:', error);
-      cardElement.style.width = '400px';
-      cardElement.style.height = '400px';
+      targetW = 400; targetH = 400;
     }
   } else {
     const dimensions = calculateModalDimensions(cardData.aspectRatio, cardData);
     if (dimensions !== 'auto') {
-      cardElement.style.width = dimensions.width + 'px';
-      cardElement.style.height = dimensions.height + 'px';
+      targetW = dimensions.width;
+      targetH = dimensions.height;
+    } else {
+      targetW = rect.width; targetH = rect.height; // Fallback
     }
   }
 
-  // ⭐ ANIMA VERSO IL CENTRO
-  cardElement.style.left = '50%';
-  cardElement.style.top = '50%';
+  // 4. Anima verso il centro
+  // Centro dello schermo
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  // Per centrare un elemento posizionato a 0,0 con transform, trasliamo a centro - metà larghezza
+  const targetX = centerX - (targetW / 2);
+  const targetY = centerY - (targetH / 2);
+
+  requestAnimationFrame(() => {
+    cardElement.classList.add('modal-active'); // Gestisce ombre e transizioni
+    cardElement.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
+    cardElement.style.width = targetW + 'px';
+    cardElement.style.height = targetH + 'px';
+  });
 }
 
 function closeModal() {
   if (!isModalActive || !currentModalCard) return;
 
-  // ⭐ RIMUOVI SUBITO LA CLASSE MODAL per permettere agli stili inline di funzionare
   currentModalCard.classList.remove('modal-active');
 
-  // ⭐ TROVA I DATI DELLA CARD NEL CAROSELLO
   const cardData = cardElements.find(c => c.element === currentModalCard);
   if (!cardData) return;
 
-  // ⭐ CALCOLA LA POSIZIONE CORRENTE NEL CAROSELLO
+  // 1. Ricalcola dove dovrebbe essere nel carosello ORA
   const { radiusX, radiusY, rotationDuration, rotationDirection, ellipseRotation } = getResponsiveValues();
-
+  // Usa currentTime corrente approssimato
   const elapsed = performance.now() - animationStartTime;
   const progress = (elapsed / rotationDuration) % 1;
   const currentRotation = progress * 360 * rotationDirection;
-
   const angle = cardData.initialAngle + currentRotation;
-  const angleRad = (angle * Math.PI) / 180;
+  
+  const offsetX = mouseInfluence.x * radiusX * ELLIPSE_DEFORM_AMOUNT;
+  const offsetY = mouseInfluence.y * radiusY * ELLIPSE_DEFORM_AMOUNT;
+  const deformedRadiusX = radiusX * (1 + mouseInfluence.x * 0.1);
+  const deformedRadiusY = radiusY * (1 + mouseInfluence.y * 0.1);
 
-  const xEllipse = Math.cos(angleRad) * radiusX;
-  const yEllipse = Math.sin(angleRad) * radiusY;
+  const angleRad = angle * DEG_TO_RAD;
+  const xEllipse = Math.cos(angleRad) * deformedRadiusX;
+  const yEllipse = Math.sin(angleRad) * deformedRadiusY;
   const rotated = rotatePoint(xEllipse, yEllipse, ellipseRotation);
 
-  // ⭐ OTTIENI IL CENTRO DEL CONTAINER NEL VIEWPORT
   const container = document.getElementById('carouselContainer');
+  // Se il container non c'è (es. cambiato pagina), abort
+  if(!container) return;
+
   const containerRect = container.getBoundingClientRect();
   const absoluteCenterX = containerRect.left + containerRect.width / 2;
   const absoluteCenterY = containerRect.top + containerRect.height / 2;
 
-  // ⭐ CALCOLA POSIZIONE ASSOLUTA NEL VIEWPORT
-  const targetX = absoluteCenterX + rotated.x;
-  const targetY = absoluteCenterY + rotated.y;
+  // Questa è la posizione centrale esatta dove l'elemento dovrebbe stare
+  const targetCenterX = absoluteCenterX + rotated.x + offsetX; 
+  const targetCenterY = absoluteCenterY + rotated.y + offsetY;
 
-  // ⭐ OTTIENI LA DIMENSIONE DELLA CARD NEL CAROSELLO
-  const cardSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-size'));
-  const actualSize = (cardSize / 100) * Math.min(window.innerWidth, window.innerHeight);
+  // Dimensioni originali
+  const originalW = parseFloat(currentModalCard.dataset.originalWidth);
+  const originalH = parseFloat(currentModalCard.dataset.originalHeight);
+  
+  // Dato che stiamo usando top:0 left:0 e transform, dobbiamo calcolare
+  // il transform che porta l'angolo in alto a sinistra della card alla posizione giusta.
+  // Il loop `animate` usa `translate(-50%, -50%)`, quindi il suo punto di ancoraggio è il centro.
+  // Noi stiamo animando una card che ha origine in alto a sinistra.
+  // Posizione target (angolo in alto a sx) = Centro Target - Metà dimensione
+  const targetLeft = targetCenterX - (originalW / 2);
+  const targetTop = targetCenterY - (originalH / 2);
 
-  // ⭐ ORA GLI STILI INLINE FUNZIONANO (niente più !important che li blocca)
-  currentModalCard.style.position = 'fixed';
-  currentModalCard.style.left = `${targetX}px`;
-  currentModalCard.style.top = `${targetY}px`;
-  currentModalCard.style.width = `${actualSize}px`;
-  currentModalCard.style.height = `${actualSize}px`;
-  currentModalCard.style.transform = 'translate(-50%, -50%)';
-  currentModalCard.style.zIndex = '21000';
+  // 2. Applica l'animazione di ritorno usando TRANSFORM
+  // Non tocchiamo top/left (rimangono 0).
+  currentModalCard.style.transform = `translate3d(${targetLeft}px, ${targetTop}px, 0)`;
+  currentModalCard.style.width = currentModalCard.dataset.originalWidth;
+  currentModalCard.style.height = currentModalCard.dataset.originalHeight;
 
-  // ⭐ ATTENDI LA FINE DELLA TRANSIZIONE
+  // 3. Cleanup dopo la transizione
+  const overlay = document.getElementById('modalOverlay');
+  overlay.classList.remove('active');
+
   setTimeout(() => {
     isModalActive = false;
-
-    // Rimuovi overlay e blur
-    const overlay = document.getElementById('modalOverlay');
-    const container = document.getElementById('carouselContainer');
-    overlay.classList.remove('active');
-    /* container.classList.remove('blurred');*/
-
-    // Rimetti la card nel carosello
+    
+    // Rimetti nel container
     const carousel = document.getElementById('carousel');
     carousel.appendChild(currentModalCard);
 
-    // Reset inline styles
+    // RESETTA TUTTO per dare controllo al loop
+    // È fondamentale rimuovere position fixed e i transform manuali
+    // Il loop animate() sovrascriverà il transform al frame successivo
     currentModalCard.style.position = '';
-    currentModalCard.style.left = '';
     currentModalCard.style.top = '';
+    currentModalCard.style.left = '';
     currentModalCard.style.width = '';
     currentModalCard.style.height = '';
-    currentModalCard.style.transform = '';
     currentModalCard.style.zIndex = '';
+    
+    // Trick: forziamo l'aggiornamento immediato del transform secondo la logica del loop
+    // per evitare il frame di "buco"
+    // Questo è il transform che il loop applicherebbe
+    const style = currentModalCard.style;
+    const centerX = (containerRect.width / 2) + offsetX; // Relativo al container
+    const centerY = (containerRect.height / 2) + offsetY;
+    const finalX = centerX + rotated.x;
+    const finalY = centerY + rotated.y;
+    
+    // Applichiamo subito lo stile "carousel" (translate -50%, -50%)
+    // Nota: ora top/left sono vuoti, quindi l'elemento è relativo al parent (carousel)
+    style.transform = `translate3d(${finalX}px, ${finalY}px, 0) translate(-50%, -50%)`;
 
     currentModalCard = null;
-  }, 400);
+  }, 400); // Deve coincidere con CSS transition duration
 }
-
 
 
 // ============================================
@@ -397,29 +342,25 @@ function closeModal() {
 function createCarousel() {
   const carousel = document.getElementById('carousel');
   const container = document.querySelector('.carousel-container');
-  containerWidth = container.offsetWidth;
-  containerHeight = container.offsetHeight;
+  if(container) {
+    containerWidth = container.offsetWidth;
+    containerHeight = container.offsetHeight;
+  }
 
-  // Crea ogni card
   for (let i = 0; i < carouselConfig.numberOfCards; i++) {
     const card = document.createElement('div');
     card.className = 'card';
     card.dataset.index = i;
 
-    // Configura l'immagine di sfondo
     if (carouselConfig.cards[i]) {
       const cardData = carouselConfig.cards[i];
       card.style.backgroundImage = `url('${cardData.image}')`;
-
-      // ⭐ AGGIUNGI LA DIDASCALIA
       if (cardData.caption) {
         const caption = document.createElement('div');
         caption.className = 'card-caption';
         caption.textContent = cardData.caption;
         card.appendChild(caption);
       }
-
-      // Aggiungi evento click per modal
       card.addEventListener('click', (e) => {
         e.stopPropagation();
         if (!isModalActive) {
@@ -436,48 +377,36 @@ function createCarousel() {
     });
   }
 
-  // Avvia l'animazione
   animationStartTime = performance.now();
-  // ⭐ INIZIALIZZA DEFORMAZIONE ELLISSE CON MOUSE
   initMouseEllipseDeformation();
   animate();
-
-  // Event listener per chiudere modal
   setupModalEvents();
 }
 
 
 function setupModalEvents() {
   const overlay = document.getElementById('modalOverlay');
-
-  // Click su overlay per chiudere
-  overlay.addEventListener('click', closeModal);
-
-  // Escape key per chiudere
+  if(overlay) overlay.addEventListener('click', closeModal);
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && isModalActive) {
-      closeModal();
-    }
+    if (e.key === 'Escape' && isModalActive) closeModal();
   });
-
-  // Click su body per chiudere (tranne su card)
   document.addEventListener('click', (e) => {
-    if (isModalActive && !e.target.closest('.card')) {
-      closeModal();
-    }
+    if (isModalActive && !e.target.closest('.card')) closeModal();
   });
 }
 
 function animate(currentTime) {
+  requestAnimationFrame(animate); // Keep loop running
+
+  // Se modal attiva, non sprecare calcoli (o continua se vuoi l'effetto sfondo)
+  // Qui continuiamo per avere le posizioni pronte al ritorno
   if (!animationStartTime) animationStartTime = currentTime;
 
   const { radiusX, radiusY, rotationDuration, rotationDirection, ellipseRotation } = getResponsiveValues();
 
-  // Aggiorna mouse influence
   mouseInfluence.x += (targetMouseInfluence.x - mouseInfluence.x) * MOUSE_SMOOTHING;
   mouseInfluence.y += (targetMouseInfluence.y - mouseInfluence.y) * MOUSE_SMOOTHING;
 
-  // Precalcola valori comuni
   const offsetX = mouseInfluence.x * radiusX * ELLIPSE_DEFORM_AMOUNT;
   const offsetY = mouseInfluence.y * radiusY * ELLIPSE_DEFORM_AMOUNT;
   const deformedRadiusX = radiusX * (1 + mouseInfluence.x * 0.1);
@@ -490,53 +419,50 @@ function animate(currentTime) {
   const centerX = (containerWidth / 2) + offsetX;
   const centerY = (containerHeight / 2) + offsetY;
 
-  // Usa for loop invece di forEach per performance
   for (let i = 0; i < cardElements.length; i++) {
     const cardData = cardElements[i];
-
-    if (cardData.element.classList.contains('modal-active')) continue;
+    if (cardData.element === currentModalCard) continue;
 
     const angle = cardData.initialAngle + currentRotation;
-    const angleRad = angle * 0.017453292519943295; // Math.PI / 180 precalcolato
+    const angleRad = angle * DEG_TO_RAD;
 
     const xEllipse = Math.cos(angleRad) * deformedRadiusX;
     const yEllipse = Math.sin(angleRad) * deformedRadiusY;
-
-    // Cache la rotazione
     const rotated = rotatePoint(xEllipse, yEllipse, ellipseRotation);
 
-    // Batch DOM updates
-    const element = cardData.element;
-    const style = element.style;
-    style.left = (centerX + rotated.x) + 'px';
-    style.top = (centerY + rotated.y) + 'px';
+    const style = cardData.element.style;
+    
+    // === CRITICAL PERFORMANCE FIX ===
+    // Use transform3d for GPU acceleration instead of top/left layout trashing
+    // Include the centering translation directly here
+    const finalX = centerX + rotated.x;
+    const finalY = centerY + rotated.y;
+    style.transform = `translate3d(${finalX}px, ${finalY}px, 0) translate(-50%, -50%)`;
+    
+    // Ensure top/left are cleared or 0 if set previously
+    // style.left = ''; style.top = ''; (Done via CSS default)
 
     const zIndex = 1000 + Math.round((rotated.y / deformedRadiusY) * 500 + (rotated.x / deformedRadiusX) * 50);
     style.zIndex = zIndex;
   }
-
-  requestAnimationFrame(animate);
 }
 
-
-
-// Aggiorna dimensioni container su resize
-window.addEventListener('resize', () => {
-  const container = document.querySelector('.carousel-container');
-  containerWidth = container.offsetWidth;
-  containerHeight = container.offsetHeight;
-});
+// ... MOTION LOGIC REMAINS MOSTLY SAME, ADDED TO END ...
 
 window.addEventListener('load', () => {
   setTimeout(() => {
-    createCarousel();
-    const el = document.querySelector('.bottom-text');
-    if (el) {
-      el.style.display = 'none';
-      el.style.display = '';
+    // Check if we are on home page
+    if (document.getElementById('carousel')) {
+        createCarousel();
+        const el = document.querySelector('.bottom-text');
+        if (el) {
+        el.style.display = 'none';
+        el.style.display = '';
+        }
     }
   }, 30);
 });
+
 // ============================================
 // === MOTION PAGE LIGHTBOX LOGIC (DOM MOVE) ===
 // ============================================
@@ -546,7 +472,6 @@ function initMotionLightbox() {
   if (!motionContainer) return;
 
   const wrappers = document.querySelectorAll('.video-wrapper');
-  // Assicuriamoci che l'overlay esista
   let overlay = document.getElementById('modalOverlay');
   if (!overlay) {
     overlay = document.createElement('div');
@@ -556,7 +481,6 @@ function initMotionLightbox() {
   }
 
   wrappers.forEach(wrapper => {
-    // Salva il genitore originale per sapere dove tornare
     wrapper._originalParent = wrapper.parentNode;
     wrapper._originalNextSibling = wrapper.nextSibling;
 
@@ -586,11 +510,8 @@ function initMotionLightbox() {
 function openMotionLightbox(wrapper) {
   const video = wrapper.querySelector('video');
   const overlay = document.getElementById('modalOverlay');
-
-  // 1. Misura posizione iniziale
   const rect = wrapper.getBoundingClientRect();
 
-  // 2. Crea il PLACEHOLDER
   const placeholder = document.createElement('div');
   placeholder.className = 'video-wrapper grid-placeholder';
   placeholder.style.width = rect.width + 'px';
@@ -599,55 +520,111 @@ function openMotionLightbox(wrapper) {
   wrapper._originalParent.insertBefore(placeholder, wrapper);
   wrapper._placeholder = placeholder;
 
-  // 3. TELETRASPORTO nel BODY
   document.body.appendChild(wrapper);
 
-  // 4. Posiziona il wrapper dove era
+  // START STATE: Fixed at origin (0,0) plus transform to original grid pos
   wrapper.style.position = 'fixed';
-  wrapper.style.top = rect.top + 'px';
-  wrapper.style.left = rect.left + 'px';
+  wrapper.style.top = '0';
+  wrapper.style.left = '0';
+  wrapper.style.margin = '0';
+  wrapper.style.transform = `translate3d(${rect.left}px, ${rect.top}px, 0)`;
+  
   wrapper.style.width = rect.width + 'px';
   wrapper.style.height = rect.height + 'px';
   wrapper.style.zIndex = '21005';
-  wrapper.style.margin = '0';
 
-  // Forza reflow
-  void wrapper.offsetWidth;
+  void wrapper.offsetWidth; // Force Reflow
 
-  // === NUOVA LOGICA: ROTAZIONE SU MOBILE ===
-  // Controlliamo se siamo su mobile (< 768px)
+  // CALCOLO DIMENSIONI TARGET E CENTRATURA MANUALE (NO CSS CENTERING)
+  // Questo previene il salto di coordinate top/left
   const isMobile = window.innerWidth <= 768;
-
-  // Controlliamo le dimensioni reali del video (se disponibili)
-  // Se videoWidth > videoHeight è orizzontale (es. 1920x1080)
   const isLandscape = video.videoWidth > video.videoHeight;
+  
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  let targetW, targetH;
 
-  if (isMobile && isLandscape) {
-    wrapper.classList.add('rotate-landscape');
+  // Logica dimensionamento simile al CSS ma in JS per calcolare il centro
+  if (isMobile) {
+      if (isLandscape) {
+          // Landscape on mobile: forced rotation
+          wrapper.classList.add('rotate-landscape'); // Solo per stile interno (video), ma gestiamo posizionamento qui
+          // In CSS .rotate-landscape ha width: 80vh
+          targetW = vh * 0.8; 
+          // Aspect ratio inverso per il container ruotato non è banale, 
+          // ma manteniamo semplice: centriamo il blocco ruotato
+          // Nota: la rotazione 90deg in CSS avviene su se stesso.
+          // Centriamo il punto perno.
+      } else {
+          // Portrait mobile
+          targetW = vw * 0.95;
+          targetH = targetW / (16/9); // Assumo ratio standard o ricalcolo
+          if (targetH > vh * 0.85) {
+              targetH = vh * 0.85;
+              targetW = targetH * (16/9);
+          }
+      }
+  } else {
+      // Desktop
+      targetW = vw * 0.90;
+      targetH = vh * 0.90;
+      // Adatta all'aspect ratio reale del video se possibile, qui semplifico max-bounds
+      // come fa il CSS object-fit: contain.
+      // Per il wrapper però serve una dimensione fisica per il transform.
+      // Lasciamo che il CSS gestisca width/height auto/max, 
+      // MA per il transform center dobbiamo sapere dove andare.
+      
+      // FIX SEMPLIFICATO: 
+      // Lasciamo che il CSS definisca la dimensione finale (.lightbox-active),
+      // MA forziamo noi la posizione top/left a 0 e usiamo transform per centrare.
+      // Il problema è che se width è 'auto', non sappiamo il centro esatto.
+      
+      // APPROCCIO IBRIDO ROBUSTO:
+      // Usiamo top: 50%, left: 50% MA SOLO DOPO che l'animazione open è finita? No, glitch.
+      // Usiamo il calcolo manuale basato sui limiti max CSS.
   }
-  // =========================================
 
-  // 5. Attiva animazione
+  // Se è desktop o mobile portrait semplice:
+  if (!isMobile || !isLandscape) {
+      // Calcoliamo la dimensione target approssimativa o usiamo valori sicuri
+      // Per evitare complessità, usiamo un trucco:
+      // Anziché calcolare w/h esatti, usiamo top:0, left:0 e 
+      // transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%)
+      // Questo usa il % relativo all'elemento stesso per centrarsi!
+  }
+
   requestAnimationFrame(() => {
     wrapper.classList.add('lightbox-active');
-
-    // Pulizia stili inline per lasciare spazio al CSS
-    wrapper.style.top = '';
-    wrapper.style.left = '';
-
-    // IMPORTANTE: Se ruotiamo, forziamo le dimensioni via CSS, 
-    // altrimenti puliamo width/height per i video verticali
-    if (!(isMobile && isLandscape)) {
-      wrapper.style.width = '';
-      wrapper.style.height = '';
+    
+    // OVERRIDE CSS POSITIONING
+    // Il CSS .lightbox-active prova a mettere top: 50%, left: 50%.
+    // Noi lo forziamo a rimanere 0,0 via inline styles (hanno priorità)
+    wrapper.style.top = '0';
+    wrapper.style.left = '0';
+    
+    // Usiamo il translate per centrare
+    if (isMobile && isLandscape) {
+        // Centro schermo
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        // Rotazione gestita da CSS transform rotate(90deg)
+        // Dobbiamo solo piazzarlo al centro.
+        // Attenzione: l'ordine dei transform conta. 
+        // Se CSS ha: translate(-50%, -50%) rotate(90deg)
+        // Noi dobbiamo replicarlo.
+        wrapper.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%) rotate(90deg)`;
     } else {
-      // Per i ruotati, puliamo comunque per far agire il CSS !important
-      wrapper.style.width = '';
-      wrapper.style.height = '';
+        // Centro standard
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        wrapper.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%)`;
     }
+    
+    // Rimuoviamo width/height fissi per lasciare che il CSS (max-width/height) faccia il suo lavoro
+    wrapper.style.width = '';
+    wrapper.style.height = '';
   });
 
-  // 6. Attiva Overlay e Video
   overlay.classList.add('active');
   video.muted = false;
   video.currentTime = 0;
@@ -659,66 +636,63 @@ function closeMotionLightbox(wrapper) {
   const video = wrapper.querySelector('video');
   const placeholder = wrapper._placeholder;
 
-  // 1. Muta video
   video.muted = true;
-
-  // 2. Rimuovi classe attiva
   wrapper.classList.remove('lightbox-active');
   wrapper.classList.remove('rotate-landscape');
 
-  // 3. Anima indietro verso il placeholder
   if (placeholder) {
     const rect = placeholder.getBoundingClientRect();
-    wrapper.style.position = 'fixed';
-    wrapper.style.top = rect.top + 'px';
-    wrapper.style.left = rect.left + 'px';
+    
+    // Manteniamo top/left a 0
+    wrapper.style.top = '0';
+    wrapper.style.left = '0';
+    // Animiamo verso la posizione originale
+    wrapper.style.transform = `translate3d(${rect.left}px, ${rect.top}px, 0)`;
+    
+    // Forziamo le dimensioni originali per l'animazione di chiusura
     wrapper.style.width = rect.width + 'px';
     wrapper.style.height = rect.height + 'px';
   }
 
-  // 4. Nascondi overlay
   overlay.classList.remove('active');
 
-  // 5. Alla fine dell'animazione (0.4s), rimetti tutto a posto
   setTimeout(() => {
-    // Ritorno a casa (nella griglia)
     if (placeholder && placeholder.parentNode) {
       placeholder.parentNode.insertBefore(wrapper, placeholder);
       placeholder.parentNode.removeChild(placeholder);
     } else {
-      // Fallback se il placeholder è sparito
       wrapper._originalParent.appendChild(wrapper);
     }
-
-    // Pulizia stili
-    wrapper.style = '';
+    // Pulizia totale
+    wrapper.style.position = '';
+    wrapper.style.top = '';
+    wrapper.style.left = '';
+    wrapper.style.transform = '';
+    wrapper.style.width = '';
+    wrapper.style.height = '';
+    wrapper.style.margin = '';
+    wrapper.style.zIndex = '';
+    
     delete wrapper._placeholder;
   }, 400);
 }
 
-
-// Avvia la logica al caricamento
 window.addEventListener('DOMContentLoaded', initMotionLightbox);
-// Backup per caricamenti asincroni o cambi pagina
 window.addEventListener('load', initMotionLightbox);
 
 // ============================================
-// === SMART VIDEO LOADER (Performance Fix) ===
+// === SMART VIDEO LOADER ===
 // ============================================
 document.addEventListener("DOMContentLoaded", function () {
-  // Seleziona solo i video con la nostra classe speciale
   var lazyVideos = [].slice.call(document.querySelectorAll("video.lazy-video"));
 
   if ("IntersectionObserver" in window) {
     var lazyVideoObserver = new IntersectionObserver(function (entries, observer) {
       entries.forEach(function (video) {
         if (video.isIntersecting) {
-          // Se il video entra nello schermo: carica e play
-          // Iteriamo sui figli <source> se necessario, o direttamente sul video
           video.target.preload = "metadata";
           video.target.play();
         } else {
-          // Se esce: pausa per risparmiare risorse
           video.target.pause();
         }
       });
@@ -728,7 +702,6 @@ document.addEventListener("DOMContentLoaded", function () {
       lazyVideoObserver.observe(lazyVideo);
     });
   } else {
-    // Fallback per browser preistorici: falli partire tutti subito
     lazyVideos.forEach(function (video) {
       video.play();
     });
