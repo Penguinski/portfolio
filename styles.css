@@ -26,24 +26,21 @@ body.work-page {
   align-items: flex-start;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* === PERFORMANCE FIX: OVERSCROLL HOME === */
+body.home {
+  overflow: hidden !important;
+  overscroll-behavior: none; /* Sostituisce il preventDefault JS */
+}
+
+h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.08em;
 }
 
-p,
-span,
-a,
-li {
+p, span, a, li {
   letter-spacing: -0.06em;
 }
 
-html,
-body {
+html, body {
   -webkit-text-size-adjust: 100% !important;
   text-size-adjust: 100% !important;
 }
@@ -85,11 +82,6 @@ body {
     overflow-y: auto !important;
     display: block !important;
   }
-
-  body.home {
-    overflow: hidden !important;
-    overscroll-behavior: none;
-  }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -109,12 +101,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: filter 0.4s ease;
+  /* transition: filter 0.4s ease; REMOVED: Performance expensive */
 }
-
-/*.carousel-container.blurred {
-  filter: blur(5px);
-}*/
 
 .carousel-circle {
   position: relative;
@@ -122,9 +110,12 @@ body {
   height: 100%;
 }
 
+/* === CARD PERFORMANCE OPTIMIZATION === */
 .card {
   position: absolute;
-  transform: translate(-50%, -50%);
+  /* Top/Left 0 because we use transform for everything now */
+  top: 0; 
+  left: 0;
   width: var(--card-size);
   aspect-ratio: 1 / 1;
   border-radius: var(--card-border-radius);
@@ -133,7 +124,16 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  
+  /* PERFORMANCE: Promote to own layer */
+  will-change: transform;
+  
+  /* PERFORMANCE: Specific transitions instead of 'all' */
+  /* Remove top/left transitions since we don't animate them anymore for carousel */
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              opacity 0.4s ease;
 }
 
 /* Fallback aspect-ratio */
@@ -152,25 +152,19 @@ body {
   height: 100%;
   z-index: 20000;
   pointer-events: none;
-
-  /* STATO INIZIALE */
   opacity: 0;
   visibility: hidden;
-  /* Importante per non far lavorare la GPU quando è nascosto */
 
-  /* IL TRUCCO: Applichiamo subito il blur fisso, NON lo animiamo */
+  /* PERFORMANCE: Reduced blur radius or removed if extremely laggy */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   background-color: rgba(0, 0, 0, 0.4);
-  /* Un po' più scuro per contrasto */
 
-  /* ANIMIAMO SOLO L'OPACITÀ (Molto più leggero) */
   transition: opacity 0.4s ease, visibility 0.4s step-end;
-  /* step-end su visibility serve a ritardare il hidden alla fine del fade-out */
-
-  /* Ottimizzazione Hardware */
-  will-change: opacity;
+  
+  /* PERFORMANCE: Hack for Safari lag */
   transform: translateZ(0);
+  will-change: opacity;
 }
 
 .modal-overlay.active {
@@ -181,10 +175,8 @@ body {
 }
 
 .card.modal-active {
-  position: fixed !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
+  /* Position fixed logic handled in JS, styling here for reference */
+  /* transform: translate(-50%, -50%) !important;  <-- REMOVED from CSS, handled in JS */
   z-index: 21000 !important;
   max-width: var(--modal-card-max-width);
   max-height: var(--modal-card-max-height);
@@ -195,7 +187,6 @@ body {
 }
 
 /* === DIDASCALIE CARD === */
-
 .card-caption {
   position: absolute;
   bottom: 0;
@@ -206,9 +197,7 @@ body {
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
   color: #ffffff;
-  /* font-family: 'M+ M Type-1 Light', monospace;*/
   font-family: 'Inter', sans-serif;
-  /* <-- USA QUESTO */
   font-weight: 300;
   letter-spacing: -0.06em;
   font-size: clamp(12px, 1.2vw, 18px);
@@ -218,6 +207,9 @@ body {
   transition: opacity 0.3s ease;
   z-index: 10;
   border-radius: 0 0 var(--card-border-radius) var(--card-border-radius);
+  
+  /* PERFORMANCE: Safari Fix */
+  transform: translateZ(0);
 }
 
 .card.modal-active .card-caption {
@@ -317,41 +309,45 @@ body {
   transform: scale(-1, 1);
 }
 
-/* === NUOVO SWITCH NAVIGAZIONE (FLOATING DOCK) === */
+/* === CUSTOM CURSOR === */
+.custom-cursor {
+  /* Assicurati che il cursore abbia stili base per il translate */
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  will-change: transform; /* Important for performance */
+  /* Aggiungi qui eventuali stili visivi del cursore se non presenti altrove */
+}
+
+
+/* === NUOVO SWITCH NAVIGAZIONE === */
 .nav-switch-container {
   position: fixed;
   bottom: 3vh;
-  /* Galleggia in basso */
   left: 50%;
   transform: translateX(-50%);
-  /* Centrato perfettamente */
   z-index: 12000;
-  /* Sopra a tutto */
-
   display: inline-flex;
   background: rgba(240, 240, 240, 0.9);
-  /* Leggera trasparenza */
   backdrop-filter: blur(10px);
-  /* Effetto vetro moderno */
   -webkit-backdrop-filter: blur(10px);
-
   padding: 5px;
   border-radius: 100px;
   gap: 4px;
-
-  /* Ombra delicata per staccarlo dal fondo */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.5);
+  
+  /* Performance */
+  transform: translateX(-50%) translateZ(0); 
 }
 
 .nav-pill {
   text-decoration: none;
   font-size: 14px;
-  /* Dimensione fissa leggibile */
   font-weight: 500;
   color: #696969;
   padding: 8px 20px;
-  /* Un po' più comodo da cliccare */
   border-radius: 100px;
   transition: all 0.3s ease;
   letter-spacing: -0.02em;
@@ -370,47 +366,37 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* MOBILE ADJUSTMENT */
 @media (max-width: 768px) {
   .nav-switch-container {
     bottom: 4vh;
-    /* Un po' più su per evitare la barra home di iOS */
     padding: 4px;
   }
-
   .nav-pill {
     padding: 8px 16px;
     font-size: 13px;
   }
 }
 
-/* ============================================
-   === WORK PAGE LAYOUT (EDITORIAL STICKY) ===
-   ============================================ */
-
+/* === WORK PAGE LAYOUT === */
 .work-container {
   width: 100%;
   max-width: 1800px;
   margin: 0 auto;
-  /* IMPORTANTE: overflow-x hidden qui ROMPE lo sticky. Non metterlo. */
   padding: 22vh var(--work-padding-inline) 10vh;
 }
 
 .project {
   display: grid;
   grid-template-columns: 35% 60%;
-  /* Layout Asimmetrico */
   gap: 5%;
   margin-bottom: 20vh;
   align-items: start;
   position: relative;
 }
 
-/* COLONNA INFO (STICKY) */
 .project-info {
   position: sticky;
   top: 25vh;
-  /* Punto di ancoraggio */
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -447,7 +433,6 @@ body {
   max-width: 90%;
 }
 
-/* COLONNA VISUAL (SCROLL) */
 .project-visual {
   display: flex;
   flex-direction: column;
@@ -473,147 +458,118 @@ body {
   object-fit: cover;
 }
 
-/* ============================================
-   === SISTEMA NOTCH + BLUR (LOGICA CLAUDE) ===
-   ============================================ */
-
-/* 1. IL "TAPPO" BIANCO (Riempie SOLO la safe area/notch) */
+/* === NOTCH & BLUR === */
 .notch-blur {
   display: block !important;
-  /* ERA "none" NEL TUO CODICE! */
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
-  /* Altezza dinamica fornita dal browser */
   height: env(safe-area-inset-top, 0px);
-  /* Colore bianco solido per coprire il contenuto che scorre sotto */
   background-color: #ffffff;
   z-index: 300000;
-  /* Sopra a tutto */
   pointer-events: none;
 }
 
-/* 2. LA BANDA SFOCATA (Occupa altezza header + notch) */
 .header-blur-band {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
-  /* Somma l'altezza base del tuo header + l'altezza del notch */
   height: calc(var(--header-blur-base) + env(safe-area-inset-top, 0px));
-
   background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-
-  /* Sta sotto al tappo bianco (.notch-blur) ma sopra al contenuto */
   z-index: 9999;
   pointer-events: none;
-
-  /* Maschera per sfumare il bordo inferiore */
   mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  
+  /* Performance */
+  transform: translateZ(0);
 }
 
-/* Assicurazione per Mobile: se env() fallisce o è 0, diamo un minimo */
 @media (max-width: 768px) {
   .notch-blur {
-    /* Se il browser non supporta env(), non fa nulla (height 0) */
     height: env(safe-area-inset-top, 0px);
     display: block !important;
   }
 }
 
-/* ============================================
-   === RESPONSIVE MOBILE (MAX 900PX) ===
-   ============================================ */
+/* === RESPONSIVE MOBILE (MAX 900PX) === */
 @media (max-width: 900px) {
-
-  /* Adattamenti Generali */
   .fixed-text {
     top: 4vw;
     left: 4vw;
   }
-
   .fixed-text h1 {
-    font-size: clamp(28px, 8vw, 40px);
+    /* TEXT SIZE INCREASE: was 28px -> 30px (+~7%) */
+    font-size: clamp(30px, 8.5vw, 42px);
   }
-
   .nav-switch-container {
     margin-top: 0.8rem;
     padding: 3px;
   }
-
   .nav-pill {
     padding: 6px 14px;
     font-size: 14px;
   }
-
   .bottom-text {
     bottom: 4vw;
     left: 4vw;
     width: calc(100vw - 8vw);
   }
-
   .bottom-text p {
-    font-size: clamp(16px, 4vw, 20px);
+    /* TEXT SIZE INCREASE: was 16px -> 17px (+6%) */
+    font-size: clamp(17px, 4.2vw, 21px);
     line-height: 0.95;
   }
-
   .arrow-container {
     width: 12vw;
     height: 12vw;
     top: 3vw;
     right: 4vw;
   }
-
-  /* Layout Work Mobile */
   .work-container {
     padding: 14vh var(--work-padding-inline) 8vh;
-    /* Overflow hidden su mobile ok per evitare scroll laterale */
     overflow-x: hidden;
   }
-
   .project {
     grid-template-columns: 1fr;
-    /* Colonna singola */
     gap: 2rem;
     margin-bottom: 15vh;
   }
-
   .project-info {
     position: static;
-    /* Disattiva Sticky su mobile */
     margin-bottom: 1rem;
   }
-
+  
+  /* TEXT SIZE INCREASE FOR PROJECT DESC */
   .project-description p {
+    font-size: clamp(17px, 1.6vw, 21px); /* Increased from 16px */
     max-width: 100%;
   }
 
-  /* Fix allineamento visivo */
+  /* TEXT SIZE INCREASE FOR META */
+  .meta-info {
+      font-size: clamp(13px, 1.3vw, 19px); /* Increased from 12px */
+  }
+
   .project-visual {
     margin-left: 0;
-    /* Reset margini negativi */
     width: 100%;
     gap: 1rem;
   }
-
   .double-grid {
     gap: 1rem;
   }
 }
 
-/* ============================================
-   === MOTION PAGE STYLES ===
-   ============================================ */
-
+/* === MOTION PAGE === */
 .motion-container {
   width: 100%;
   max-width: 1800px;
   margin: 0 auto;
-  /* Padding bottom aumentato per spazio switch */
   padding: 18vh var(--work-padding-inline) 15vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -627,35 +583,22 @@ body {
   opacity: 0;
   animation: fadeIn 0.8s ease forwards;
 }
-
-/* Ritardo animazione per effetto cascata */
-.motion-item:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.motion-item:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.motion-item:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-.motion-item:nth-child(4) {
-  animation-delay: 0.4s;
-}
+.motion-item:nth-child(1) { animation-delay: 0.1s; }
+.motion-item:nth-child(2) { animation-delay: 0.2s; }
+.motion-item:nth-child(3) { animation-delay: 0.3s; }
+.motion-item:nth-child(4) { animation-delay: 0.4s; }
 
 .video-wrapper {
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #e0e0e0;
   border-radius: var(--card-border-radius);
-  /* Usa variabile globale */
   overflow: hidden;
   position: relative;
+  /* PERFORMANCE FIX: Only transition necessary properties, avoid box-shadow transition if heavy */
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  /* Fix per safari per rispettare il border radius col video */
   -webkit-mask-image: -webkit-radial-gradient(white, black);
+  will-change: transform;
 }
 
 .video-wrapper:hover {
@@ -673,76 +616,55 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding-left: 0.2rem;
-  padding-right: 0.2rem;
+  padding: 0 0.2rem;
 }
 
 .motion-title {
-  font-size: clamp(18px, 2vw, 24px);
+  /* TEXT SIZE INCREASE */
+  font-size: clamp(19px, 2.1vw, 25px); /* Was 18px */
   font-weight: 600;
   letter-spacing: -0.06em;
   color: #000;
 }
 
 .motion-tags {
-  font-size: clamp(14px, 1.2vw, 16px);
+  /* TEXT SIZE INCREASE */
+  font-size: clamp(15px, 1.3vw, 17px); /* Was 14px */
   color: #696969;
   letter-spacing: -0.04em;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive Motion per Mobile */
 @media (max-width: 768px) {
   .motion-container {
     grid-template-columns: 1fr;
     gap: 3rem;
     padding-top: 16vh;
     padding-bottom: 12vh;
-    /* Spazio per lo switch */
   }
-
   .video-wrapper {
     aspect-ratio: 4 / 3;
   }
 }
 
-/* ============================================
-   === MOTION LIGHTBOX (DOM MOVE FIX) ===
-   ============================================ */
-
-/* Overlay sotto al video */
-.modal-overlay {
-  z-index: 20000;
-}
-
-/* Video attivo (quando è appeso al body) */
+/* === MOTION LIGHTBOX === */
 .video-wrapper.lightbox-active {
   position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
+  /* Top/Left 0 because we control centering with transform via JS now */
+  /* top: 50% !important; REMOVED to avoid glitch */
+  /* left: 50% !important; REMOVED to avoid glitch */
+  
+  /* We still want the styles for appearance, but positioning is overridden inline */
   z-index: 21005 !important;
-  /* Sicuramente sopra overlay */
-
-  /* Dimensioni espanse */
   width: auto !important;
   height: auto !important;
   max-width: 90vw;
   max-height: 90vh;
   aspect-ratio: unset !important;
-  /* Sblocca le proporzioni */
-
   margin: 0 !important;
   box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
   background: #000;
@@ -753,71 +675,40 @@ body {
   width: 100%;
   height: 100%;
   object-fit: contain !important;
-  /* Mostra tutto il video senza tagli */
   max-height: 90vh;
   max-width: 90vw;
 }
 
-/* Placeholder invisibile che tiene aperto lo spazio nella griglia */
 .grid-placeholder {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 
-/* Transizioni fluide */
-.video-wrapper {
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* === MOTION LIGHTBOX MOBILE OPTIMIZATIONS === */
+/* === MOTION LIGHTBOX MOBILE === */
 @media (max-width: 768px) {
-
-  /* 1. RESETTAGGIO GENERALE PER IL VIDEO INTERNO (CRUCIALE) */
-  /* Questo sblocca il limite che impediva l'ingrandimento */
   .video-wrapper.lightbox-active video {
     max-width: 100% !important;
     max-height: 100% !important;
-    /* Rimuoviamo i limiti fissi che bloccavano tutto */
   }
-
-  /* 2. VIDEO VERTICALI (Portiamo al 95% della larghezza schermo) */
   .video-wrapper.lightbox-active {
     width: 95vw !important;
-    /* Molto più largo */
     max-width: none !important;
     height: auto !important;
     max-height: 85vh !important;
-    /* Limite altezza per non coprire i controlli */
     aspect-ratio: unset !important;
   }
-
-  /* 3. VIDEO ORIZZONTALI RUOTATI (Landscape) - FIX DIMENSIONE "TINY" */
   .video-wrapper.lightbox-active.rotate-landscape {
-    /* Ruota e centra */
-    transform: translate(-50%, -50%) rotate(90deg) !important;
-
-    /* FORZIAMO LA GRANDEZZA: 
-       La larghezza del box (asse lungo) diventa l'80% dell'ALTEZZA del telefono (vh).
-       Questo costringe il video a diventare grande. */
+    /* transform handled in JS to avoid conflict */
+    /* width/height fixed in JS/CSS logic combination */
     width: 80vh !important;
-
-    /* L'altezza del box (asse corto) si adatta automaticamente */
     height: auto !important;
-
-    /* Ma mettiamo un tetto per non farlo uscire dai bordi laterali del telefono */
     max-height: 95vw !important;
-
-    /* Reset contorno */
     background: transparent !important;
     box-shadow: none !important;
     -webkit-mask-image: none !important;
-
-    /* Rimuoviamo limiti standard */
     max-width: none !important;
   }
-
-  /* Ombra specifica per il video ruotato */
   .video-wrapper.lightbox-active.rotate-landscape video {
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
     border-radius: var(--card-border-radius);
