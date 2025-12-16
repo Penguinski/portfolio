@@ -681,29 +681,45 @@ window.addEventListener('DOMContentLoaded', initMotionLightbox);
 window.addEventListener('load', initMotionLightbox);
 
 // ============================================
-// === SMART VIDEO LOADER ===
+// === SMART VIDEO LOADER (SAFE MOBILE FIX) ===
 // ============================================
 document.addEventListener("DOMContentLoaded", function () {
-  var lazyVideos = [].slice.call(document.querySelectorAll("video.lazy-video"));
-
-  if ("IntersectionObserver" in window) {
-    var lazyVideoObserver = new IntersectionObserver(function (entries, observer) {
-      entries.forEach(function (video) {
-        if (video.isIntersecting) {
-          video.target.preload = "metadata";
-          video.target.play();
-        } else {
-          video.target.pause();
-        }
+    // Selezioniamo tutti i video lazy
+    var lazyVideos = [].slice.call(document.querySelectorAll("video.lazy-video"));
+  
+    if ("IntersectionObserver" in window) {
+      var lazyVideoObserver = new IntersectionObserver(function (entries, observer) {
+        entries.forEach(function (video) {
+          if (video.isIntersecting) {
+            // Su mobile è meglio non forzare il preload dinamico se non serve
+            // video.target.preload = "metadata"; <-- RIMOSSO per evitare conflitti
+            
+            // Tenta la riproduzione sicura
+            var playPromise = video.target.play();
+            
+            // Gestione Promise per evitare errori su Safari/Chrome Mobile
+            if (playPromise !== undefined) {
+              playPromise.catch(error => {
+                console.log("Auto-play prevented by browser (Low Power Mode?):", error);
+                // Qui potresti mostrare un tasto "Play" se l'autoplay fallisce
+              });
+            }
+          } else {
+            video.target.pause();
+          }
+        });
+      }, {
+        // Aggiungi un margine per caricare il video PRIMA che entri nello schermo
+        rootMargin: "0px 0px 200px 0px" 
       });
-    });
-
-    lazyVideos.forEach(function (lazyVideo) {
-      lazyVideoObserver.observe(lazyVideo);
-    });
-  } else {
-    lazyVideos.forEach(function (video) {
-      video.play();
-    });
-  }
-});
+  
+      lazyVideos.forEach(function (lazyVideo) {
+        lazyVideoObserver.observe(lazyVideo);
+      });
+    } else {
+      // Fallback per browser vecchissimi
+      lazyVideos.forEach(function (video) {
+        video.play();
+      });
+    }
+  });
