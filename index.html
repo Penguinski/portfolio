@@ -192,6 +192,8 @@
             cursor: grab;
             display: flex; align-items: center; justify-content: center;
             perspective: 2500px;
+            /* FIX SCROLL: Previene scroll nativo su mobile */
+            touch-action: none;
         }
         .view-home:active { cursor: grabbing; }
 
@@ -351,27 +353,27 @@
                 justify-content: center;
                 padding: 0;
             }
-            /* FIX CRUCIALE: ALZIAMO IL CAROSELLO */
             .cylinder-wrap { 
                 width: 70vw; 
                 height: 50vh; 
-                /* Margine negativo per "tirarlo su" fisicamente */
                 margin-top: -15vh; 
             } 
             
-            /* HOME INFO: IN BASSO A SINISTRA (RIPRISTINATO) */
+            /* HOME INFO: FIX POSIZIONE */
             .home-info { 
                 width: 100%;
                 left: 0;
                 top: auto; 
-                bottom: 120px; /* Sopra la nav, sotto il carosello */
+                /* FIX: Abbassato a 100px per creare spazio */
+                bottom: 100px; 
                 padding: 0 var(--margin-mobile);
                 text-align: left;
                 pointer-events: none;
             }
             
             .counter { margin-bottom: 8px; opacity: 0.5; }
-            .project-title { font-size: 30px; white-space: normal; line-height: 1.05; padding-bottom: 4px; transform: none; }
+            /* FIX: Interlinea ridotta per compattezza */
+            .project-title { font-size: 30px; white-space: normal; line-height: 0.9; padding-bottom: 4px; transform: none; }
             .project-meta { font-size: 13px; }
 
             /* WORK MOBILE */
@@ -483,32 +485,45 @@
     <div class="view view-motion" id="view-motion">
         <div class="motion-grid">
             <div class="motion-item" onclick="lightbox.open('resources/video/Colonna.mp4')">
-                <div class="video-thumb"><video src="resources/video/Colonna.mp4" muted loop playsinline></video></div>
+                <div class="video-thumb">
+                    <!-- FIX: Autoplay aggiunto per anteprima immediata -->
+                    <video src="resources/video/Colonna.mp4" autoplay muted loop playsinline></video>
+                </div>
                 <div class="m-title">Structural Loop</div>
                 <div class="m-tags">Cavalry · 2025</div>
             </div>
             <div class="motion-item" onclick="lightbox.open('resources/video/typography.mp4')">
-                <div class="video-thumb"><video src="resources/video/typography.mp4" muted loop playsinline></video></div>
+                <div class="video-thumb">
+                    <video src="resources/video/typography.mp4" autoplay muted loop playsinline></video>
+                </div>
                 <div class="m-title">Typography Loop</div>
                 <div class="m-tags">Cavalry · 2025</div>
             </div>
             <div class="motion-item" onclick="lightbox.open('resources/video/rotante.mp4')">
-                <div class="video-thumb"><video src="resources/video/rotante.mp4" muted loop playsinline></video></div>
+                <div class="video-thumb">
+                    <video src="resources/video/rotante.mp4" autoplay muted loop playsinline></video>
+                </div>
                 <div class="m-title">Typography Loop</div>
                 <div class="m-tags">Cavalry · 2025</div>
             </div>
             <div class="motion-item" onclick="lightbox.open('resources/video/IPRASE.mp4')">
-                <div class="video-thumb"><video src="resources/video/IPRASE.mp4" muted loop playsinline></video></div>
+                <div class="video-thumb">
+                    <video src="resources/video/IPRASE.mp4" autoplay muted loop playsinline></video>
+                </div>
                 <div class="m-title">IPRASE Logo</div>
                 <div class="m-tags">After Effects · 2025</div>
             </div>
             <div class="motion-item" onclick="lightbox.open('resources/video/National Geographic.mp4')">
-                <div class="video-thumb"><video src="resources/video/National Geographic.mp4" muted loop playsinline></video></div>
+                <div class="video-thumb">
+                    <video src="resources/video/National Geographic.mp4" autoplay muted loop playsinline></video>
+                </div>
                 <div class="m-title">Nat Geo Logo</div>
                 <div class="m-tags">After Effects · 2024</div>
             </div>
             <div class="motion-item" onclick="lightbox.open('resources/video/Showcase.mp4')">
-                <div class="video-thumb"><video src="resources/video/Showcase.mp4" muted loop playsinline></video></div>
+                <div class="video-thumb">
+                    <video src="resources/video/Showcase.mp4" autoplay muted loop playsinline></video>
+                </div>
                 <div class="m-title">Motion Research</div>
                 <div class="m-tags">Cavalry · 2025</div>
             </div>
@@ -516,7 +531,8 @@
     </div>
 
     <!-- Lightbox -->
-    <div class="lightbox" id="lightboxOverlay" onclick="lightbox.close()">
+    <!-- FIX: Rimosso onclick="lightbox.close()" per gestione più precisa via JS -->
+    <div class="lightbox" id="lightboxOverlay">
         <div class="lb-container" id="lbContainer"></div>
     </div>
 
@@ -697,12 +713,18 @@
                 setTimeout(() => this.container.innerHTML = '', 300);
             }
         };
+        
+        // FIX: Gestione click intelligente per Lightbox
+        // Chiude solo se clicchi sull'overlay, non se interagisci col video
+        document.getElementById('lightboxOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('lightboxOverlay')) {
+                lightbox.close();
+            }
+        });
+
         document.addEventListener('keydown', (e) => { if(e.key === 'Escape') lightbox.close(); });
         
-        document.querySelectorAll('.video-thumb video').forEach(v => {
-            v.parentElement.addEventListener('mouseenter', () => v.play());
-            v.parentElement.addEventListener('mouseleave', () => v.pause());
-        });
+        // Removed old hover logic because we now use autoplay for immediate previews
 
         window.onload = () => {
             cylinder.init();
