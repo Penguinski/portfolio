@@ -22,6 +22,7 @@
             --margin-desktop: 40px;
             --margin-mobile: 20px;
             --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-reveal: cubic-bezier(0.2, 1, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
@@ -51,7 +52,8 @@
         .ui-layer {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             padding: var(--margin-desktop);
-            pointer-events: none; z-index: 100;
+            pointer-events: none; 
+            z-index: 15000;
             display: flex; flex-direction: column; justify-content: space-between;
         }
 
@@ -59,7 +61,7 @@
         .header-container {
             position: fixed; top: 0; left: 0; width: 100%;
             padding: var(--margin-desktop);
-            z-index: 110;
+            z-index: 15010;
             background: rgba(255,255,255,0.01);
             transition: background 0.3s ease;
         }
@@ -79,6 +81,7 @@
             text-transform: uppercase; 
             letter-spacing: -0.03em; 
             line-height: 1.1; 
+            color: var(--text-color);
         }
         
         .brand p { 
@@ -86,6 +89,7 @@
             font-size: 14px; 
             opacity: 0.5; 
             letter-spacing: -0.03em; 
+            color: var(--text-color);
         }
         
         .contact-links { 
@@ -109,7 +113,7 @@
             transition: opacity 0.4s ease, transform 0.4s ease;
             width: 50%;
             pointer-events: none;
-            z-index: 90;
+            z-index: 15020;
         }
 
         .counter { 
@@ -119,6 +123,7 @@
             margin-bottom: 8px; 
             display: block; 
             letter-spacing: -0.01em;
+            color: var(--text-color);
         }
         
         .project-title { 
@@ -133,6 +138,7 @@
             text-overflow: clip;
             padding-bottom: 5px; 
             transform: translateY(5px); 
+            color: var(--text-color);
         }
         
         .project-meta { 
@@ -140,6 +146,7 @@
             font-size: 14px; 
             opacity: 0.6; 
             letter-spacing: -0.02em;
+            color: var(--text-color);
         }
 
         /* =========================================
@@ -147,7 +154,7 @@
            ========================================= */
         .nav-pill-container {
             position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-            z-index: 200; pointer-events: auto;
+            z-index: 16000; pointer-events: auto;
         }
         .nav-pill {
             background: rgba(255, 255, 255, 0.9);
@@ -192,7 +199,6 @@
             cursor: grab;
             display: flex; align-items: center; justify-content: center;
             perspective: 2500px;
-            /* FIX SCROLL: Previene scroll nativo su mobile */
             touch-action: none;
         }
         .view-home:active { cursor: grabbing; }
@@ -213,6 +219,7 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.1);
             user-select: none; 
             pointer-events: none; 
+            z-index: 100;
         }
         .cylinder-item.is-active { opacity: 1; filter: brightness(1); }
         .cylinder-item:not(.is-active) { opacity: 0.3; filter: brightness(0.6) grayscale(100%); }
@@ -226,12 +233,11 @@
 
         /* --- WORK VIEW --- */
         .work-container { max-width: 1400px; margin: 0 auto; padding: 0 var(--margin-desktop); }
+        
         .project-row {
             display: grid; grid-template-columns: 300px 1fr; gap: 60px;
-            margin-bottom: 160px; opacity: 0; transform: translateY(40px);
-            transition: all 0.8s ease;
+            margin-bottom: 160px; 
         }
-        .view.active .project-row { opacity: 1; transform: translateY(0); }
         
         .p-sticky-info { position: sticky; top: 140px; height: fit-content; }
         
@@ -244,7 +250,6 @@
             letter-spacing: -0.05em; 
             color: #000;
         }
-        
         .p-subtitle { 
             font-family: 'Inter Tight', sans-serif; 
             font-size: 14px; 
@@ -252,7 +257,6 @@
             margin-bottom: 24px; 
             letter-spacing: -0.02em;
         }
-        
         .p-desc { 
             font-family: 'Inter', sans-serif; 
             font-size: 16px; 
@@ -279,18 +283,82 @@
             object-fit: cover; 
         }
 
-        /* --- MOTION VIEW --- */
+        /* === SCROLL REVEAL ANIMATIONS === */
+        .reveal-node {
+            opacity: 0;
+            transform: translateY(40px) scale(0.98);
+            transition: opacity 1.2s var(--ease-reveal), transform 1.2s var(--ease-reveal);
+            will-change: opacity, transform;
+        }
+        .reveal-node.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .p-sticky-info > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s var(--ease-reveal), transform 1s var(--ease-reveal);
+        }
+        .p-sticky-info.is-visible > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .p-sticky-info.is-visible > *:nth-child(1) { transition-delay: 0s; }
+        .p-sticky-info.is-visible > *:nth-child(2) { transition-delay: 0.1s; }
+        .p-sticky-info.is-visible > *:nth-child(3) { transition-delay: 0.2s; }
+
+        .p-gallery img, .p-gallery .bento-fix-row {
+            opacity: 0;
+            transform: translateY(60px) scale(0.96);
+            transition: opacity 1.4s var(--ease-reveal), transform 1.4s var(--ease-reveal);
+        }
+        .p-gallery img.is-visible, .p-gallery .bento-fix-row.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+
+        /* --- MOTION VIEW (FIX PREVIEW) --- */
         .motion-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 40px;
             max-width: 1600px; margin: 0 auto; padding: 0 var(--margin-desktop);
         }
-        .motion-item { cursor: pointer; }
-        .video-thumb {
-            aspect-ratio: 16/9; background: #111; border-radius: 4px; overflow: hidden; 
-            margin-bottom: 12px; position: relative;
+        .motion-item { 
+            cursor: pointer; 
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s var(--ease-reveal), transform 1s var(--ease-reveal);
         }
-        .video-thumb video { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; transition: opacity 0.4s; }
-        .motion-item:hover .video-thumb video { opacity: 1; }
+        .motion-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .video-thumb {
+            aspect-ratio: 16/9; 
+            background: #e0e0e0; 
+            border-radius: 4px; 
+            overflow: hidden; 
+            margin-bottom: 12px; 
+            position: relative;
+            background-size: cover; 
+            background-position: center;
+        }
+        
+        .video-thumb video { 
+            width: 100%; height: 100%; object-fit: cover; 
+            display: block; 
+            opacity: 0; /* Hidden initially to show poster bg */
+            transition: opacity 0.4s ease, transform 0.6s var(--ease-out-expo);
+        }
+        
+        /* Class added by JS when playing */
+        .video-thumb.playing video { 
+            opacity: 1; 
+        }
+        
+        .motion-item:hover .video-thumb video { transform: scale(1.02); }
         
         .m-title { font-family: 'Inter Tight', sans-serif; font-size: 16px; font-weight: 600; margin-bottom: 2px; letter-spacing: -0.03em; }
         .m-tags { font-family: 'Inter', sans-serif; font-size: 13px; opacity: 0.5; letter-spacing: -0.02em; }
@@ -316,7 +384,7 @@
         }
 
         /* =========================================
-           MOBILE OPTIMIZATIONS (FIX DEFINITIVO)
+           MOBILE OPTIMIZATIONS
            ========================================= */
         @media (max-width: 900px) {
             :root { --margin-desktop: 20px; }
@@ -359,22 +427,40 @@
                 margin-top: -15vh; 
             } 
             
-            /* HOME INFO: FIX POSIZIONE */
+            /* HOME INFO: BLACK TEXT + GRADIENT BACKDROP */
             .home-info { 
                 width: 100%;
                 left: 0;
                 top: auto; 
-                /* FIX: Abbassato a 100px per creare spazio */
                 bottom: 100px; 
-                padding: 0 var(--margin-mobile);
+                padding: 20px var(--margin-mobile);
                 text-align: left;
                 pointer-events: none;
+                
+                background: radial-gradient(
+                    circle at bottom left, 
+                    rgba(255,255,255,0.95) 0%, 
+                    rgba(255,255,255,0.8) 30%, 
+                    rgba(255,255,255,0) 70%
+                );
+                -webkit-mask-image: linear-gradient(to top, black 50%, transparent 100%);
+                mask-image: linear-gradient(to top, black 50%, transparent 100%);
+                
+                color: #000;
+                mix-blend-mode: normal; 
             }
             
-            .counter { margin-bottom: 8px; opacity: 0.5; }
-            /* FIX: Interlinea ridotta per compattezza */
-            .project-title { font-size: 30px; white-space: normal; line-height: 0.9; padding-bottom: 4px; transform: none; }
-            .project-meta { font-size: 13px; }
+            .counter { margin-bottom: 4px; opacity: 0.5; color: #000; font-size: 11px; }
+            .project-title { 
+                font-size: 30px; 
+                white-space: normal; 
+                line-height: 0.9; 
+                padding-bottom: 2px; 
+                transform: none; 
+                color: #000; 
+                text-shadow: 0 0 20px rgba(255,255,255,0.8);
+            }
+            .project-meta { font-size: 13px; color: #000; opacity: 0.7; }
 
             /* WORK MOBILE */
             .project-row { grid-template-columns: 1fr; gap: 30px; margin-bottom: 100px; }
@@ -484,54 +570,71 @@
     <!-- VIEW: MOTION -->
     <div class="view view-motion" id="view-motion">
         <div class="motion-grid">
+            
             <div class="motion-item" onclick="lightbox.open('resources/video/Colonna.mp4')">
                 <div class="video-thumb">
-                    <!-- FIX: Autoplay aggiunto per anteprima immediata -->
-                    <video src="resources/video/Colonna.mp4" autoplay muted loop playsinline></video>
+                    <video src="resources/video/Colonna.mp4" 
+                           muted loop playsinline preload="none" 
+                           poster="resources/video/Colonna.jpg"></video>
                 </div>
                 <div class="m-title">Structural Loop</div>
                 <div class="m-tags">Cavalry · 2025</div>
             </div>
+
             <div class="motion-item" onclick="lightbox.open('resources/video/typography.mp4')">
                 <div class="video-thumb">
-                    <video src="resources/video/typography.mp4" autoplay muted loop playsinline></video>
+                    <video src="resources/video/typography.mp4" 
+                           muted loop playsinline preload="none" 
+                           poster="resources/video/typography.jpg"></video>
                 </div>
                 <div class="m-title">Typography Loop</div>
                 <div class="m-tags">Cavalry · 2025</div>
             </div>
+
             <div class="motion-item" onclick="lightbox.open('resources/video/rotante.mp4')">
                 <div class="video-thumb">
-                    <video src="resources/video/rotante.mp4" autoplay muted loop playsinline></video>
+                    <video src="resources/video/rotante.mp4" 
+                           muted loop playsinline preload="none" 
+                           poster="resources/video/rotante.jpg"></video>
                 </div>
-                <div class="m-title">Typography Loop</div>
+                <div class="m-title">Rotating Loop</div>
                 <div class="m-tags">Cavalry · 2025</div>
             </div>
+
             <div class="motion-item" onclick="lightbox.open('resources/video/IPRASE.mp4')">
                 <div class="video-thumb">
-                    <video src="resources/video/IPRASE.mp4" autoplay muted loop playsinline></video>
+                    <video src="resources/video/IPRASE.mp4" 
+                           muted loop playsinline preload="none" 
+                           poster="resources/video/IPRASE.jpg"></video>
                 </div>
                 <div class="m-title">IPRASE Logo</div>
                 <div class="m-tags">After Effects · 2025</div>
             </div>
+
             <div class="motion-item" onclick="lightbox.open('resources/video/National Geographic.mp4')">
                 <div class="video-thumb">
-                    <video src="resources/video/National Geographic.mp4" autoplay muted loop playsinline></video>
+                    <video src="resources/video/National Geographic.mp4" 
+                           muted loop playsinline preload="none" 
+                           poster="resources/video/National Geographic.jpg"></video>
                 </div>
                 <div class="m-title">Nat Geo Logo</div>
                 <div class="m-tags">After Effects · 2024</div>
             </div>
+
             <div class="motion-item" onclick="lightbox.open('resources/video/Showcase.mp4')">
                 <div class="video-thumb">
-                    <video src="resources/video/Showcase.mp4" autoplay muted loop playsinline></video>
+                    <video src="resources/video/Showcase.mp4" 
+                           muted loop playsinline preload="none" 
+                           poster="resources/video/Showcase.jpg"></video>
                 </div>
                 <div class="m-title">Motion Research</div>
                 <div class="m-tags">Cavalry · 2025</div>
             </div>
+
         </div>
     </div>
 
     <!-- Lightbox -->
-    <!-- FIX: Rimosso onclick="lightbox.close()" per gestione più precisa via JS -->
     <div class="lightbox" id="lightboxOverlay">
         <div class="lb-container" id="lbContainer"></div>
     </div>
@@ -559,15 +662,13 @@
                     btn.classList.toggle('active', btn.innerText.toLowerCase().includes(pageId === 'home' ? 'showcase' : pageId));
                 });
                 
-                // Gestione Visibilità Header Sfondo su Desktop
                 const headerContainer = document.querySelector('.header-container');
-                if (window.innerWidth > 900) { // Solo desktop, su mobile è fisso
+                if (window.innerWidth > 900) { 
                     if (pageId === 'home') {
                         headerContainer.style.background = 'rgba(255,255,255,0.01)';
                         headerContainer.style.backdropFilter = 'none';
                         headerContainer.style.webkitBackdropFilter = 'none';
                     } else {
-                        // Sfondo solido per le pagine scrollabili
                         headerContainer.style.background = 'rgba(255,255,255,0.85)';
                         headerContainer.style.backdropFilter = 'blur(8px)';
                         headerContainer.style.webkitBackdropFilter = 'blur(8px)';
@@ -575,7 +676,8 @@
                 }
 
                 document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-                document.getElementById(`view-${pageId}`).classList.add('active');
+                const nextView = document.getElementById(`view-${pageId}`);
+                nextView.classList.add('active');
 
                 const homeInfo = document.getElementById('homeInfo');
                 if (pageId === 'home') {
@@ -587,10 +689,105 @@
                     homeInfo.style.opacity = '0';
                     homeInfo.style.transform = 'translateY(10px)';
                     cylinder.isActive = false;
+                    
+                    if(pageId === 'work' || pageId === 'motion') {
+                        initScrollAnimations(nextView);
+                        
+                        if(pageId === 'motion') {
+                            setTimeout(initMotionObservers, 100);
+                        }
+                    }
                 }
                 this.current = pageId;
             }
         };
+
+        // === SCROLL REVEAL ANIMATIONS ===
+        function initScrollAnimations(rootElement) {
+            const observerOptions = {
+                root: rootElement,
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, observerOptions);
+
+            const targets = rootElement.querySelectorAll('.p-sticky-info, .p-gallery img, .bento-fix-row, .motion-item');
+            targets.forEach(el => observer.observe(el));
+        }
+
+        // === MOTION VIDEO PREVIEW LOGIC (FIX) ===
+        let motionObserver;
+        function initMotionObservers() {
+            if (motionObserver) motionObserver.disconnect();
+
+            const isMobile = window.innerWidth <= 900;
+            const videos = document.querySelectorAll('.motion-item video');
+            
+            // 1. APPLY POSTER AS BACKGROUND
+            videos.forEach(video => {
+                const poster = video.getAttribute('poster');
+                if(poster) {
+                    const wrapper = video.closest('.video-thumb');
+                    wrapper.style.backgroundImage = `url('${poster}')`;
+                }
+            });
+
+            if (!isMobile) {
+                // DESKTOP: Hover Logic without .load()
+                videos.forEach(video => {
+                    const wrapper = video.closest('.video-thumb');
+                    // Clone to remove old listeners
+                    const newWrapper = wrapper.cloneNode(true);
+                    wrapper.parentNode.replaceChild(newWrapper, wrapper);
+                    const newVideo = newWrapper.querySelector('video');
+                    
+                    newWrapper.addEventListener('mouseenter', () => {
+                        newWrapper.classList.add('playing');
+                        newVideo.play().catch(e => {}); 
+                    });
+                    newWrapper.addEventListener('mouseleave', () => {
+                        newWrapper.classList.remove('playing');
+                        newVideo.pause();
+                        // No .load(), so it pauses in place
+                    });
+                });
+                return;
+            }
+
+            // MOBILE: Intersection Observer without .load()
+            const options = {
+                root: document.getElementById('view-motion'),
+                threshold: 0.7 
+            };
+
+            motionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    const wrapper = video.closest('.video-thumb');
+                    
+                    if (entry.isIntersecting) {
+                        wrapper.classList.add('playing');
+                        video.play().catch(e => {});
+                    } else {
+                        wrapper.classList.remove('playing');
+                        video.pause();
+                        // No .load(), pauses in place.
+                        // Opacity transition handles visual reset to poster.
+                    }
+                });
+            }, options);
+
+            videos.forEach(video => motionObserver.observe(video));
+        }
+
 
         // === 3D CYLINDER LOGIC ===
         const cylinder = {
@@ -607,6 +804,10 @@
             theta: 0, 
             isActive: true,
             lastIndex: -1,
+            
+            // SWING LOGIC
+            initialSwing: true,
+            swingStartTime: Date.now(),
 
             init() {
                 const count = this.data.length;
@@ -624,12 +825,32 @@
                 window.addEventListener('resize', () => this.onResize());
 
                 const homeView = document.getElementById('view-home');
-                homeView.addEventListener('mousedown', e => this.start(e.clientX));
-                homeView.addEventListener('touchstart', e => this.start(e.touches[0].clientX), {passive: false});
-                window.addEventListener('mousemove', e => this.move(e.clientX));
-                window.addEventListener('touchmove', e => this.move(e.touches[0].clientX), {passive: false});
-                window.addEventListener('mouseup', () => this.end());
-                window.addEventListener('touchend', () => this.end());
+                
+                const startInteract = (e) => {
+                    this.start(e.clientX || e.touches[0].clientX);
+                    this.initialSwing = false;
+                };
+                const moveInteract = (e) => this.move(e.clientX || e.touches[0].clientX);
+                const endInteract = () => this.end();
+
+                homeView.addEventListener('mousedown', startInteract);
+                homeView.addEventListener('touchstart', startInteract, {passive: false});
+                window.addEventListener('mousemove', moveInteract);
+                window.addEventListener('touchmove', moveInteract, {passive: false});
+                window.addEventListener('mouseup', endInteract);
+                window.addEventListener('touchend', endInteract);
+                
+                document.addEventListener('keydown', (e) => {
+                    if (!this.isActive) return;
+                    if (e.key === 'ArrowLeft') {
+                        this.initialSwing = false;
+                        this.targetAngle += this.theta;
+                    }
+                    if (e.key === 'ArrowRight') {
+                        this.initialSwing = false;
+                        this.targetAngle -= this.theta;
+                    }
+                });
                 
                 this.animate = this.animate.bind(this);
                 requestAnimationFrame(this.animate);
@@ -670,6 +891,12 @@
 
             animate() {
                 if(!this.isActive) return;
+                
+                if (this.initialSwing && !this.isDragging) {
+                    const time = (Date.now() - this.swingStartTime) / 1000;
+                    this.targetAngle = Math.sin(time * 1.5) * 8; 
+                }
+
                 this.currentAngle += (this.targetAngle - this.currentAngle) * this.ease;
                 this.wrap.style.transform = `rotateY(${this.currentAngle}deg)`;
                 
@@ -714,8 +941,6 @@
             }
         };
         
-        // FIX: Gestione click intelligente per Lightbox
-        // Chiude solo se clicchi sull'overlay, non se interagisci col video
         document.getElementById('lightboxOverlay').addEventListener('click', (e) => {
             if (e.target === document.getElementById('lightboxOverlay')) {
                 lightbox.close();
@@ -723,8 +948,6 @@
         });
 
         document.addEventListener('keydown', (e) => { if(e.key === 'Escape') lightbox.close(); });
-        
-        // Removed old hover logic because we now use autoplay for immediate previews
 
         window.onload = () => {
             cylinder.init();
