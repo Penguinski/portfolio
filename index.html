@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Alessandro Kosowski — Portfolio</title>
+    <title>Alessandro Kosowski - Graphic Designer</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -104,9 +104,8 @@
         .contact-links a:hover { opacity: 1; }
 
         /* =========================================
-           HOME PROJECT INFO (ISOLATED FOR BLEND MODE)
+           HOME PROJECT INFO (ISOLATED)
            ========================================= */
-        /* Spostato fuori da .ui-layer per garantire che mix-blend-mode funzioni */
         .home-info {
             position: fixed; /* FIXED perché fuori dal flow */
             bottom: var(--margin-desktop); 
@@ -117,19 +116,18 @@
             
             transition: opacity 0.4s ease, transform 0.4s ease;
             
-            /* CRUCIALE PER LA LEGGIBILITÀ */
-            color: #ffffff; /* Bianco puro serve per la matematica Difference */
-            mix-blend-mode: difference;
+            /* Colore standard desktop */
+            color: var(--text-color); 
         }
 
         .counter { 
             font-family: 'Inter Tight', sans-serif; 
             font-size: 12px; 
-            opacity: 0.9; /* Opacità alta per contrasto */
+            opacity: 0.4;
             margin-bottom: 8px; 
             display: block; 
             letter-spacing: -0.01em;
-            color: inherit; /* Prende il bianco */
+            color: inherit; 
         }
         
         .project-title { 
@@ -152,7 +150,7 @@
         .project-meta { 
             font-family: 'Inter Tight', sans-serif; 
             font-size: 14px; 
-            opacity: 0.9; 
+            opacity: 0.6; 
             letter-spacing: -0.02em;
             color: inherit;
         }
@@ -417,28 +415,30 @@
             .cylinder-wrap { 
                 width: 70vw; 
                 height: 50vh; 
-                margin-top: -15vh; 
+                /* Solleviamo il carosello per lasciare spazio sotto */
+                margin-top: -23vh; 
             } 
             
-            /* HOME INFO: DIFFERENCE MODE + NO WRAP */
+            /* HOME INFO: NORMAL LAYOUT FIX (NO BLEND MODES) */
             .home-info { 
                 width: 100%;
                 left: 0;
                 top: auto; 
-                bottom: 100px; 
+                /* Spingiamo il testo leggermente più in basso */
+                bottom: 85px; 
+                
                 padding: 0 var(--margin-mobile);
                 text-align: left;
                 pointer-events: none;
                 z-index: 15020;
                 margin: 0;
 
-                /* SOLUZIONE CONTRASTO */
                 background: none; 
-                color: #ffffff; /* FORCE WHITE for Difference Math */
-                mix-blend-mode: difference;
+                mix-blend-mode: normal;
+                color: var(--text-color); /* Ritorna nero/scuro */
             }
             
-            .counter { margin-bottom: 8px; opacity: 0.7; color: inherit; font-size: 11px; }
+            .counter { margin-bottom: 8px; opacity: 0.5; color: inherit; font-size: 11px; }
             .project-title { 
                 font-size: 30px; 
                 white-space: nowrap; 
@@ -449,7 +449,7 @@
                 transform: none; 
                 color: inherit; 
             }
-            .project-meta { font-size: 13px; color: inherit; opacity: 0.8; }
+            .project-meta { font-size: 13px; color: inherit; opacity: 0.7; }
 
             /* WORK MOBILE */
             .project-row { grid-template-columns: 1fr; gap: 30px; margin-bottom: 100px; }
@@ -488,7 +488,7 @@
         </div>
     </div>
 
-    <!-- Home Info (ISOLATED OUTSIDE UI-LAYER FOR BLEND MODE) -->
+    <!-- Home Info (ISOLATED) -->
     <div class="home-info" id="homeInfo">
         <span class="counter" id="hCount">01 / 08</span>
         <div class="project-title" id="hTitle">Project Name</div>
