@@ -162,6 +162,12 @@
         .nav-pill-container {
             position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
             z-index: 16000; pointer-events: auto;
+            transition: opacity 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
+        }
+        .nav-pill-container.hidden {
+            opacity: 0;
+            transform: translateX(-50%) translateY(20px);
+            pointer-events: none;
         }
         .nav-pill {
             background: rgba(255, 255, 255, 0.9);
@@ -907,9 +913,13 @@
                     `<video src="${src}" controls autoplay loop playsinline></video>` : 
                     `<img src="${src}">`;
                 this.el.classList.add('active');
+                document.querySelector('.nav-pill-container').classList.add('hidden');
+                document.body.style.overflow = 'hidden';
             },
             close() {
                 this.el.classList.remove('active');
+                document.querySelector('.nav-pill-container').classList.remove('hidden');
+                document.body.style.overflow = '';
                 setTimeout(() => this.container.innerHTML = '', 300);
             }
         };
