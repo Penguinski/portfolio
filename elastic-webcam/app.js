@@ -6,7 +6,7 @@ const FACE_MODEL_URL =
   "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
 
 const DEFAULT_CONFIG = Object.freeze({
-  radius: 0.16,
+  radius: 0.11,
   strength: 0.9,
   maxPull: 0.28,
   smoothing: 0.22,
@@ -14,7 +14,7 @@ const DEFAULT_CONFIG = Object.freeze({
   releaseEase: 0.12,
   showDebug: false,
   showElasticLine: true,
-  targetMode: "both",
+  targetMode: "fingers",
 });
 
 const config = { ...DEFAULT_CONFIG };
@@ -62,12 +62,12 @@ const state = {
   glRenderer: null,
 };
 
-const FINGER_TIPS = [
-  [4, "thumb"],
-  [8, "index"],
-  [12, "middle"],
-  [16, "ring"],
-  [20, "pinky"],
+const FINGERS = [
+  { name: "thumb", joints: [1, 2, 3, 4] },
+  { name: "index", joints: [5, 6, 7, 8] },
+  { name: "middle", joints: [9, 10, 11, 12] },
+  { name: "ring", joints: [13, 14, 15, 16] },
+  { name: "pinky", joints: [17, 18, 19, 20] },
 ];
 
 const HAND_CONNECTIONS = [
@@ -108,6 +108,8 @@ function isSecureCameraContext() {
 }
 
 function initUI() {
+  resetControls();
+
   const sliders = [
     ["radius", "radiusValue"],
     ["strength", "strengthValue"],
@@ -357,20 +359,49 @@ function processLandmarks() {
   state.pinches.length = hands.length;
 
   if ((config.targetMode === "both" || config.targetMode === "mouth") && faces[0]) {
-    const mouthIndices = [13, 14, 61, 291];
-    const mouth = averagePoints(mouthIndices.map((index) => toDisplayPoint(faces[0][index])));
-    state.targets.push({ type: "mouth", name: "mouth", point: mouth });
+    const mouthTop = toDisplayPoint(faces[0][13]);
+    const mouthBottom = toDisplayPoint(faces[0][14]);
+    const mouthLeft = toDisplayPoint(faces[0][61]);
+    const mouthRight = toDisplayPoint(faces[0][291]);
+    const mouth = averagePoints([mouthTop, mouthBottom, mouthLeft, mouthRight]);
+    const mouthHalfWidth = pointDistance(mouthLeft, mouthRight) * 0.56;
+    const mouthHalfHeight = Math.max(
+      pointDistance(mouthTop, mouthBottom) * 0.9,
+      mouthHalfWidth * 0.28,
+    );
+    state.targets.push({
+      type: "mouth",
+      name: "mouth",
+      point: mouth,
+      mouthLeft,
+      mouthRight,
+      mouthTop,
+      mouthBottom,
+      mouthHalfWidth,
+      mouthHalfHeight,
+    });
   }
 
   if (config.targetMode === "both" || config.targetMode === "fingers") {
     hands.forEach((hand, handIndex) => {
-      FINGER_TIPS.forEach(([landmarkIndex, fingerName]) => {
+      FINGERS.forEach(({ name, joints }) => {
+        const [, baseIndex, midIndex, landmarkIndex] = joints;
+        const point = toDisplayPoint(hand[landmarkIndex]);
+        const basePoint = toDisplayPoint(hand[baseIndex]);
+        const midPoint = toDisplayPoint(hand[midIndex]);
+        const distalLength = pointDistance(basePoint, point);
+        const maskWidth = clamp(distalLength * (name === "thumb" ? 0.24 : 0.2), 0.018, 0.042);
+
         state.targets.push({
           type: "finger",
-          name: fingerName,
+          name,
           handIndex,
           landmarkIndex,
-          point: toDisplayPoint(hand[landmarkIndex]),
+          joints,
+          point,
+          basePoint,
+          midPoint,
+          maskWidth,
         });
       });
     });
@@ -433,6 +464,15 @@ function updateGrabLogic() {
       pinchHandIndex: bestMatch.pinch.handIndex,
       origin: { ...bestMatch.target.point },
       target: { ...bestMatch.pinch.point },
+      basePoint: bestMatch.target.basePoint ? { ...bestMatch.target.basePoint } : null,
+      midPoint: bestMatch.target.midPoint ? { ...bestMatch.target.midPoint } : null,
+      partWidth: bestMatch.target.maskWidth ?? 0.028,
+      mouthLeft: bestMatch.target.mouthLeft ? { ...bestMatch.target.mouthLeft } : null,
+      mouthRight: bestMatch.target.mouthRight ? { ...bestMatch.target.mouthRight } : null,
+      mouthTop: bestMatch.target.mouthTop ? { ...bestMatch.target.mouthTop } : null,
+      mouthBottom: bestMatch.target.mouthBottom ? { ...bestMatch.target.mouthBottom } : null,
+      mouthHalfWidth: bestMatch.target.mouthHalfWidth ?? 0.06,
+      mouthHalfHeight: bestMatch.target.mouthHalfHeight ?? 0.025,
     };
     state.activeAmount = 0.08;
     setStatus(bestMatch.target.type === "mouth" ? "grab mouth" : "grab finger");
@@ -476,6 +516,10 @@ function pointDistance(a, b) {
   const height = elements.glCanvas.height || 540;
   const scale = Math.min(width, height);
   return Math.hypot((a.x - b.x) * width, (a.y - b.y) * height) / scale;
+}
+
+function clamp(value, minimum, maximum) {
+  return Math.max(minimum, Math.min(maximum, value));
 }
 
 function resizeCanvases(force = false) {
@@ -548,11 +592,42 @@ function renderOverlay() {
 
   for (const target of state.targets) {
     const point = overlayPoint(target.point);
+    if (target.type === "finger") {
+      const base = overlayPoint(target.basePoint);
+      const mid = overlayPoint(target.midPoint);
+      context.beginPath();
+      context.moveTo(base.x, base.y);
+      context.lineTo(point.x, point.y);
+      context.strokeStyle = "rgba(159, 151, 32, 0.7)";
+      context.lineWidth = 1.5;
+      context.stroke();
+      drawPoint(context, base, 4, "#B7AACB", "#F7F3EA");
+      drawPoint(context, mid, 3, "#90B5DD", "#F7F3EA");
+    }
     context.beginPath();
     context.arc(point.x, point.y, target.type === "mouth" ? 10 : 7, 0, Math.PI * 2);
     context.strokeStyle = target.type === "mouth" ? "#B7AACB" : "#9F9720";
     context.lineWidth = 2;
     context.stroke();
+  }
+
+  if (state.grab?.type === "finger" && state.grab.basePoint) {
+    const base = overlayPoint(state.grab.basePoint);
+    const origin = overlayPoint(state.grab.origin);
+    const target = overlayPoint(state.grab.target);
+    const capsuleDiameter = state.grab.partWidth * Math.min(canvas.width, canvas.height) * 2;
+    context.save();
+    context.lineCap = "round";
+    context.globalAlpha = 0.24;
+    context.strokeStyle = "#90B5DD";
+    context.lineWidth = capsuleDiameter;
+    context.beginPath();
+    context.moveTo(base.x, base.y);
+    context.lineTo(target.x, target.y);
+    context.stroke();
+    context.restore();
+    drawPoint(context, base, 5, "#B7AACB", "#F7F3EA");
+    drawPoint(context, origin, 5, "#9F9720", "#F7F3EA");
   }
 
   if (state.activePinch) {
@@ -604,6 +679,13 @@ function initWebGL(canvas) {
     uniform sampler2D u_texture;
     uniform vec2 u_origin;
     uniform vec2 u_target;
+    uniform vec2 u_fingerBase;
+    uniform float u_partWidth;
+    uniform int u_maskMode;
+    uniform vec2 u_mouthLeft;
+    uniform vec2 u_mouthRight;
+    uniform float u_mouthHalfWidth;
+    uniform float u_mouthHalfHeight;
     uniform float u_radius;
     uniform float u_strength;
     uniform float u_maxPull;
@@ -618,6 +700,34 @@ function initWebGL(canvas) {
       return 1.0 - abs(wrapped - 1.0);
     }
 
+    float capsuleMask(vec2 uv, vec2 a, vec2 b, float width, vec2 aspectScale) {
+      vec2 scaledAB = (b - a) * aspectScale;
+      vec2 scaledAP = (uv - a) * aspectScale;
+      float denominator = max(dot(scaledAB, scaledAB), 0.000001);
+      float t = clamp(dot(scaledAP, scaledAB) / denominator, 0.0, 1.0);
+      vec2 closest = mix(a, b, t);
+      float distanceToAxis = length((uv - closest) * aspectScale);
+      return 1.0 - smoothstep(width, width * 1.55, distanceToAxis);
+    }
+
+    float mouthEllipseMask(
+      vec2 uv,
+      vec2 center,
+      vec2 axisDirection,
+      float halfWidth,
+      float halfHeight,
+      vec2 aspectScale
+    ) {
+      vec2 delta = (uv - center) * aspectScale;
+      vec2 perpendicular = vec2(-axisDirection.y, axisDirection.x);
+      vec2 ellipsePosition = vec2(
+        dot(delta, axisDirection) / max(halfWidth, 0.0001),
+        dot(delta, perpendicular) / max(halfHeight, 0.0001)
+      );
+      float ellipseDistance = length(ellipsePosition);
+      return 1.0 - smoothstep(1.0, 1.32, ellipseDistance);
+    }
+
     void main() {
       float shortSide = min(u_resolution.x, u_resolution.y);
       vec2 aspectScale = u_resolution / shortSide;
@@ -627,10 +737,59 @@ function initWebGL(canvas) {
         pullVector *= u_maxPull / max(pullLength, 0.0001);
       }
 
-      float distanceFromOrigin = length((v_uv - u_origin) * aspectScale);
-      float radius = max(u_radius, 0.0001);
-      float falloff = exp(-(distanceFromOrigin * distanceFromOrigin) / (2.0 * radius * radius));
-      vec2 sourceUV = v_uv - pullVector * falloff * u_strength * u_activeAmount;
+      vec2 sourceUV = v_uv;
+
+      if (u_maskMode == 1) {
+        // The destination capsule grows from the original finger base toward the pinch.
+        // Sampling along the shorter source segment stretches only the finger texture.
+        pullVector *= u_strength;
+        float strengthenedLength = length(pullVector * aspectScale);
+        if (strengthenedLength > u_maxPull) {
+          pullVector *= u_maxPull / max(strengthenedLength, 0.0001);
+        }
+
+        vec2 dstA = u_fingerBase;
+        vec2 dstB = u_origin + pullVector * u_activeAmount;
+        vec2 srcA = u_fingerBase;
+        vec2 srcB = u_origin;
+        vec2 scaledDstAxis = (dstB - dstA) * aspectScale;
+        vec2 scaledFromBase = (v_uv - dstA) * aspectScale;
+        float denominator = max(dot(scaledDstAxis, scaledDstAxis), 0.000001);
+        float t = clamp(dot(scaledFromBase, scaledDstAxis) / denominator, 0.0, 1.0);
+        vec2 closestDst = mix(dstA, dstB, t);
+        vec2 closestSrc = mix(srcA, srcB, t);
+        vec2 lateralOffset = v_uv - closestDst;
+        vec2 fingerSourceUV = closestSrc + lateralOffset;
+        float mask = capsuleMask(v_uv, dstA, dstB, u_partWidth, aspectScale);
+        sourceUV = mix(v_uv, fingerSourceUV, mask * u_activeAmount);
+      } else if (u_maskMode == 2) {
+        // Move only a small oriented ellipse containing the lips.
+        pullVector *= u_strength;
+        float strengthenedLength = length(pullVector * aspectScale);
+        if (strengthenedLength > u_maxPull) {
+          pullVector *= u_maxPull / max(strengthenedLength, 0.0001);
+        }
+        vec2 destinationCenter = u_origin + pullVector * u_activeAmount;
+        vec2 mouthAxis = (u_mouthRight - u_mouthLeft) * aspectScale;
+        mouthAxis /= max(length(mouthAxis), 0.0001);
+        float mask = mouthEllipseMask(
+          v_uv,
+          destinationCenter,
+          mouthAxis,
+          u_mouthHalfWidth,
+          u_mouthHalfHeight,
+          aspectScale
+        );
+        vec2 mouthSourceUV = v_uv - (destinationCenter - u_origin);
+        sourceUV = mix(v_uv, mouthSourceUV, mask * u_activeAmount);
+      } else {
+        // Generic fallback retains the original localized radial warp.
+        float distanceFromOrigin = length((v_uv - u_origin) * aspectScale);
+        float radius = max(u_radius, 0.0001);
+        float falloff = exp(-(distanceFromOrigin * distanceFromOrigin) / (2.0 * radius * radius));
+        sourceUV = v_uv - pullVector * falloff * u_strength * u_activeAmount;
+      }
+
       sourceUV = reflectUV(sourceUV);
       sourceUV.x = mix(sourceUV.x, 1.0 - sourceUV.x, u_mirror);
       gl_FragColor = texture2D(u_texture, sourceUV);
@@ -652,6 +811,13 @@ function initWebGL(canvas) {
     "u_texture",
     "u_origin",
     "u_target",
+    "u_fingerBase",
+    "u_partWidth",
+    "u_maskMode",
+    "u_mouthLeft",
+    "u_mouthRight",
+    "u_mouthHalfWidth",
+    "u_mouthHalfHeight",
     "u_radius",
     "u_strength",
     "u_maxPull",
@@ -682,9 +848,20 @@ function initWebGL(canvas) {
 
     const origin = grab?.origin ?? { x: 0.5, y: 0.5 };
     const target = grab?.target ?? origin;
+    const fingerBase = grab?.basePoint ?? origin;
+    const maskMode = grab?.type === "finger" ? 1 : grab?.type === "mouth" ? 2 : 0;
+    const mouthLeft = grab?.mouthLeft ?? origin;
+    const mouthRight = grab?.mouthRight ?? origin;
     gl.uniform1i(uniforms.u_texture, 0);
     gl.uniform2f(uniforms.u_origin, origin.x, origin.y);
     gl.uniform2f(uniforms.u_target, target.x, target.y);
+    gl.uniform2f(uniforms.u_fingerBase, fingerBase.x, fingerBase.y);
+    gl.uniform1f(uniforms.u_partWidth, grab?.partWidth ?? 0.028);
+    gl.uniform1i(uniforms.u_maskMode, maskMode);
+    gl.uniform2f(uniforms.u_mouthLeft, mouthLeft.x, mouthLeft.y);
+    gl.uniform2f(uniforms.u_mouthRight, mouthRight.x, mouthRight.y);
+    gl.uniform1f(uniforms.u_mouthHalfWidth, grab?.mouthHalfWidth ?? 0.06);
+    gl.uniform1f(uniforms.u_mouthHalfHeight, grab?.mouthHalfHeight ?? 0.025);
     gl.uniform1f(uniforms.u_radius, currentConfig.radius);
     gl.uniform1f(uniforms.u_strength, currentConfig.strength);
     gl.uniform1f(uniforms.u_maxPull, currentConfig.maxPull);
