@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F7F3EA" />
+    <meta
+      name="description"
+      content="A local, real-time elastic webcam experiment powered by MediaPipe and WebGL."
+    />
+    <title>Elastic Webcam</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="masthead">
+        <div>
+          <p class="eyebrow">Realtime visual experiment</p>
+          <h1>Elastic Webcam</h1>
+          <p class="subtitle">Pull your face like rubber.</p>
+        </div>
+
+        <div class="status-cluster" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="statusText">idle</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="stage-column" aria-label="Camera preview">
+          <div id="stage" class="stage">
+            <video id="webcam" playsinline muted hidden></video>
+            <canvas id="glCanvas" aria-label="Elastic webcam output"></canvas>
+            <canvas id="overlayCanvas" aria-hidden="true"></canvas>
+
+            <div id="welcomePanel" class="welcome-panel">
+              <span class="welcome-orbit" aria-hidden="true"></span>
+              <p class="welcome-kicker">Pinch · grab · pull</p>
+              <h2>Make the image stretch.</h2>
+              <p>
+                Pinch near your mouth or a fingertip, then move your hand while
+                keeping the pinch closed.
+              </p>
+              <button id="startButton" class="primary-button" type="button">
+                <span class="button-label">Start camera</span>
+                <span class="button-arrow" aria-hidden="true">↗</span>
+              </button>
+            </div>
+
+            <div id="loader" class="loader" hidden>
+              <span class="loader-ring" aria-hidden="true"></span>
+              <span>Preparing the experiment…</span>
+            </div>
+          </div>
+
+          <div id="message" class="message" role="alert" hidden></div>
+
+          <p class="privacy-note">
+            <span aria-hidden="true">●</span>
+            The camera is processed locally in your browser. Nothing is uploaded.
+          </p>
+        </section>
+
+        <aside class="controls" aria-label="Effect controls">
+          <div class="controls-heading">
+            <span>Controls</span>
+            <button id="resetButton" class="text-button" type="button">Reset</button>
+          </div>
+
+          <label class="control-row" for="radius">
+            <span>Radius</span>
+            <output id="radiusValue" for="radius">0.16</output>
+            <input id="radius" type="range" min="0.06" max="0.32" step="0.01" value="0.16" />
+          </label>
+
+          <label class="control-row" for="strength">
+            <span>Strength</span>
+            <output id="strengthValue" for="strength">0.90</output>
+            <input id="strength" type="range" min="0.2" max="1.5" step="0.05" value="0.9" />
+          </label>
+
+          <label class="control-row" for="maxPull">
+            <span>Max Pull</span>
+            <output id="maxPullValue" for="maxPull">0.28</output>
+            <input id="maxPull" type="range" min="0.08" max="0.5" step="0.01" value="0.28" />
+          </label>
+
+          <label class="control-row" for="smoothing">
+            <span>Smoothing</span>
+            <output id="smoothingValue" for="smoothing">0.22</output>
+            <input id="smoothing" type="range" min="0.05" max="0.6" step="0.01" value="0.22" />
+          </label>
+
+          <div class="control-group">
+            <label class="select-label" for="targetMode">Target mode</label>
+            <select id="targetMode">
+              <option value="both">Both</option>
+              <option value="mouth">Mouth only</option>
+              <option value="fingers">Fingers only</option>
+            </select>
+          </div>
+
+          <div class="toggle-list">
+            <label class="toggle-row" for="showDebug">
+              <span>Show debug landmarks</span>
+              <input id="showDebug" type="checkbox" />
+              <span class="toggle" aria-hidden="true"></span>
+            </label>
+
+            <label class="toggle-row" for="showElasticLine">
+              <span>Show elastic line</span>
+              <input id="showElasticLine" type="checkbox" checked />
+              <span class="toggle" aria-hidden="true"></span>
+            </label>
+          </div>
+
+          <div class="gesture-guide">
+            <span class="gesture-number">01</span>
+            <p>Bring thumb and index finger together near a target.</p>
+            <span class="gesture-number">02</span>
+            <p>Keep pinching and pull. Release to let it snap back.</p>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
