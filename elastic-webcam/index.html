@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F7F3EA" />
+    <meta
+      name="description"
+      content="Close your fist, move your hand, and stretch the live camera image like rubber."
+    />
+    <title>Stretch Cam</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="masthead">
+        <div>
+          <p class="eyebrow">A rubber camera experiment</p>
+          <h1>Stretch Cam</h1>
+          <p class="subtitle">Close your fist to grab. Move to pull.</p>
+        </div>
+
+        <div class="status-cluster" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="statusText">idle</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="stage-column" aria-label="Stretch Cam preview">
+          <div id="stage" class="stage">
+            <video id="webcam" playsinline muted hidden></video>
+            <canvas id="glCanvas" aria-label="Stretched webcam output"></canvas>
+            <canvas id="overlayCanvas" aria-hidden="true"></canvas>
+
+            <div id="welcomePanel" class="welcome-panel">
+              <span class="welcome-shape" aria-hidden="true"></span>
+              <p class="welcome-kicker">Fist · pull · release</p>
+              <h2>Turn yourself into rubber.</h2>
+              <p>Hold an open hand over your image, close it into a fist, then move.</p>
+              <button id="startButton" class="primary-button" type="button">
+                <span>Start camera</span>
+                <span class="button-arrow" aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="message" class="message" role="alert" hidden></div>
+
+          <div class="stage-notes">
+            <p class="instruction">Open hand → close fist → move → open to release.</p>
+            <p class="privacy-note">
+              <span aria-hidden="true">●</span>
+              Processed locally. Nothing is uploaded.
+            </p>
+          </div>
+        </section>
+
+        <aside class="controls" aria-label="Stretch controls">
+          <div class="controls-heading">
+            <span>Feel</span>
+            <button id="resetButton" class="text-button" type="button">Reset</button>
+          </div>
+
+          <label class="control-row" for="stretch">
+            <span>Stretch</span>
+            <output id="stretchValue" for="stretch">1.05</output>
+            <input id="stretch" type="range" min="0.45" max="1.6" step="0.05" value="1.05" />
+          </label>
+
+          <label class="control-row" for="width">
+            <span>Width</span>
+            <output id="widthValue" for="width">0.10</output>
+            <input id="width" type="range" min="0.035" max="0.20" step="0.005" value="0.10" />
+          </label>
+
+          <label class="control-row" for="snapBack">
+            <span>Snap Back</span>
+            <output id="snapBackValue" for="snapBack">0.16</output>
+            <input id="snapBack" type="range" min="0.035" max="0.34" step="0.005" value="0.16" />
+          </label>
+
+          <label class="toggle-row" for="showGuide">
+            <span>Show Guide</span>
+            <input id="showGuide" type="checkbox" checked />
+            <span class="toggle" aria-hidden="true"></span>
+          </label>
+
+          <button id="snapshotButton" class="snapshot-button" type="button" disabled>
+            Take snapshot
+          </button>
+
+          <div class="gesture-guide">
+            <span class="gesture-number">01</span>
+            <p>Show one open hand clearly to the camera.</p>
+            <span class="gesture-number">02</span>
+            <p>Close your fist, keep it closed, and pull.</p>
+            <span class="gesture-number">03</span>
+            <p>Open your hand and watch the image snap back.</p>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
