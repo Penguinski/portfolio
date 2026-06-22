@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F7F3EA" />
+    <meta
+      name="description"
+      content="A webcam playground where your body collides with physical letters."
+    />
+    <title>Body Type Playground</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="masthead">
+        <div>
+          <p class="eyebrow">Physical typography experiment</p>
+          <h1>Body Type Playground</h1>
+          <p class="subtitle">Move through the letters.</p>
+        </div>
+
+        <div class="status-cluster" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="statusText">idle</span>
+        </div>
+      </header>
+
+      <main>
+        <section class="stage-wrap" aria-label="Body Type camera playground">
+          <div id="stage" class="stage">
+            <video id="webcam" playsinline muted hidden></video>
+            <canvas id="playgroundCanvas" width="960" height="540" aria-label="Live mirrored webcam with physical letters"></canvas>
+
+            <div id="welcomePanel" class="welcome-panel">
+              <span class="welcome-mark" aria-hidden="true">A</span>
+              <p class="welcome-kicker">Camera · body · type</p>
+              <h2>Walk into the words.</h2>
+              <p>Move your head, hands and arms to push physical letters around the frame.</p>
+              <button id="startButton" class="primary-button" type="button">
+                <span>Start camera</span>
+                <span class="button-arrow" aria-hidden="true">↗</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="message" class="message" role="alert" hidden></div>
+
+          <div class="stage-caption">
+            <p>Move slowly, then swipe. Letters light up on contact.</p>
+            <p class="privacy-note">
+              <span aria-hidden="true">●</span>
+              Camera processed locally. Nothing is uploaded.
+            </p>
+          </div>
+        </section>
+
+        <section class="toolbox" aria-label="Letter playground controls">
+          <div class="type-tools">
+            <span class="tool-label">Drop type</span>
+            <div class="composer">
+              <label class="sr-only" for="typeInput">Text to spawn, maximum 24 characters</label>
+              <input id="typeInput" type="text" maxlength="24" placeholder="TYPE SOMETHING" autocomplete="off" />
+              <button id="spawnButton" class="spawn-button" type="button">Spawn letters</button>
+            </div>
+
+            <div class="word-presets" aria-label="Preset words">
+              <button type="button" data-word="TOUCH">TOUCH</button>
+              <button type="button" data-word="MOVE">MOVE</button>
+              <button type="button" data-word="BODY">BODY</button>
+              <button type="button" data-word="TYPE">TYPE</button>
+              <button type="button" data-word="COLLIDE">COLLIDE</button>
+              <button type="button" data-word="WAIT">WAIT</button>
+            </div>
+
+            <div class="utility-actions">
+              <button id="clearButton" type="button">Clear</button>
+              <button id="snapshotButton" type="button" disabled>Snapshot</button>
+            </div>
+          </div>
+
+          <div class="physics-tools">
+            <label class="control" for="letterSize">
+              <span>Letter size</span>
+              <output id="letterSizeValue" for="letterSize">82</output>
+              <input id="letterSize" type="range" min="44" max="124" step="2" value="82" />
+            </label>
+
+            <label class="control" for="gravity">
+              <span>Gravity</span>
+              <output id="gravityValue" for="gravity">0.55</output>
+              <input id="gravity" type="range" min="0" max="1.6" step="0.05" value="0.55" />
+            </label>
+
+            <label class="control" for="bounce">
+              <span>Bounce</span>
+              <output id="bounceValue" for="bounce">0.72</output>
+              <input id="bounce" type="range" min="0.1" max="1" step="0.05" value="0.72" />
+            </label>
+
+            <label class="control" for="contactForce">
+              <span>Contact force</span>
+              <output id="contactForceValue" for="contactForce">1.15</output>
+              <input id="contactForce" type="range" min="0.2" max="2.5" step="0.05" value="1.15" />
+            </label>
+
+            <label class="toggle-row" for="showGuides">
+              <span>Show body guides</span>
+              <input id="showGuides" type="checkbox" />
+              <span class="toggle" aria-hidden="true"></span>
+            </label>
+
+            <label class="toggle-row" for="freezeVideo">
+              <span>Freeze video background</span>
+              <input id="freezeVideo" type="checkbox" />
+              <span class="toggle" aria-hidden="true"></span>
+            </label>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
