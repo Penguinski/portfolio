@@ -1,0 +1,6377 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu Identitario — Alessandro K.</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,700;0,800;0,900;1,900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Nunito', sans-serif;
+}
+
+body {
+  background: #FFDEA0;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-blocker {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  body {
+    min-height: 100%;
+    background: #050505;
+  }
+
+  body > :not(.mobile-blocker) {
+    display: none !important;
+  }
+
+  .mobile-blocker {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    background: #050505;
+    color: #FFF;
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(22px, 7vw, 34px);
+    font-weight: 900;
+    line-height: 1.18;
+    text-align: center;
+  }
+}
+
+/* ══════════════════════════════════════
+   TOP BAR
+══════════════════════════════════════ */
+.topbar {
+  flex-shrink: 0;
+  height: clamp(140px, 18vh, 195px);
+  background: #FFAB00;
+  display: flex;
+  align-items: center;
+  padding:
+    0
+    clamp(16px, 1.8vw, 32px)
+    0
+    clamp(80px, 10vw, 170px);
+  gap: clamp(12px, 1.6vw, 26px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  position: relative;
+  z-index: 40;
+  overflow: visible;
+}
+
+.section-pill {
+  background: #FF8300;
+  border-radius: clamp(10px, 1.2vw, 20px);
+  padding: 0 clamp(14px, 2vw, 30px);
+  height: 68%;
+  display: none !important;
+  align-items: center;
+  color: #7A3300;
+  font-size: clamp(14px, 1.6vw, 24px);
+  font-weight: 900;
+  white-space: nowrap;
+  flex-shrink: 0;
+  width: clamp(130px, 15vw, 220px);
+  justify-content: center;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.14);
+  user-select: none;
+  transition: opacity 0.28s ease-in-out, transform 0.28s ease-in-out;
+}
+.section-pill.switching {
+  animation: pillSwitch 0.3s ease-in-out;
+}
+@keyframes pillSwitch {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.72; transform: scale(0.98); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.dots-row {
+  display: flex !important;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 20px);
+  width: clamp(220px, 26vw, 410px);
+  justify-content: flex-start;
+  flex-shrink: 0;
+}
+
+.dot {
+  background: #FFF3CC;
+  border-radius: 50%;
+  border: clamp(2px, 0.22vw, 3.5px) solid rgba(255,255,255,0.55);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: opacity 0.28s ease-in-out, transform 0.28s ease-in-out, background-color 0.28s ease-in-out, box-shadow 0.28s ease-in-out;
+  width:  clamp(46px, 6vw, 84px);
+  height: clamp(46px, 6vw, 84px);
+  font-size: clamp(16px, 2vw, 28px);
+  user-select: none;
+  opacity: 0.6;
+  transform: scale(0.76);
+}
+.dot:not(.active):hover {
+  filter: brightness(1.07);
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+.dot.active {
+  background: #FFFFFF;
+  border-color: #FFFFFF;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.22);
+  opacity: 1;
+  transform: scale(1);
+}
+
+.topbar-spacer { flex: 1; min-width: 0; }
+
+.topbar-arrows {
+  display: none;
+  align-items: center;
+  gap: clamp(6px, 0.8vw, 12px);
+  flex-shrink: 0;
+}
+
+ .bubble-anchor {
+  flex-shrink: 0;
+  position: relative;
+  margin-right: 0;
+}
+
+.bubble {
+  background: #FFFFFF;
+  border-radius: clamp(20px, 2.8vw, 44px);
+  padding: clamp(12px, 1.4vh, 22px) clamp(18px, 2.2vw, 36px);
+  width: clamp(220px, 28vw, 480px);
+  font-size: clamp(12px, 1.2vw, 18px);
+  font-weight: 700;
+  color: #201000;
+  line-height: 1.55;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  position: relative;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.94);
+  transition: opacity 0.32s ease, transform 0.38s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+  transform-origin: bottom right;
+}
+.bubble.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.bubble-cursor {
+  display: inline-block;
+  animation: cursorBlink 0.5s steps(1, end) infinite;
+}
+@keyframes cursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.bubble::after {
+  content: '';
+  position: absolute;
+  bottom: clamp(-13px, -1.4vh, -20px);
+  right: clamp(18px, 2.5vw, 36px);
+  width: 0; height: 0;
+  border-left: clamp(8px, 0.9vw, 14px) solid transparent;
+  border-right: clamp(8px, 0.9vw, 14px) solid transparent;
+  border-top: clamp(13px, 1.4vh, 20px) solid #FFFFFF;
+}
+
+/* ══════════════════════════════════════
+   MAIN
+══════════════════════════════════════ */
+.main {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr clamp(160px, 23vw, 350px);
+  padding:
+    clamp(10px, 1.4vh, 20px)
+    clamp(16px, 1.8vw, 32px)
+    clamp(54px, 7vh, 120px)
+    clamp(80px, 10vw, 170px);
+  gap: clamp(10px, 1.4vw, 24px);
+}
+
+/* ══════════════════════════════════════
+   MENU CARD
+══════════════════════════════════════ */
+.menu-card {
+  min-height: 0;
+  background: linear-gradient(155deg, #F8F5E5 0%, #FFE880 100%);
+  border: clamp(3px, 0.38vw, 6px) solid #EDE0C4;
+  border-radius: clamp(8px, 1vw, 16px);
+  box-shadow: 4px 6px 20px rgba(0,0,0,0.14);
+  display: flex;
+  flex-direction: column;
+  padding:
+    clamp(12px, 1.6vh, 26px)
+    clamp(14px, 2vw, 30px)
+    clamp(14px, 2vh, 28px)
+    clamp(14px, 2vw, 30px);
+  gap: clamp(8px, 1.2vh, 18px);
+}
+
+.cat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  margin-bottom: clamp(8px, 1.5vh, 20px);
+}
+
+.cat-title {
+  font-size: clamp(26px, 4vw, 56px);
+  font-weight: 900;
+  font-style: italic;
+  color: #FFC400;
+  -webkit-text-stroke: clamp(5px, 0.8vw, 12px) #FF5D44;
+  paint-order: stroke fill;
+  line-height: 1;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.cards-row {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(8px, 1.2vw, 20px);
+  padding: clamp(4px, 0.6vh, 10px) clamp(2px, 0.4vw, 8px);
+}
+
+.arrow-btn {
+  background: rgba(255,255,255,0.7);
+  border: none;
+  border-radius: 50%;
+  width:  clamp(24px, 2.5vw, 40px);
+  height: clamp(24px, 2.5vw, 40px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(12px, 1.5vw, 24px);
+  color: #7A3300;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s;
+  flex-shrink: 0;
+}
+.arrow-btn:hover { transform: scale(1.16); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
+.arrow-btn:active { transform: scale(0.88); }
+
+/* ══════════════════════════════════════
+   ITEM CARD
+══════════════════════════════════════ */
+.item-card {
+  background: linear-gradient(180deg, #F7F4E4 0%, #FFE870 100%);
+  border-radius: clamp(4px, 0.5vw, 8px);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  min-height: 200px;
+  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s ease, filter 0.28s ease;
+}
+#cardsRow[data-direction="right"] .item-card {
+  animation: cardInRight 0.30s cubic-bezier(.34,1.56,.64,1) both;
+}
+#cardsRow[data-direction="left"] .item-card {
+  animation: cardInLeft 0.30s cubic-bezier(.34,1.56,.64,1) both;
+}
+#cardsRow:not([data-direction]) .item-card {
+  animation: cardInRight 0.30s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes cardInRight {
+  from { opacity: 0; transform: translateX(38px) scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes cardInLeft {
+  from { opacity: 0; transform: translateX(-38px) scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+.item-card:nth-child(1) { animation-delay: 0.03s; }
+.item-card:nth-child(2) { animation-delay: 0.09s; }
+.item-card:nth-child(3) { animation-delay: 0.15s; }
+
+.bite-particle {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.item-card:hover {
+  transform: translateY(-6px) scale(1.025);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+}
+
+.item-card.in-cart {
+  transform: translateY(-5px);
+  box-shadow:
+    0 0 0 clamp(3px, 0.4vw, 5px) #FF5D44,
+    0 10px 26px rgba(0,0,0,0.18);
+}
+
+/* ── Elementi del Carrello ─ */
+.cart-badge {
+  position: absolute;
+  top: clamp(8px, 1vw, 16px);
+  right: clamp(8px, 1vw, 16px);
+  background: #D41010;
+  color: #FFF;
+  font-weight: 900;
+  font-size: clamp(12px, 1.5vw, 18px);
+  width: clamp(24px, 3vw, 36px);
+  height: clamp(24px, 3vw, 36px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: clamp(2px, 0.2vw, 3px) solid #FFF;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 20;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.2s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+}
+.item-card.in-cart .cart-badge {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.btn-remove {
+  position: absolute;
+  top: clamp(8px, 1vw, 16px);
+  left: clamp(8px, 1vw, 16px);
+  background: #FFF;
+  color: #D41010;
+  border: clamp(2px, 0.25vw, 3px) solid #D41010;
+  border-radius: 20px;
+  padding: clamp(2px, 0.3vw, 4px) clamp(6px, 0.8vw, 12px);
+  font-weight: 900;
+  font-size: clamp(10px, 1.2vw, 15px);
+  cursor: pointer;
+  z-index: 20;
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.item-card.in-cart .btn-remove {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+.btn-remove:active { transform: scale(0.85); }
+
+/* ── Image area ───────────────────── */
+.card-img {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+  background: #FFFFFF;
+}
+.card-img img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.card-img.food-card-image-stack {
+  position: relative;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.food-card-plate {
+  position: absolute;
+  width: 82%;
+  height: auto;
+  object-fit: contain;
+  z-index: 1;
+  transform: translateY(6%);
+  pointer-events: none;
+  user-select: none;
+}
+.food-card-food {
+  position: relative;
+  width: 68%;
+  height: 68%;
+  object-fit: contain;
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+  filter: drop-shadow(0 8px 6px rgba(70, 35, 15, 0.16));
+}
+.food-card-image-stack.no-menu-plate .food-card-food {
+  width: 76%;
+  height: 76%;
+}
+.food-card-image-stack.food-img-missing::after {
+  content: 'x';
+  position: relative;
+  z-index: 3;
+  color: #B8A888;
+  font-size: clamp(24px, 3.5vw, 58px);
+  font-weight: 900;
+}
+.img-x {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(24px, 3.5vw, 58px);
+  color: #B8A888;
+  font-weight: 900;
+}
+
+/* ── Starburst & Text zone ────────── */
+.card-star-zone {
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.star-svg {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: clamp(230px, 26vw + 60px, 460px);
+  aspect-ratio: 1.25 / 1;
+  height: auto;
+  transform: translate(38%, 42%);
+  overflow: visible;
+  z-index: -1;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.25));
+}
+
+.star-text-content {
+  position: absolute;
+  bottom: clamp(-8px, -0.15vw, -2px);
+  right: clamp(8px, 1.35vw, 22px);
+  transform: rotate(-6deg);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  width: clamp(132px, 14.5vw, 220px);
+}
+
+.card-name {
+  font-size: clamp(13px, 1.4vw, 20px);
+  font-weight: 900;
+  color: #1A0800;
+  -webkit-text-stroke: clamp(1px, 0.12vw, 2px) rgba(255,255,255,0.9);
+  paint-order: stroke fill;
+  white-space: normal;
+  line-height: 1.1;
+  margin-bottom: clamp(0px, 0.2vw, 2px);
+}
+
+/* ── Prezzi con Bordo Rosso (SVG filter approach) ─ */
+.price-container {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  height: clamp(38px, 4.8vw, 70px);
+}
+
+.price-svg {
+  display: block;
+  width: min(100%, clamp(112px, 11.8vw, 184px));
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.price-text {
+  display: none;
+}
+
+/* ══════════════════════════════════════
+   MII PANEL
+══════════════════════════════════════ */
+.mii-panel {
+  min-height: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-top: clamp(44px, 9vh, 120px);
+  overflow: visible;
+}
+
+.mii-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  display: block;
+  transition: opacity 0.18s ease;
+  background: transparent;
+  border-radius: 0;
+}
+@keyframes miiPop {
+  0%   { transform: scale(1) translateY(0); }
+  30%  { transform: scale(1.1) translateY(-8px); }
+  65%  { transform: scale(0.95) translateY(3px); }
+  100% { transform: scale(1) translateY(0); }
+}
+.mii-img.mii-pop { animation: miiPop 0.42s cubic-bezier(.34,1.56,.64,1); }
+@keyframes miiIdle {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50%      { transform: scale(1.03) translateY(-3px); }
+}
+.mii-img.mii-idle { animation: miiIdle 2.2s ease-in-out infinite; }
+
+/* ══════════════════════════════════════
+   BOTTOM ACTIONS
+══════════════════════════════════════ */
+.bottom-actions {
+  position: fixed;
+  bottom: clamp(10px, 1.5vh, 22px);
+  right: clamp(14px, 1.8vw, 28px);
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.2vw, 16px);
+  z-index: 30;
+}
+
+.score-pill {
+  background: rgba(70,55,42,0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-radius: 40px;
+  padding: clamp(6px, 0.8vh, 12px) clamp(16px, 2vw, 32px);
+  color: #FFFFFF;
+  font-size: clamp(16px, 1.8vw, 28px);
+  font-weight: 900;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.26);
+  transition: transform 0.1s;
+}
+
+.checkout-btn {
+  background: linear-gradient(135deg, #FF5D44 0%, #D41010 100%);
+  border: clamp(2px, 0.3vw, 4px) solid #FFFFFF;
+  border-radius: 40px;
+  padding: clamp(6px, 0.8vh, 12px) clamp(20px, 2.5vw, 40px);
+  color: #FFFFFF;
+  font-size: clamp(14px, 1.8vw, 24px);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.26);
+  transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s;
+  font-family: 'Nunito', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.checkout-btn:hover {
+  transform: scale(1.06) translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212,16,16,0.4);
+}
+.checkout-btn:active {
+  transform: scale(0.96);
+}
+
+@keyframes priceBump {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+.score-pill.bump { animation: priceBump 0.38s cubic-bezier(.34,1.56,.64,1); }
+
+.table-overlay {
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 232, 180, 0.38) 0%, rgba(255, 178, 123, 0.34) 100%);
+  z-index: 90;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.table-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.table-overlay-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+#threeContainer {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 16%, rgba(255, 255, 255, 0.48), rgba(255, 238, 201, 0.1) 38%, rgba(255, 196, 143, 0) 72%),
+    linear-gradient(180deg, #FFE8B9 0%, #FFD39B 46%, #FFAFA0 100%);
+}
+
+#threeContainer canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tasting-2d-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 24%, rgba(255,255,255,0.48), rgba(255,255,255,0) 34%),
+    linear-gradient(180deg, #FFE7BD 0%, #FFD7A1 42%, #FFC0AC 100%);
+}
+
+.tasting-2d-scene::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  left: -4%;
+  right: -4%;
+  top: 18%;
+  height: 23%;
+  background:
+    linear-gradient(90deg, transparent 0 9%, rgba(255,255,255,0.22) 9% 30%, transparent 30% 100%),
+    linear-gradient(180deg, rgba(255,248,221,0.82), rgba(255,224,169,0.72));
+  border-top: 7px solid rgba(255,184,100,0.55);
+  border-bottom: 10px solid rgba(105,190,178,0.66);
+  transform: skewX(-5deg);
+}
+
+.tasting-2d-scene::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  left: -8%;
+  right: -8%;
+  bottom: -9%;
+  height: 57%;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.18), rgba(255,255,255,0) 42%),
+    linear-gradient(180deg, #F8D88E 0%, #F5C982 100%);
+  border-top: 10px solid rgba(246,183,96,0.58);
+}
+
+.diner-sign {
+  position: absolute;
+  z-index: 1;
+  top: 19%;
+  left: 50%;
+  width: min(320px, 30vw);
+  height: 74px;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: rgba(255, 247, 218, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  box-shadow: 0 8px 18px rgba(158, 89, 41, 0.08);
+}
+
+.diner-dot,
+.counter-confetti span,
+.food-bite-spark {
+  width: 24px;
+  height: 11px;
+  border-radius: 999px;
+  display: block;
+  box-shadow: inset 0 -3px 0 rgba(126, 73, 44, 0.12);
+}
+
+.diner-dot:nth-child(1) { background: #F06C5A; }
+.diner-dot:nth-child(2) { background: #F3B84F; }
+.diner-dot:nth-child(3) { background: #74C8BC; }
+.diner-dot:nth-child(4) { background: #E87598; }
+.diner-dot:nth-child(5) { background: #8EC565; }
+
+.diner-lamp {
+  position: absolute;
+  z-index: 1;
+  top: 4%;
+  width: 78px;
+  height: 160px;
+  transform-origin: top center;
+}
+
+.diner-lamp::before {
+  content: '';
+  position: absolute;
+  left: 34px;
+  top: 0;
+  width: 14px;
+  height: 118px;
+  border-radius: 99px;
+  background: linear-gradient(180deg, #E7B953, #D69C42);
+}
+
+.diner-lamp::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  bottom: 0;
+  width: 68px;
+  height: 39px;
+  border-radius: 50%;
+  background: var(--lamp-color, #79BFB0);
+  box-shadow: inset 0 -8px 0 rgba(126, 73, 44, 0.16), 0 10px 20px rgba(130, 70, 38, 0.1);
+}
+
+.diner-lamp.l1 { left: 30%; transform: rotate(-4deg); --lamp-color: #86C9B8; }
+.diner-lamp.l2 { left: 50%; transform: translateX(-50%); --lamp-color: #F2826E; }
+.diner-lamp.l3 { right: 28%; transform: rotate(4deg); --lamp-color: #86C9B8; }
+
+.tasting-tabletop {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 8%;
+  width: min(1120px, 82vw);
+  height: min(390px, 45vh);
+  transform: translateX(-50%);
+}
+
+.placemat {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 37%;
+  width: min(520px, 46vw);
+  height: min(136px, 15vh);
+  transform: translateX(-50%);
+  border-radius: 8px;
+  background: #FFE9BC;
+  border: 8px solid #EA7564;
+  box-shadow: 0 12px 0 rgba(174, 105, 54, 0.08);
+}
+
+.condiment-set {
+  position: absolute;
+  z-index: 2;
+  left: 9%;
+  top: 34%;
+  width: 135px;
+  height: 116px;
+}
+
+.condiment {
+  position: absolute;
+  bottom: 0;
+  width: 58px;
+  border-radius: 16px 16px 10px 10px;
+  box-shadow: inset -8px -8px 0 rgba(97, 79, 60, 0.08);
+}
+
+.condiment::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -11px;
+  width: 45px;
+  height: 20px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #FFF7E7;
+  box-shadow: inset 0 -5px 0 rgba(114, 84, 57, 0.07);
+}
+
+.condiment.salmon { left: 0; height: 94px; background: #EF8E62; }
+.condiment.mint { left: 63px; height: 82px; background: #71BBAE; }
+
+.chopstick-rest {
+  position: absolute;
+  z-index: 2;
+  bottom: 14%;
+  width: 170px;
+  height: 25px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #EFE0B7, #D9C690);
+  box-shadow: 0 9px 0 rgba(117, 88, 43, 0.08);
+}
+
+.chopstick-rest.left { left: 22%; transform: rotate(-1deg); }
+.chopstick-rest.right { right: 20%; transform: rotate(1deg); }
+
+.counter-confetti {
+  position: absolute;
+  z-index: 2;
+  left: 3%;
+  bottom: 19%;
+  display: flex;
+  gap: 20px;
+  transform: rotate(-8deg);
+}
+
+.counter-confetti span:nth-child(1),
+.counter-confetti span:nth-child(3),
+.counter-confetti span:nth-child(5) { background: #F06C5A; }
+.counter-confetti span:nth-child(2),
+.counter-confetti span:nth-child(4),
+.counter-confetti span:nth-child(6) { background: #F4C35B; }
+
+.tasting-plate-wrap {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 26%;
+  width: min(360px, 32vw);
+  aspect-ratio: 1;
+  transform: translate(-50%, 18%) scale(0.86);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tasting-plate-wrap.arriving {
+  animation: plateArrive2d 0.72s cubic-bezier(.22,1.22,.36,1) forwards;
+}
+
+.tasting-plate-wrap.ready {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+  pointer-events: auto;
+}
+
+.tasting-plate-wrap.finished {
+  animation: plateExit2d 0.48s ease forwards;
+}
+
+@keyframes plateArrive2d {
+  0% { opacity: 0; transform: translate(-95%, 26%) scale(0.84) rotate(-5deg); }
+  70% { opacity: 1; transform: translate(-48%, -3%) scale(1.04) rotate(2deg); }
+  100% { opacity: 1; transform: translate(-50%, 0) scale(1) rotate(0); }
+}
+
+@keyframes plateExit2d {
+  to { opacity: 0; transform: translate(58%, 10%) scale(0.74) rotate(8deg); }
+}
+
+.tasting-plate-shadow {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 8%;
+  height: 22%;
+  border-radius: 50%;
+  background: rgba(157, 106, 58, 0.12);
+  filter: blur(2px);
+}
+
+.tasting-plate {
+  position: absolute;
+  inset: 9%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 47%, #FFF9E9 0 47%, #F2BB68 48% 51%, #FFE4A9 52% 72%, #E9B565 73% 76%, #F6D48B 77% 100%);
+  box-shadow: inset 0 -12px 0 rgba(156, 96, 50, 0.1), 0 14px 22px rgba(147, 93, 53, 0.13);
+  cursor: pointer;
+}
+
+.tasting-plate:active {
+  transform: scale(0.98);
+}
+
+.tasting-food {
+  position: absolute;
+  inset: 23%;
+  transition: transform 0.34s cubic-bezier(.34,1.56,.64,1), opacity 0.3s ease;
+  animation: foodFloat2d 2.4s ease-in-out infinite;
+}
+
+.tasting-food.bite-1 { transform: scale(0.76) rotate(-2deg); }
+.tasting-food.bite-2 { transform: scale(0.48) rotate(3deg); }
+.tasting-food.bite-3 { transform: scale(0.08); opacity: 0; }
+
+@keyframes foodFloat2d {
+  0%, 100% { margin-top: 0; }
+  50% { margin-top: -5px; }
+}
+
+.food-piece {
+  position: absolute;
+  display: block;
+  box-shadow: inset -5px -6px 0 rgba(91, 57, 37, 0.1);
+}
+
+.finished-plate-stack {
+  position: absolute;
+  z-index: 3;
+  right: 13%;
+  top: 33%;
+  width: 160px;
+  height: 92px;
+}
+
+.stacked-plate {
+  position: absolute;
+  left: 0;
+  width: 150px;
+  height: 46px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #FFF9E9 0 54%, #E7B565 55% 61%, #F6D48B 62% 100%);
+  box-shadow: 0 8px 0 rgba(155, 97, 49, 0.08);
+}
+
+.bite-flash {
+  animation: biteFlash2d 0.36s ease;
+}
+
+@keyframes biteFlash2d {
+  0% { filter: brightness(1); }
+  40% { filter: brightness(1.15) saturate(1.2); }
+  100% { filter: brightness(1); }
+}
+
+.food-illustration {
+  position: absolute;
+  inset: 0;
+}
+
+.food-noodles .bowl {
+  left: 12%;
+  right: 12%;
+  bottom: 9%;
+  height: 50%;
+  border-radius: 18% 18% 46% 46%;
+  background: linear-gradient(180deg, #FFF7E8 0 34%, #7DC8BD 35% 100%);
+}
+
+.food-noodles .noodle {
+  width: 72%;
+  height: 18px;
+  left: 14%;
+  border-radius: 999px;
+  background: #F4C95F;
+  box-shadow: inset 0 -4px 0 rgba(135, 88, 36, 0.12);
+}
+.food-noodles .n1 { top: 26%; transform: rotate(-9deg); }
+.food-noodles .n2 { top: 35%; left: 20%; transform: rotate(7deg); }
+.food-noodles .n3 { top: 44%; transform: rotate(-4deg); }
+.food-noodles .n4 { top: 53%; left: 18%; transform: rotate(5deg); }
+.food-noodles .garnish {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: #75B85D;
+}
+.food-noodles .g1 { left: 33%; top: 31%; transform: rotate(22deg); }
+.food-noodles .g2 { right: 29%; top: 47%; transform: rotate(-18deg); }
+
+.food-rolls .roll {
+  width: 34%;
+  height: 70%;
+  top: 16%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #D99C4A, #F0BE6D);
+}
+.food-rolls .roll::after {
+  content: '';
+  position: absolute;
+  inset: 15% 24%;
+  border-radius: 50%;
+  background: #FFE6A8;
+}
+.food-rolls .r1 { left: 4%; transform: rotate(75deg); }
+.food-rolls .r2 { left: 33%; transform: rotate(85deg); }
+.food-rolls .r3 { right: 4%; transform: rotate(75deg); }
+
+.food-dumplings .dumpling {
+  width: 38%;
+  height: 32%;
+  border-radius: 60% 60% 45% 45%;
+  background: #F1D6A7;
+}
+.food-dumplings .dumpling::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  top: 21%;
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(179, 119, 61, 0.28);
+}
+.food-dumplings .d1 { left: 13%; top: 20%; transform: rotate(-10deg); }
+.food-dumplings .d2 { right: 14%; top: 24%; transform: rotate(9deg); }
+.food-dumplings .d3 { left: 24%; bottom: 19%; transform: rotate(8deg); }
+.food-dumplings .d4 { right: 22%; bottom: 15%; transform: rotate(-8deg); }
+
+.food-pizza .pizza-base {
+  inset: 7%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #D94F3F 0 48%, #F3D36B 49% 72%, #DCA04A 73% 100%);
+}
+.food-pizza .pep {
+  width: 24%;
+  height: 24%;
+  border-radius: 50%;
+  background: #8F463A;
+}
+.food-pizza .p1 { left: 25%; top: 24%; }
+.food-pizza .p2 { right: 23%; top: 36%; }
+.food-pizza .p3 { left: 42%; bottom: 21%; }
+.food-pizza .leaf {
+  width: 18%;
+  height: 10%;
+  border-radius: 999px;
+  background: #78AD59;
+}
+.food-pizza .l1 { left: 52%; top: 24%; transform: rotate(24deg); }
+.food-pizza .l2 { left: 25%; bottom: 30%; transform: rotate(-18deg); }
+
+.food-tortellini .tort {
+  width: 30%;
+  height: 24%;
+  border: 14px solid #E7BF5D;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: inset -3px -3px 0 rgba(133, 91, 38, 0.08);
+}
+.food-tortellini .t1 { left: 15%; top: 19%; transform: rotate(-15deg); }
+.food-tortellini .t2 { right: 16%; top: 24%; transform: rotate(18deg); }
+.food-tortellini .t3 { left: 35%; top: 42%; transform: rotate(4deg); }
+.food-tortellini .t4 { left: 18%; bottom: 13%; transform: rotate(18deg); }
+.food-tortellini .t5 { right: 17%; bottom: 12%; transform: rotate(-12deg); }
+
+.food-lasagne .layer {
+  left: 12%;
+  width: 76%;
+  height: 26%;
+  border-radius: 12px;
+}
+.food-lasagne .base { top: 32%; background: #D79B54; }
+.food-lasagne .tomato { top: 46%; background: #B94F3F; }
+.food-lasagne .cream { top: 59%; background: #EED69B; }
+.food-lasagne .dot {
+  width: 16%;
+  height: 13%;
+  border-radius: 50%;
+  background: #FFF0B8;
+}
+.food-lasagne .cheese1 { left: 28%; top: 50%; }
+.food-lasagne .cheese2 { right: 27%; top: 62%; }
+
+.food-eggs .white {
+  left: 12%;
+  right: 8%;
+  top: 29%;
+  height: 46%;
+  border-radius: 48% 55% 45% 52%;
+  background: #FFF8EF;
+}
+.food-eggs .yolk {
+  left: 42%;
+  top: 41%;
+  width: 28%;
+  height: 28%;
+  border-radius: 50%;
+  background: #F2B22F;
+}
+
+.food-salmon .salmon-slab {
+  left: 14%;
+  right: 13%;
+  top: 31%;
+  height: 42%;
+  border-radius: 16px;
+  background: #F28F70;
+}
+.food-salmon .stripe {
+  top: 38%;
+  width: 9%;
+  height: 32%;
+  border-radius: 99px;
+  background: rgba(255, 224, 190, 0.72);
+}
+.food-salmon .s1 { left: 31%; transform: rotate(10deg); }
+.food-salmon .s2 { left: 47%; transform: rotate(10deg); }
+.food-salmon .s3 { left: 63%; transform: rotate(10deg); }
+.food-salmon .wasabi {
+  right: 13%;
+  bottom: 21%;
+  width: 18%;
+  height: 16%;
+  border-radius: 50%;
+  background: #7EBB61;
+}
+
+.food-sandwich .bun {
+  left: 12%;
+  right: 12%;
+  height: 26%;
+  border-radius: 50% 50% 18px 18px;
+  background: #E5AA5E;
+}
+.food-sandwich .top { top: 22%; }
+.food-sandwich .bottom { bottom: 21%; border-radius: 18px; }
+.food-sandwich .filling {
+  left: 16%;
+  right: 16%;
+  top: 48%;
+  height: 17%;
+  border-radius: 99px;
+  background: #E58FA1;
+}
+.food-sandwich .leaf {
+  left: 13%;
+  right: 13%;
+  top: 57%;
+  height: 13%;
+  border-radius: 50%;
+  background: #82B965;
+}
+
+.food-tiramisu .cake {
+  left: 14%;
+  right: 14%;
+  top: 35%;
+  height: 40%;
+  border-radius: 12px;
+  background: #936139;
+}
+.food-tiramisu .cream {
+  left: 18%;
+  right: 18%;
+  top: 29%;
+  height: 21%;
+  border-radius: 14px;
+  background: #EAD9B8;
+}
+.food-tiramisu .cocoa {
+  left: 20%;
+  right: 20%;
+  top: 25%;
+  height: 8%;
+  border-radius: 99px;
+  background: #5D3927;
+}
+.food-tiramisu .cream-dot {
+  width: 13%;
+  height: 13%;
+  border-radius: 50%;
+  background: #FFF2DC;
+}
+.food-tiramisu .cd1 { left: 32%; top: 18%; }
+.food-tiramisu .cd2 { right: 30%; top: 20%; }
+
+.food-crema .ramekin {
+  left: 18%;
+  right: 18%;
+  top: 28%;
+  height: 48%;
+  border-radius: 18px 18px 36px 36px;
+  background: #F3D49B;
+}
+.food-crema .burnt-top {
+  left: 21%;
+  right: 21%;
+  top: 27%;
+  height: 17%;
+  border-radius: 50%;
+  background: #9B5A2A;
+}
+.food-crema .shine {
+  left: 38%;
+  top: 32%;
+  width: 18%;
+  height: 7%;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.42);
+}
+
+.food-pannacotta .pudding {
+  left: 26%;
+  right: 26%;
+  top: 24%;
+  height: 54%;
+  border-radius: 46% 46% 24% 24%;
+  background: #FFF2DF;
+}
+.food-pannacotta .berry {
+  left: 38%;
+  top: 17%;
+  width: 25%;
+  height: 18%;
+  border-radius: 50%;
+  background: #D94D5C;
+}
+
+.food-special .special-main {
+  left: 24%;
+  right: 24%;
+  top: 26%;
+  height: 52%;
+  border-radius: 35% 35% 25% 25%;
+  background: #FF8B5F;
+}
+.food-special .special-leaf {
+  right: 28%;
+  top: 19%;
+  width: 18%;
+  height: 16%;
+  border-radius: 50% 0 50% 0;
+  background: #75B85D;
+  transform: rotate(28deg);
+}
+
+@media (max-width: 760px) {
+  .diner-lamp.l1 { left: 20%; }
+  .diner-lamp.l2 { left: 53%; }
+  .diner-lamp.l3 { right: 12%; }
+  .diner-sign {
+    top: 24%;
+    width: 220px;
+    height: 56px;
+    gap: 12px;
+  }
+  .diner-dot {
+    width: 18px;
+    height: 9px;
+  }
+  .tasting-tabletop {
+    width: 104vw;
+    height: 46vh;
+    bottom: 6%;
+  }
+  .placemat {
+    width: 62vw;
+    height: 88px;
+    border-width: 6px;
+  }
+  .tasting-plate-wrap {
+    width: min(300px, 58vw);
+    top: 27%;
+  }
+  .condiment-set {
+    left: 2%;
+    transform: scale(0.72);
+  }
+  .finished-plate-stack {
+    right: 4%;
+    transform: scale(0.76);
+  }
+  .chopstick-rest.left { left: 13%; }
+  .chopstick-rest.right { right: 10%; }
+}
+
+/* Cooking Mama inspired 2.5D tasting pass */
+.table-overlay.memory-mode #threeContainer {
+  opacity: 0.18;
+  filter: blur(2px) saturate(0.8);
+  transition: opacity 0.35s ease, filter 0.35s ease;
+}
+
+.table-overlay.memory-mode .tasting-tabletop,
+.table-overlay.memory-mode .diner-sign,
+.table-overlay.memory-mode .diner-lamp,
+.table-overlay.memory-mode .mama-ribbon {
+  opacity: 0;
+  transform: translateY(24px) scale(0.96);
+  pointer-events: none;
+}
+
+.tasting-2d-scene {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255,255,255,0.62), rgba(255,255,255,0) 34%),
+    linear-gradient(180deg, #FFF4A9 0%, #FFE188 42%, #FFC46D 100%);
+}
+
+.tasting-2d-scene::before {
+  top: 0;
+  height: 100%;
+  border: 0;
+  transform: none;
+  background:
+    linear-gradient(45deg, rgba(255,120,144,0.24) 25%, transparent 25% 75%, rgba(255,120,144,0.24) 75%),
+    linear-gradient(45deg, rgba(255,120,144,0.24) 25%, transparent 25% 75%, rgba(255,120,144,0.24) 75%);
+  background-color: #FFEFD2;
+  background-position: 0 0, 24px 24px;
+  background-size: 48px 48px;
+  opacity: 0.82;
+}
+
+.tasting-2d-scene::after {
+  left: -14%;
+  right: -14%;
+  bottom: -18%;
+  height: 72%;
+  border-top: 12px solid rgba(185, 111, 47, 0.16);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.34), rgba(255,255,255,0) 38%),
+    linear-gradient(90deg, rgba(191,104,42,0.1), transparent 22% 78%, rgba(191,104,42,0.1)),
+    linear-gradient(180deg, rgba(224,139,51,0.94), rgba(185,103,38,0.96));
+}
+
+.mama-ribbon {
+  position: absolute;
+  z-index: 2;
+  left: -18px;
+  top: clamp(112px, 15vh, 150px);
+  transform: rotate(-5deg);
+  padding: 12px 28px 12px 34px;
+  border-radius: 0 16px 16px 0;
+  background: linear-gradient(180deg, #FFF071, #FFC533);
+  border: 4px solid #4D3825;
+  border-left: 0;
+  color: #4D3825;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(22px, 2.8vw, 46px);
+  font-weight: 1000;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #FFF9C6;
+  box-shadow: 0 10px 0 rgba(89, 57, 25, 0.2);
+}
+
+.diner-sign,
+.diner-lamp {
+  display: none;
+}
+
+.tasting-tabletop {
+  left: 50%;
+  bottom: -2%;
+  width: min(1320px, 94vw);
+  height: min(560px, 60vh);
+  transform: translateX(-50%);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.placemat {
+  left: 50%;
+  top: 31%;
+  width: min(650px, 52vw);
+  height: min(170px, 18vh);
+  border-radius: 4px;
+  background:
+    linear-gradient(45deg, rgba(255,255,255,0.36) 25%, transparent 25% 75%, rgba(255,255,255,0.36) 75%),
+    linear-gradient(45deg, rgba(255,255,255,0.36) 25%, transparent 25% 75%, rgba(255,255,255,0.36) 75%),
+    #F8768C;
+  background-position: 0 0, 18px 18px;
+  background-size: 36px 36px;
+  border: 8px solid #5D6FA7;
+  box-shadow: 0 18px 0 rgba(97, 53, 24, 0.14);
+}
+
+.condiment-set {
+  left: 5%;
+  top: 23%;
+  transform: scale(1.06);
+}
+
+.counter-confetti {
+  left: 1%;
+  bottom: 13%;
+  gap: 14px;
+}
+
+.chopstick-rest {
+  bottom: 6%;
+  height: 16px;
+  background: linear-gradient(180deg, #FF75A8, #D8487C);
+  box-shadow: 0 8px 0 rgba(97, 53, 24, 0.12);
+}
+
+.chopstick-rest.left {
+  left: 15%;
+  width: 260px;
+  transform: rotate(-2deg);
+}
+
+.chopstick-rest.right {
+  right: 8%;
+  width: 290px;
+  transform: rotate(2deg);
+}
+
+.side-dish {
+  position: absolute;
+  z-index: 2;
+  top: 36%;
+  width: 260px;
+  aspect-ratio: 1.35;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 48% 43%, #FFFCEB 0 48%, #74B8CE 49% 54%, #FFF8DF 55% 100%);
+  box-shadow: 0 20px 0 rgba(85, 54, 28, 0.15);
+  opacity: 0.96;
+}
+
+.side-dish.left {
+  left: -120px;
+  transform: rotate(-8deg);
+}
+
+.side-dish.right {
+  right: -120px;
+  transform: rotate(8deg);
+}
+
+.side-dish::after {
+  content: '';
+  position: absolute;
+  inset: 22% 18%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 20% 42%, #EF6154 0 8%, transparent 9%),
+    radial-gradient(circle at 45% 34%, #FFD65A 0 9%, transparent 10%),
+    radial-gradient(circle at 62% 54%, #7BC76B 0 8%, transparent 9%),
+    radial-gradient(circle at 34% 64%, #F28BA7 0 7%, transparent 8%);
+}
+
+.tasting-plate-wrap {
+  top: 12%;
+  width: min(460px, 36vw);
+}
+
+.tasting-plate-wrap.ready {
+  transform: translate(-50%, 0) scale(1.08);
+}
+
+.tasting-plate-shadow {
+  left: 6%;
+  right: 6%;
+  bottom: 4%;
+  height: 18%;
+  background: rgba(65, 38, 22, 0.18);
+  filter: blur(8px);
+}
+
+.tasting-plate {
+  inset: 4%;
+  border: 5px solid #4D4C62;
+  background:
+    radial-gradient(circle at 50% 47%, #FFFDF4 0 43%, #F2C666 44% 47%, #FFF1B8 48% 69%, #F06F8C 70% 74%, #FFF3C6 75% 100%);
+  box-shadow: inset 0 -18px 0 rgba(159, 96, 33, 0.12), 0 28px 32px rgba(90, 52, 24, 0.18);
+}
+
+.tasting-food {
+  inset: 17%;
+}
+
+.finished-plate-stack {
+  display: none;
+}
+
+.food-asset {
+  position: absolute;
+  inset: -12%;
+  width: 124%;
+  height: 124%;
+  object-fit: contain;
+  image-rendering: auto;
+  filter: drop-shadow(0 18px 10px rgba(82, 45, 18, 0.18));
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .mama-ribbon {
+    top: 96px;
+    font-size: 22px;
+    padding: 9px 18px 9px 24px;
+  }
+  .tasting-tabletop {
+    width: 112vw;
+    height: 58vh;
+  }
+  .placemat {
+    width: 72vw;
+    top: 33%;
+  }
+  .tasting-plate-wrap {
+    width: min(330px, 66vw);
+    top: 17%;
+  }
+  .side-dish {
+    width: 190px;
+    top: 43%;
+  }
+  .condiment-set {
+    left: 1%;
+    top: 33%;
+    transform: scale(0.76);
+  }
+  .chopstick-rest.left,
+  .chopstick-rest.right {
+    width: 190px;
+  }
+}
+
+/* Cleaner close-up tasting table */
+.mama-ribbon {
+  display: none !important;
+}
+
+.tasting-2d-scene {
+  background:
+    linear-gradient(180deg, #FFF0B8 0 32%, #F7C17D 32% 33%, #D9863E 33% 100%);
+}
+
+.tasting-2d-scene::before {
+  top: 0;
+  height: 32%;
+  background:
+    linear-gradient(45deg, rgba(245,126,144,0.16) 25%, transparent 25% 75%, rgba(245,126,144,0.16) 75%),
+    linear-gradient(45deg, rgba(245,126,144,0.16) 25%, transparent 25% 75%, rgba(245,126,144,0.16) 75%),
+    #FFF6CB;
+  background-position: 0 0, 20px 20px;
+  background-size: 40px 40px;
+  opacity: 0.82;
+}
+
+.tasting-2d-scene::after {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 67%;
+  border-top: 10px solid rgba(126, 73, 28, 0.22);
+  background:
+    radial-gradient(ellipse at 50% 16%, rgba(255,232,160,0.38), rgba(255,232,160,0) 38%),
+    linear-gradient(180deg, #DC914B 0%, #B96D32 100%);
+}
+
+.tasting-tabletop {
+  bottom: 0;
+  width: min(1180px, 92vw);
+  height: min(520px, 58vh);
+}
+
+.placemat {
+  top: 31%;
+  width: min(600px, 48vw);
+  height: min(158px, 17vh);
+  border: 6px solid #5B6FA8;
+  border-radius: 6px;
+  background:
+    linear-gradient(45deg, rgba(255,255,255,0.34) 25%, transparent 25% 75%, rgba(255,255,255,0.34) 75%),
+    linear-gradient(45deg, rgba(255,255,255,0.34) 25%, transparent 25% 75%, rgba(255,255,255,0.34) 75%),
+    #EF7A92;
+  background-position: 0 0, 18px 18px;
+  background-size: 36px 36px;
+}
+
+.side-dish {
+  width: 190px;
+  top: 40%;
+  opacity: 0.88;
+}
+
+.side-dish.left {
+  left: -46px;
+}
+
+.side-dish.right {
+  right: -46px;
+}
+
+.condiment-set {
+  left: 8%;
+  top: 31%;
+  transform: scale(0.9);
+}
+
+.counter-confetti {
+  left: 6%;
+  bottom: 10%;
+}
+
+.chopstick-rest {
+  bottom: 4%;
+  height: 14px;
+  border-radius: 99px;
+}
+
+.chopstick-rest.left {
+  left: 18%;
+  width: 230px;
+}
+
+.chopstick-rest.right {
+  right: 16%;
+  width: 240px;
+}
+
+.tasting-plate-wrap {
+  top: 13%;
+  width: min(390px, 31vw);
+}
+
+.tasting-plate-wrap.ready {
+  transform: translate(-50%, 0) scale(1);
+}
+
+.tasting-plate {
+  inset: 3%;
+  border-width: 4px;
+  background:
+    radial-gradient(circle at 50% 47%, #FFFDF7 0 43%, #EBC160 44% 47%, #FFF0B7 48% 68%, #E96D85 69% 73%, #FFF1BE 74% 100%);
+}
+
+.tasting-food {
+  inset: 18%;
+  animation: none;
+  margin-top: 0;
+  transform-origin: 50% 54%;
+}
+
+.tasting-food.bite-1 { transform: scale(0.78); }
+.tasting-food.bite-2 { transform: scale(0.52); }
+.tasting-food.bite-3 { transform: scale(0.08); opacity: 0; }
+
+.finished-plate-stack {
+  display: block;
+  right: 8%;
+  top: 18%;
+  width: 180px;
+  height: 110px;
+  opacity: 1;
+}
+
+.finished-plate-stack::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  bottom: 4px;
+  width: 152px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(78, 44, 20, 0.16);
+  filter: blur(5px);
+}
+
+.stacked-plate {
+  left: 8px;
+  width: 150px;
+  height: 48px;
+  border: 3px solid #5B6FA8;
+  background:
+    radial-gradient(circle, #FFFDF4 0 50%, #F0C467 51% 58%, #FFF0B7 59% 100%);
+}
+
+.table-overlay.memory-mode .finished-plate-stack {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .tasting-tabletop {
+    width: 106vw;
+    height: 56vh;
+  }
+  .tasting-plate-wrap {
+    width: min(320px, 60vw);
+    top: 18%;
+  }
+  .placemat {
+    width: 66vw;
+    top: 35%;
+  }
+  .side-dish {
+    width: 142px;
+    top: 45%;
+  }
+  .condiment-set,
+  .counter-confetti {
+    opacity: 0.75;
+  }
+  .finished-plate-stack {
+    right: 1%;
+    top: 25%;
+    transform: scale(0.74);
+  }
+}
+
+.memory-visual-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+  overflow: hidden;
+}
+
+.memory-visual-overlay.show {
+  opacity: 0.96;
+}
+
+.memory-visual-image {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(255,255,255,0.22), rgba(255, 226, 184, 0.16)),
+    linear-gradient(180deg, rgba(255,244,218,0.2), rgba(255,173,151,0.28)),
+    linear-gradient(135deg, #FFD58A, #FF9F93);
+  background-size: cover;
+  background-position: center;
+  filter: blur(5px) saturate(0.9) brightness(1.08);
+  transform: scale(1.06);
+}
+
+.memory-label {
+  position: absolute;
+  bottom: clamp(18px, 3vh, 32px);
+  left: clamp(18px, 3vw, 36px);
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(13px, 1.2vw, 18px);
+  font-weight: 700;
+  font-style: italic;
+  color: rgba(255, 251, 232, 0.9);
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.7s;
+  pointer-events: none;
+  max-width: 320px;
+  line-height: 1.4;
+  text-shadow: 0 2px 10px rgba(112, 60, 34, 0.45);
+}
+.memory-visual-overlay.show .memory-label { opacity: 1; }
+
+.memory-visual-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, rgba(255, 246, 218, 0.08) 0%, rgba(255, 162, 126, 0.16) 68%, rgba(115, 55, 40, 0.2) 100%);
+}
+
+.table-overlay-ui {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: clamp(18px, 2.5vw, 30px);
+  pointer-events: none;
+}
+
+.table-overlay-panel {
+  max-width: min(460px, 72vw);
+  border-radius: clamp(18px, 2vw, 28px);
+  padding: clamp(14px, 1.8vh, 22px) clamp(18px, 2.2vw, 28px);
+  background:
+    linear-gradient(180deg, rgba(255, 245, 214, 0.92), rgba(255, 233, 136, 0.88));
+  border: 2px solid rgba(255,255,255,0.7);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+  pointer-events: auto;
+}
+
+.table-overlay-kicker {
+  font-size: clamp(12px, 1vw, 14px);
+  font-weight: 900;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: #8C4A12;
+  margin-bottom: 8px;
+}
+
+.table-overlay-title {
+  font-size: clamp(24px, 3.2vw, 42px);
+  font-weight: 800;
+  color: #7A3300;
+  line-height: 1.05;
+}
+
+.table-overlay-text {
+  margin-top: 8px;
+  font-size: clamp(14px, 1.3vw, 18px);
+  font-weight: 700;
+  color: rgba(122, 51, 0, 0.84);
+}
+
+.table-overlay-meta {
+  margin-top: 8px;
+  font-size: clamp(12px, 1vw, 15px);
+  font-weight: 900;
+  color: rgba(140, 74, 18, 0.92);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.table-overlay-bites {
+  margin-top: 10px;
+  font-size: clamp(13px, 1.1vw, 16px);
+  font-weight: 900;
+  color: #7A3300;
+}
+
+.table-overlay-comment {
+  margin-top: 14px;
+  display: none;
+  border-radius: 18px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.72);
+  border: 2px solid rgba(255,255,255,0.8);
+}
+
+.table-overlay-comment.show {
+  display: block;
+}
+
+.table-overlay-comment-title {
+  display: none;
+  font-size: clamp(16px, 1.4vw, 20px);
+  font-weight: 900;
+  color: #8C4A12;
+}
+
+.table-overlay-comment-text {
+  margin-top: 0;
+  font-size: clamp(14px, 1.2vw, 18px);
+  font-weight: 700;
+  color: rgba(80, 42, 12, 0.92);
+  line-height: 1.45;
+}
+
+.table-overlay-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+/* ══════════════════════════════════════
+   CHECKOUT OVERLAY
+══════════════════════════════════════ */
+.checkout-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.checkout-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Loading screen */
+.checkout-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  z-index: 101;
+}
+
+.checkout-loading.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loading-text {
+  font-size: clamp(18px, 3vw, 32px);
+  font-weight: 900;
+  color: #FFF;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: clamp(40px, 8vw, 80px);
+  height: clamp(40px, 8vw, 80px);
+  border: 4px solid rgba(255,255,255,0.2);
+  border-top-color: #FF5D44;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: clamp(20px, 4vh, 40px);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Receipt container */
+.receipt-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: clamp(24px, 5vh, 52px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.receipt-container.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ══════════════════════════════════════
+   RECEIPT
+══════════════════════════════════════ */
+.receipt {
+  position: relative;
+  background: #fbf7e8;
+  color: #151515;
+  border-radius: 2px 2px 0 0;
+  padding: clamp(20px, 3vh, 34px) clamp(18px, 3vw, 34px) clamp(18px, 3vh, 30px);
+  width: clamp(310px, 72vw, 430px);
+  max-height: 78vh;
+  overflow-y: auto;
+  overflow-anchor: none;
+  scroll-behavior: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  box-shadow: 0 -10px 28px rgba(255,255,255,0.12), 0 24px 70px rgba(0,0,0,0.58);
+  border: 1px solid #ece2ca;
+  border-bottom: none;
+  font-family: "Courier New", Courier, monospace;
+  transform: translateY(100%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.receipt::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.receipt::before {
+  content: "";
+  position: absolute;
+}
+
+.receipt::after {
+  content: "";
+  display: block;
+  height: 12px;
+  margin: 18px -18px -18px;
+  background:
+    linear-gradient(135deg, transparent 8px, #fbf7e8 0) left bottom / 16px 16px repeat-x,
+    linear-gradient(225deg, transparent 8px, #fbf7e8 0) left bottom / 16px 16px repeat-x;
+}
+
+.receipt.wave-1 {
+  animation: receiptWave1 0.5s cubic-bezier(.34, 1.56, .64, 1) forwards;
+}
+.receipt.wave-2 {
+  animation: receiptWave2 0.5s cubic-bezier(.34, 1.56, .64, 1) forwards;
+}
+.receipt.wave-3 {
+  animation: receiptWave3 0.5s cubic-bezier(.34, 1.56, .64, 1) forwards;
+}
+.receipt.wave-4 {
+  animation: receiptWave4 0.5s cubic-bezier(.34, 1.56, .64, 1) forwards;
+}
+.receipt.complete {
+  animation: none;
+  transform: translateY(-2vh);
+  opacity: 1;
+}
+
+@keyframes receiptWave1 {
+  0%   { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(72%); opacity: 1; }
+}
+@keyframes receiptWave2 {
+  0%   { transform: translateY(72%); opacity: 1; }
+  100% { transform: translateY(46%); opacity: 1; }
+}
+@keyframes receiptWave3 {
+  0%   { transform: translateY(46%); opacity: 1; }
+  100% { transform: translateY(20%); opacity: 1; }
+}
+@keyframes receiptWave4 {
+  0%   { transform: translateY(20%); opacity: 1; }
+  100% { transform: translateY(-2vh); opacity: 1; }
+}
+
+.receipt-header {
+  text-align: center;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #111;
+}
+
+.receipt-title {
+  font-size: clamp(18px, 4vw, 25px);
+  font-weight: 900;
+  color: #111;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.receipt-subtitle {
+  font-size: clamp(10px, 2vw, 13px);
+  color: #222;
+  line-height: 1.35;
+}
+
+.receipt-date {
+  font-size: clamp(10px, 2vw, 13px);
+  color: #222;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+.receipt-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #111;
+}
+
+.receipt-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: start;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+}
+
+.receipt-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.receipt-item-name {
+  font-size: clamp(12px, 2.2vw, 15px);
+  font-weight: 800;
+  color: #111;
+  text-transform: uppercase;
+}
+
+.receipt-item-qty {
+  font-size: clamp(10px, 1.9vw, 13px);
+  color: #222;
+  font-weight: 700;
+}
+
+.receipt-item-price {
+  font-size: clamp(12px, 2.2vw, 15px);
+  font-weight: 900;
+  color: #111;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.receipt-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0 0;
+  background: transparent;
+  border-radius: 0;
+  margin-bottom: 12px;
+  border-top: 2px solid #111;
+}
+
+.receipt-total-label {
+  font-size: clamp(18px, 3vw, 28px);
+  font-weight: 900;
+  color: #111;
+  text-transform: uppercase;
+}
+
+.receipt-total-value {
+  font-size: clamp(22px, 4vw, 38px);
+  font-weight: 900;
+  color: #111;
+  font-style: normal;
+}
+
+.receipt-barcode {
+  height: clamp(48px, 8vh, 66px);
+  margin: 12px 8px 8px;
+  background: repeating-linear-gradient(
+    90deg,
+    #111 0 2px,
+    transparent 2px 5px,
+    #111 5px 6px,
+    transparent 6px 10px,
+    #111 10px 14px,
+    transparent 14px 17px
+  );
+}
+
+.receipt-code {
+  text-align: center;
+  font-size: clamp(9px, 1.8vw, 12px);
+  letter-spacing: 2px;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.receipt-divider-dashed { border-top: 1px dashed #111; margin: 10px 0; }
+.receipt-chefnote { padding: 4px 0 8px; }
+.receipt-chefnote-label {
+  font-size: 10px; font-weight: 900; letter-spacing: 2px;
+  color: #555; text-transform: uppercase; margin-bottom: 6px;
+}
+.receipt-chefnote-body {
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px; font-weight: 700; color: #222; line-height: 1.55;
+}
+.receipt-contacts {
+  text-align: center; font-size: 11px; letter-spacing: 0.4px;
+  color: #333; line-height: 1.8; margin: 4px 0;
+}
+.receipt-qr-wrap {
+  display: flex; justify-content: center; margin: 10px auto 16px;
+}
+.receipt-qr-wrap canvas, .receipt-qr-wrap img {
+  width: 76px !important; height: 76px !important;
+}
+
+.receipt-continue-btn {
+  margin-top: clamp(16px, 3vh, 28px);
+  min-width: clamp(160px, 18vw, 230px);
+  height: clamp(54px, 7vh, 72px);
+  border: clamp(4px, 0.55vw, 7px) solid #FFF;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #FF7565, #D83728);
+  box-shadow: 0 7px 0 #7B2A24, 0 16px 24px rgba(0,0,0,0.36);
+  color: #FFF;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(22px, 2.6vw, 34px);
+  font-weight: 1000;
+  letter-spacing: 0;
+  text-shadow: 0 3px 0 rgba(91,28,22,0.55);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(14px) scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(.34,1.56,.64,1);
+}
+
+.receipt-continue-btn.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.receipt-continue-btn:active {
+  transform: translateY(5px);
+  box-shadow: 0 3px 0 #7B2A24, 0 10px 18px rgba(0,0,0,0.28);
+}
+
+.final-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 104;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  padding: clamp(24px, 5vw, 72px);
+}
+
+.final-screen.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.final-confetti-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.final-confetti {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  width: var(--w, 12px);
+  height: var(--h, 18px);
+  border-radius: var(--r, 3px);
+  background: var(--c, #FFD85A);
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: finalConfettiFall var(--dur, 4.8s) cubic-bezier(.16,.76,.32,1) var(--delay, 0s) forwards;
+}
+
+@keyframes finalConfettiFall {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.65) rotate(0deg);
+  }
+  14% {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--burst-x)), calc(-50% + var(--burst-y))) scale(1) rotate(160deg);
+  }
+  100% {
+    opacity: 0.92;
+    transform: translate(calc(-50% + var(--fall-x)), calc(-50% + var(--fall-y))) rotate(var(--rot));
+  }
+}
+
+.final-thanks-title {
+  position: relative;
+  z-index: 3;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(76px, 15vw, 190px);
+  font-weight: 1000;
+  font-style: italic;
+  line-height: 0.92;
+  color: #FFE36D;
+  -webkit-text-stroke: clamp(7px, 1vw, 15px) #FF5D44;
+  paint-order: stroke fill;
+  text-shadow: 0 10px 0 rgba(106, 34, 18, 0.58), 0 24px 42px rgba(255, 93, 68, 0.28);
+  letter-spacing: 0;
+  transform: scale(0.78);
+  opacity: 0;
+  animation: finalThanksIntro 1.25s cubic-bezier(.34,1.56,.64,1) 0.12s forwards;
+  transition: opacity 0.5s ease, transform 0.7s cubic-bezier(.34,1.56,.64,1);
+}
+
+.final-screen.show-mii .final-thanks-title {
+  opacity: 0.34;
+  transform: translateY(clamp(-170px, -20vh, -90px)) scale(0.64);
+}
+
+@keyframes finalThanksIntro {
+  0% { opacity: 0; transform: translateY(30px) scale(0.66) rotate(-5deg); }
+  68% { opacity: 1; transform: translateY(-8px) scale(1.06) rotate(2deg); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+}
+
+.final-mii-scene {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(150px, 230px) minmax(260px, 560px);
+  gap: clamp(18px, 4vw, 46px);
+  align-items: end;
+  margin-top: clamp(18px, 4vh, 44px);
+  opacity: 0;
+  transform: translateY(30px) scale(0.96);
+  transition: opacity 0.55s ease, transform 0.65s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+}
+
+.final-screen.show-mii .final-mii-scene {
+  opacity: 1;
+  transform: none;
+}
+
+.final-mii-img {
+  width: min(230px, 30vw);
+  height: min(310px, 42vh);
+  object-fit: contain;
+  object-position: bottom center;
+  filter: drop-shadow(0 16px 18px rgba(0,0,0,0.45));
+}
+
+.final-bubble {
+  position: relative;
+  align-self: center;
+  max-width: 560px;
+  border-radius: clamp(24px, 3vw, 42px);
+  background: #FFF;
+  color: #201000;
+  padding: clamp(18px, 2.6vw, 34px);
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 800;
+  line-height: 1.42;
+  box-shadow: 0 16px 34px rgba(255,255,255,0.16);
+}
+
+.final-bubble::before {
+  content: '';
+  position: absolute;
+  left: clamp(-20px, -2vw, -12px);
+  bottom: 34px;
+  width: 0;
+  height: 0;
+  border-top: 16px solid transparent;
+  border-bottom: 16px solid transparent;
+  border-right: 24px solid #FFF;
+}
+
+.final-signature {
+  position: fixed;
+  left: clamp(24px, 4vw, 70px);
+  bottom: clamp(24px, 4vh, 52px);
+  z-index: 3;
+  width: min(178px, 18vw);
+  opacity: 0;
+  transform: translateY(10px);
+  filter: drop-shadow(0 0 8px rgba(255,255,255,0.18));
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.5s ease;
+}
+
+.final-screen.show-signature .final-signature {
+  opacity: 0.86;
+  transform: none;
+}
+
+.final-signature-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.final-signature-mask-path {
+  fill: none;
+  stroke: white;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 54;
+}
+
+.final-restart-btn {
+  position: relative;
+  z-index: 3;
+  margin-top: clamp(24px, 5vh, 48px);
+  min-width: clamp(180px, 20vw, 260px);
+  height: clamp(56px, 7.4vh, 78px);
+  border: clamp(4px, 0.55vw, 7px) solid #FFF;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #FF7565, #D83728);
+  box-shadow: 0 8px 0 #7B2A24, 0 18px 28px rgba(255, 93, 68, 0.24);
+  color: #FFF;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(24px, 2.8vw, 38px);
+  font-weight: 1000;
+  letter-spacing: 0;
+  text-shadow: 0 4px 0 rgba(91,28,22,0.55);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(18px) scale(0.94);
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(.34,1.56,.64,1);
+}
+
+.final-screen.show-restart .final-restart-btn {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.final-restart-btn:active {
+  transform: translateY(5px);
+  box-shadow: 0 3px 0 #7B2A24, 0 10px 20px rgba(255, 93, 68, 0.18);
+}
+
+@media (max-width: 760px) {
+  .final-mii-scene {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 14px;
+  }
+
+  .final-mii-img {
+    width: min(190px, 46vw);
+    height: min(250px, 34vh);
+    order: 2;
+  }
+
+  .final-bubble {
+    order: 1;
+    text-align: center;
+  }
+
+  .final-bubble::before {
+    left: 50%;
+    bottom: -20px;
+    transform: translateX(-50%);
+    border-left: 16px solid transparent;
+    border-right: 16px solid transparent;
+    border-top: 24px solid #FFF;
+    border-bottom: 0;
+  }
+}
+
+/* ══════════════════════════════════════
+   RESTART BUTTON
+══════════════════════════════════════ */
+.restart-btn {
+  width: clamp(70px, 14vw, 110px);
+  height: clamp(70px, 14vw, 110px);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF5D44 0%, #D41010 100%);
+  border: clamp(4px, 0.6vw, 8px) solid #FFF;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 28px rgba(212,16,16,0.6), 0 6px 18px rgba(0,0,0,0.4);
+  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s;
+  opacity: 0;
+  transform: scale(0);
+  margin-top: clamp(20px, 4vh, 40px);
+}
+
+.restart-btn.show {
+  animation: restartAppear 0.6s cubic-bezier(.34, 1.56, .64, 1) forwards;
+}
+
+@keyframes restartAppear {
+  0%   { opacity: 0; transform: scale(0) rotate(-180deg); }
+  60%  { opacity: 1; transform: scale(1.15) rotate(10deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.restart-btn:hover {
+  transform: scale(1.12);
+  box-shadow: 0 10px 36px rgba(212,16,16,0.7), 0 8px 24px rgba(0,0,0,0.45);
+}
+
+.restart-btn:active {
+  transform: scale(0.95);
+}
+
+.restart-arrow {
+  width: 55%;
+  height: 55%;
+  fill: #FFF;
+}
+
+/* ══════════════════════════════════════
+   SPLASH SCREEN
+══════════════════════════════════════ */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: grid;
+  place-items: center;
+  padding: clamp(18px, 4vw, 48px);
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255,255,255,0.50) 0 8%, transparent 24%),
+    radial-gradient(circle at 80% 82%, rgba(255,255,255,0.34) 0 8%, transparent 22%),
+    linear-gradient(180deg, #FFB52E 0%, #FFDA8A 48%, #FFE8B8 100%);
+  transition: opacity 0.48s ease, transform 0.48s cubic-bezier(.34,1.56,.64,1), visibility 0.48s;
+}
+.splash-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(1.03);
+}
+.splash-bg-bubbles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.splash-bg-bubbles span {
+  position: absolute;
+  width: clamp(54px, 8vw, 128px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.26);
+  border: 3px solid rgba(255,255,255,0.45);
+  box-shadow: inset 0 -8px 0 rgba(255, 131, 0, 0.08);
+  animation: splashFloat 5.8s ease-in-out infinite;
+}
+.splash-bg-bubbles span:nth-child(1) { left: 8%; top: 16%; animation-delay: 0s; }
+.splash-bg-bubbles span:nth-child(2) { left: 74%; top: 10%; width: clamp(44px, 6vw, 92px); animation-delay: .6s; }
+.splash-bg-bubbles span:nth-child(3) { left: 88%; top: 60%; animation-delay: 1.1s; }
+.splash-bg-bubbles span:nth-child(4) { left: 15%; top: 74%; width: clamp(38px, 5vw, 78px); animation-delay: 1.6s; }
+.splash-bg-bubbles span:nth-child(5) { left: 48%; top: 82%; width: clamp(42px, 5.5vw, 88px); animation-delay: 2.1s; }
+@keyframes splashFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-14px) scale(1.035); }
+}
+.splash-card {
+  position: relative;
+  width: min(1180px, 94vw);
+  min-height: min(640px, 78vh);
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+  gap: clamp(18px, 4vw, 56px);
+  align-items: center;
+  padding: clamp(28px, 5vw, 70px);
+  border-radius: clamp(28px, 4vw, 60px);
+  background:
+    linear-gradient(150deg, rgba(255,255,255,0.96) 0%, rgba(255,244,196,0.94) 48%, rgba(255,224,112,0.92) 100%);
+  border: clamp(4px, 0.6vw, 8px) solid rgba(255,255,255,0.9);
+  box-shadow: 0 28px 80px rgba(96, 49, 0, 0.30), inset 0 -7px 0 rgba(255, 131, 0, 0.12);
+  overflow: hidden;
+}
+.splash-card::after {
+  content: '';
+  position: absolute;
+  right: -14%;
+  bottom: -30%;
+  width: 52%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 131, 0, 0.13);
+  border: 18px solid rgba(255,255,255,0.26);
+}
+.splash-left { position: relative; z-index: 2; }
+.splash-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: #FFF3CC;
+  color: #8C4A12;
+  font-size: clamp(12px, 1.2vw, 16px);
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,0.08);
+  margin-bottom: clamp(14px, 2.5vh, 26px);
+}
+.splash-title {
+  font-size: clamp(58px, 9vw, 132px);
+  line-height: 0.88;
+  font-weight: 900;
+  font-style: italic;
+  color: #FFC400;
+  -webkit-text-stroke: clamp(6px, 0.9vw, 13px) #FF5D44;
+  paint-order: stroke fill;
+  letter-spacing: -0.04em;
+  text-shadow: 0 8px 0 rgba(122, 51, 0, 0.10);
+  margin-bottom: clamp(14px, 3vh, 30px);
+}
+.splash-subtitle {
+  max-width: 610px;
+  font-size: clamp(17px, 1.8vw, 26px);
+  line-height: 1.38;
+  font-weight: 800;
+  color: #7A3300;
+}
+.splash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(12px, 2vw, 22px);
+  margin-top: clamp(24px, 5vh, 48px);
+}
+.splash-start {
+  appearance: none;
+  border: clamp(3px, 0.45vw, 6px) solid #FFFFFF;
+  border-radius: 999px;
+  padding: clamp(13px, 1.8vh, 20px) clamp(26px, 4vw, 48px);
+  background: linear-gradient(135deg, #FF5D44 0%, #D41010 100%);
+  color: #FFFFFF;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(212,16,16,0.34), inset 0 -5px 0 rgba(0,0,0,0.14);
+  transition: transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s;
+}
+.splash-start:hover { transform: scale(1.055) translateY(-2px); box-shadow: 0 14px 30px rgba(212,16,16,0.40), inset 0 -5px 0 rgba(0,0,0,0.14); }
+.splash-start:active { transform: scale(0.96); }
+.splash-hint {
+  max-width: 260px;
+  color: rgba(122,51,0,0.78);
+  font-size: clamp(13px, 1.15vw, 16px);
+  font-weight: 900;
+  line-height: 1.3;
+}
+.splash-right {
+  position: relative;
+  z-index: 2;
+  min-height: 420px;
+  display: grid;
+  place-items: center;
+}
+.splash-mii-badge {
+  width: clamp(220px, 27vw, 380px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255,255,255,0.88) 0 34%, rgba(255, 243, 204, 0.86) 35% 62%, rgba(255, 171, 0, 0.18) 63% 100%);
+  border: clamp(6px, 0.7vw, 10px) solid #FFFFFF;
+  box-shadow: 0 18px 42px rgba(92, 48, 0, 0.24), inset 0 -8px 0 rgba(0,0,0,0.08);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  animation: splashMii 2.5s ease-in-out infinite;
+}
+.splash-mii-badge img {
+  width: 72%;
+  height: 90%;
+  object-fit: contain;
+  object-position: bottom center;
+}
+@keyframes splashMii {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.015); }
+}
+.splash-orbit {
+  position: absolute;
+  width: clamp(58px, 6.6vw, 92px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #FFF3CC;
+  border: 4px solid rgba(255,255,255,0.86);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.16), inset 0 -4px 0 rgba(255, 131, 0, 0.10);
+  display: grid;
+  place-items: center;
+  font-size: clamp(24px, 3vw, 42px);
+  animation: splashFloat 4.7s ease-in-out infinite;
+}
+.splash-orbit-1 { top: 2%; left: 10%; animation-delay: 0s; }
+.splash-orbit-2 { top: 10%; right: 6%; animation-delay: .45s; }
+.splash-orbit-3 { bottom: 10%; left: 4%; animation-delay: .9s; }
+.splash-orbit-4 { bottom: 0%; right: 12%; animation-delay: 1.35s; }
+.splash-receipt-mini {
+  position: absolute;
+  left: 13%;
+  bottom: 4%;
+  width: clamp(120px, 14vw, 180px);
+  transform: rotate(-6deg);
+  padding: 18px 14px;
+  background: #fbf7e8;
+  color: #151515;
+  border: 1px solid #e5dcc6;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.16);
+  font-family: "Courier New", Courier, monospace;
+  text-align: center;
+}
+.splash-receipt-mini strong,
+.splash-receipt-mini span,
+.splash-receipt-mini i { display: block; }
+.splash-receipt-mini strong { font-size: 20px; }
+.splash-receipt-mini span { font-size: 14px; font-weight: 900; }
+.splash-receipt-mini i { margin-top: 10px; font-size: 11px; color: #444; }
+.splash-receipt-mini::after {
+  content: '';
+  display: block;
+  height: 28px;
+  margin-top: 12px;
+  background: repeating-linear-gradient(90deg, #111 0 2px, transparent 2px 5px, #111 5px 7px, transparent 7px 10px);
+}
+@media (max-width: 820px) {
+  .splash-card { grid-template-columns: 1fr; min-height: auto; text-align: left; }
+  .splash-right { min-height: 270px; }
+  .splash-receipt-mini { display: none; }
+}
+
+.restaurant-scene {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.18), transparent 34%),
+    linear-gradient(180deg, #FFE7A8 0%, #FFC06D 100%);
+}
+
+.restaurant-scene::before,
+.restaurant-scene::after {
+  display: none;
+}
+
+.restaurant-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(135, 68, 31, 0.18), transparent 16% 84%, rgba(135, 68, 31, 0.18)),
+    linear-gradient(180deg, #FFE2A0 0 58%, #F3A858 58% 100%);
+}
+
+.restaurant-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 36%;
+  background:
+    linear-gradient(90deg, transparent 0 18%, rgba(255,244,194,0.42) 18% 20%, transparent 20% 80%, rgba(255,244,194,0.42) 80% 82%, transparent 82%),
+    linear-gradient(180deg, rgba(255,255,255,0.24), transparent 55%);
+}
+
+.restaurant-backdrop::after {
+  content: '';
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  bottom: 0;
+  height: 45%;
+  background:
+    repeating-linear-gradient(90deg, rgba(122,72,38,0.12) 0 4px, transparent 4px 92px),
+    linear-gradient(180deg, #F8B268, #D77A3D);
+  transform: perspective(700px) rotateX(58deg);
+  transform-origin: bottom;
+}
+
+.kitchen-window {
+  position: absolute;
+  z-index: 1;
+  top: 8%;
+  left: 50%;
+  width: min(360px, 25vw);
+  height: min(130px, 15vh);
+  transform: translateX(-50%);
+  border-radius: 0 0 18px 18px;
+  background: #BF6C36;
+  border: 8px solid #E58B46;
+  box-shadow: inset 0 -14px 0 rgba(91, 44, 20, 0.12);
+}
+
+.kitchen-window span {
+  position: absolute;
+  bottom: 20px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #FFE9B5;
+  box-shadow: inset 0 -8px 0 rgba(141, 77, 38, 0.12);
+}
+.kitchen-window span:first-child { left: 26%; }
+.kitchen-window span:last-child { right: 26%; }
+
+.back-table {
+  position: absolute;
+  z-index: 1;
+  top: 23%;
+  width: min(310px, 20vw);
+  height: min(150px, 18vh);
+  border-radius: 16px;
+  background: #FFF7D9;
+  border-bottom: 14px solid #D57A3B;
+  filter: blur(1.6px);
+  opacity: 0.72;
+}
+.back-left { left: 9%; }
+.back-right { right: 8%; }
+
+.guest {
+  position: absolute;
+  bottom: 54px;
+  width: 58px;
+  height: 78px;
+  border-radius: 34px 34px 18px 18px;
+  background: #FFD36D;
+}
+.guest::before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: -24px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #FFD2A5;
+}
+.guest.hair-dark { left: 24px; background: #60A9E8; }
+.guest.hair-dark::before { background: #3A221B; }
+.guest.hair-red { right: 34px; }
+.guest.hair-red::before { background: #C76338; }
+.guest.bear { left: 38px; background: #F493B7; }
+.guest.bear::before { background: #E1A43E; }
+.guest.purple { right: 20px; background: #A687D8; }
+.guest.purple::before { background: #8B68C5; }
+
+.center-chair {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 34%;
+  width: 180px;
+  height: 190px;
+  transform: translateX(-50%);
+  border-radius: 28px 28px 8px 8px;
+  background: linear-gradient(180deg, #D36D31, #B9582A);
+  border: 5px solid #8E3E22;
+  filter: blur(0.8px);
+  opacity: 0.7;
+}
+
+.restaurant-table {
+  z-index: 2;
+  left: 50%;
+  bottom: -4%;
+  width: min(1180px, 90vw);
+  height: min(530px, 56vh);
+  transform: translateX(-50%);
+}
+
+.table-surface {
+  position: absolute;
+  inset: 0 0 4%;
+  border-radius: 44px 44px 16px 16px;
+  background: #FFF8D2;
+  border: 6px solid #7E3420;
+  box-shadow: 0 28px 0 #A94D28;
+}
+
+.table-surface::after {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -56px;
+  height: 70px;
+  border-radius: 0 0 42px 42px;
+  background: #813C2E;
+  z-index: -1;
+}
+
+.tray {
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  width: min(660px, 58vw);
+  height: min(280px, 31vh);
+  transform: translateX(-50%);
+  border-radius: 28px;
+  background: #FFA94D;
+  border: 5px solid #A84B25;
+  box-shadow: inset 0 -12px 0 rgba(137,68,25,0.12), 0 18px 0 rgba(117,55,24,0.14);
+}
+
+.tray-inner {
+  position: absolute;
+  inset: 9%;
+  border-radius: 18px;
+  background: rgba(255, 198, 95, 0.76);
+}
+
+.tasting-plate-wrap {
+  z-index: 5;
+  top: 18%;
+  left: 50%;
+  width: min(250px, 21vw);
+}
+
+.tasting-plate-wrap.ready {
+  transform: translate(-50%, 0) scale(1);
+}
+
+.tasting-plate-shadow {
+  left: 5%;
+  right: 5%;
+  bottom: -1%;
+  height: 18%;
+  background: rgba(84,45,20,0.2);
+  filter: blur(7px);
+}
+
+.tasting-plate {
+  inset: 2%;
+  border: 4px solid #783622;
+  background:
+    radial-gradient(circle at 50% 47%, #FFFDF5 0 52%, #8FD1DD 53% 57%, #FFF9E7 58% 100%);
+  box-shadow: inset 0 -12px 0 rgba(142,79,28,0.09), 0 18px 22px rgba(78,42,19,0.18);
+}
+
+.tasting-food {
+  inset: 16%;
+  animation: none !important;
+  margin-top: 0 !important;
+  transform-origin: 50% 50%;
+}
+
+.tasting-food.bite-1 { transform: scale(0.78); }
+.tasting-food.bite-2 { transform: scale(0.5); }
+.tasting-food.bite-3 { transform: scale(0.06); opacity: 0; }
+
+.drink-glass,
+.soup-bowl,
+.fork,
+.spoon {
+  position: absolute;
+  z-index: 4;
+}
+
+.drink-glass {
+  left: 15%;
+  top: -4%;
+  width: 58px;
+  height: 116px;
+  border-radius: 13px 13px 20px 20px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.7), rgba(142,220,232,0.72));
+  border: 4px solid #6A4B3A;
+  transform: rotate(-5deg);
+}
+.drink-glass span {
+  position: absolute;
+  left: 7px;
+  right: 7px;
+  bottom: 10px;
+  height: 62%;
+  border-radius: 8px 8px 16px 16px;
+  background: linear-gradient(180deg, #FFD566, #FF8D29);
+}
+
+.soup-bowl {
+  right: 13%;
+  top: 3%;
+  width: 130px;
+  height: 76px;
+  border-radius: 50% 50% 44% 44%;
+  background: #FFF0BE;
+  border: 4px solid #783622;
+  box-shadow: inset 0 -13px 0 rgba(141,67,28,0.1);
+}
+.soup-bowl span {
+  position: absolute;
+  left: 13%;
+  right: 13%;
+  top: 18%;
+  height: 38%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 42% 40%, #6DAE5E 0 6px, transparent 7px),
+    radial-gradient(circle at 58% 42%, #6DAE5E 0 6px, transparent 7px),
+    #F2C756;
+}
+
+.fork {
+  left: 20%;
+  bottom: 8%;
+  width: 24px;
+  height: 130px;
+  border-radius: 99px;
+  background: #DDE4E8;
+  border: 4px solid #664333;
+  transform: rotate(10deg);
+}
+.fork span {
+  position: absolute;
+  left: -11px;
+  top: -21px;
+  width: 42px;
+  height: 38px;
+  border-radius: 12px 12px 4px 4px;
+  border-top: 8px solid #DDE4E8;
+  border-left: 8px solid #DDE4E8;
+  border-right: 8px solid #DDE4E8;
+}
+
+.spoon {
+  right: 20%;
+  bottom: 8%;
+  width: 24px;
+  height: 132px;
+  border-radius: 99px;
+  background: #DDE4E8;
+  border: 4px solid #664333;
+  transform: rotate(-10deg);
+}
+.spoon span {
+  position: absolute;
+  left: -16px;
+  top: -35px;
+  width: 52px;
+  height: 58px;
+  border-radius: 50%;
+  background: #DDE4E8;
+  border: 4px solid #664333;
+}
+
+.eat-button {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  bottom: -28px;
+  min-width: 220px;
+  height: 82px;
+  transform: translateX(-50%);
+  border: 7px solid #FFF;
+  border-radius: 32px;
+  background: linear-gradient(180deg, #9AE555, #32B64E);
+  box-shadow: 0 8px 0 #1F7E41, 0 16px 20px rgba(71, 35, 17, 0.25);
+  color: #FFF;
+  font-family: 'Nunito', sans-serif;
+  font-size: 34px;
+  font-weight: 1000;
+  letter-spacing: 0;
+  text-shadow: 0 4px 0 rgba(30, 104, 50, 0.55);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.eat-button:active {
+  transform: translateX(-50%) translateY(5px);
+  box-shadow: 0 3px 0 #1F7E41, 0 10px 15px rgba(71, 35, 17, 0.2);
+}
+.eat-face {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #FFF06C;
+  position: relative;
+  box-shadow: inset 0 -5px 0 rgba(85, 139, 39, 0.18);
+}
+.eat-face::before,
+.eat-face::after {
+  content: '';
+  position: absolute;
+  top: 14px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5B3A2A;
+}
+.eat-face::before { left: 12px; }
+.eat-face::after { right: 12px; }
+
+.finished-plate-stack {
+  display: block;
+  z-index: 3;
+  right: -18%;
+  top: 18%;
+  width: 154px;
+  height: 96px;
+}
+.stacked-plate {
+  width: 132px;
+  height: 42px;
+  border: 3px solid #6EAEC1;
+  background: radial-gradient(circle, #FFFDF5 0 52%, #8FD1DD 53% 58%, #FFF9E7 59% 100%);
+}
+
+.memory-ripple {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 62%;
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+}
+.memory-ripple span {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 4px solid rgba(255,255,255,0.9);
+  box-shadow: 0 0 0 7px rgba(255,217,115,0.36);
+}
+.restaurant-scene.ripple-out .memory-ripple {
+  opacity: 1;
+}
+.restaurant-scene.ripple-out .memory-ripple span {
+  animation: memoryRippleRing 0.95s ease-out forwards;
+}
+.restaurant-scene.ripple-out .memory-ripple span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.restaurant-scene.ripple-out .memory-ripple span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+@keyframes memoryRippleRing {
+  to {
+    opacity: 0;
+    transform: scale(95);
+  }
+}
+
+.memory-visual-overlay {
+  clip-path: circle(0 at 50% 62%);
+}
+.memory-visual-overlay.show {
+  clip-path: circle(145% at 50% 62%);
+  transition: opacity 0.3s ease, clip-path 1s cubic-bezier(.2,.86,.24,1);
+}
+
+.table-overlay.memory-mode #threeContainer {
+  opacity: 1;
+  filter: none;
+}
+.table-overlay.memory-mode .restaurant-table,
+.table-overlay.memory-mode .restaurant-backdrop {
+  opacity: 1;
+  transform: none;
+}
+.table-overlay.memory-mode .tray,
+.table-overlay.memory-mode .eat-button {
+  opacity: 0;
+  transform: translateY(6px) scale(0.98);
+  transition: opacity 0.36s ease 0.25s, transform 0.36s ease 0.25s;
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .restaurant-table {
+    width: 96vw;
+    height: 54vh;
+  }
+  .tray {
+    width: 76vw;
+  }
+  .tasting-plate-wrap {
+    width: min(220px, 40vw);
+  }
+  .drink-glass {
+    left: 8%;
+    transform: scale(0.85) rotate(-5deg);
+  }
+  .soup-bowl {
+    right: 6%;
+    transform: scale(0.82);
+  }
+  .fork { left: 12%; }
+  .spoon { right: 12%; }
+  .eat-button {
+    min-width: 180px;
+    height: 68px;
+    font-size: 26px;
+  }
+}
+.three-eat-button {
+  position: absolute;
+  z-index: 6;
+  left: 50%;
+  bottom: clamp(14px, 3.2vh, 34px);
+  min-width: clamp(156px, 15vw, 220px);
+  height: clamp(52px, 6.8vh, 72px);
+  transform: translateX(-50%);
+  border: 4px solid #FFF8DF;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #82D85B, #2D9E52);
+  box-shadow: 0 6px 0 #1F7040, 0 14px 20px rgba(71, 35, 17, 0.22);
+  color: #FFF;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(22px, 2.4vw, 34px);
+  font-weight: 1000;
+  letter-spacing: 0;
+  text-shadow: 0 3px 0 rgba(28, 103, 49, 0.48);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  pointer-events: auto;
+}
+
+.three-eat-button.show {
+  display: inline-flex;
+}
+
+.three-eat-button:active {
+  transform: translateX(-50%) translateY(5px);
+  box-shadow: 0 3px 0 #1F7F42, 0 10px 16px rgba(71, 35, 17, 0.22);
+}
+
+.three-eat-face {
+  width: clamp(28px, 3vw, 42px);
+  height: clamp(28px, 3vw, 42px);
+  border-radius: 50%;
+  background: #FFF06C;
+  position: relative;
+  box-shadow: inset 0 -5px 0 rgba(85, 139, 39, 0.18);
+}
+
+.three-eat-face::before,
+.three-eat-face::after {
+  content: '';
+  position: absolute;
+  top: 34%;
+  width: 14%;
+  height: 14%;
+  border-radius: 50%;
+  background: #5B3A2A;
+}
+
+.three-eat-face::before { left: 27%; }
+.three-eat-face::after { right: 27%; }
+
+.memory-white-ripple {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 57%;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #FFFDF2;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 0 0 10px rgba(255, 235, 157, 0.4);
+}
+
+.memory-white-ripple.play {
+  animation: fullScreenRipple 1.08s cubic-bezier(.18,.84,.22,1) forwards;
+}
+
+@keyframes fullScreenRipple {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+  18% { opacity: 1; }
+  72% { opacity: 1; transform: translate(-50%, -50%) scale(95); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(115); }
+}
+
+.table-overlay.memory-mode #threeContainer {
+  opacity: 1;
+  filter: none;
+}
+
+.table-overlay.memory-mode .three-eat-button {
+  display: none;
+}
+
+.memory-visual-overlay {
+  clip-path: circle(0 at 50% 57%);
+}
+
+.memory-visual-overlay.show {
+  clip-path: circle(150% at 50% 57%);
+  transition: opacity 0.35s ease, clip-path 0.9s cubic-bezier(.2,.86,.24,1);
+}
+.asset-tasting-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 58%, rgba(255,255,255,0.84) 0%, rgba(255,255,255,0.52) 28%, rgba(255,255,255,0) 62%),
+    linear-gradient(180deg, #EF843A 0%, #F7B064 34%, #FFE4B4 66%, #FFFDF4 100%);
+}
+
+.asset-tasting-scene::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(255,255,255,0.42), transparent 48%),
+    linear-gradient(90deg, rgba(122,54,24,0.13), transparent 20% 80%, rgba(122,54,24,0.13));
+  pointer-events: none;
+}
+
+.asset-hunger {
+  position: absolute;
+  z-index: 4;
+  left: clamp(18px, 3vw, 42px);
+  top: clamp(330px, 39vh, 430px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Nunito', sans-serif;
+  color: #5A2C1A;
+  filter: drop-shadow(0 3px 0 rgba(255,255,255,0.62));
+}
+
+.asset-hunger-label {
+  position: absolute;
+  left: -16px;
+  top: -42px;
+  font-size: clamp(15px, 1.65vw, 24px);
+  font-weight: 1000;
+  color: #FFF;
+  -webkit-text-stroke: 5px #5A2C1A;
+  paint-order: stroke fill;
+  white-space: nowrap;
+}
+
+.asset-hunger-track {
+  position: relative;
+  width: 48px;
+  height: 220px;
+  border-radius: 999px;
+  border: 6px solid #5A2C1A;
+  background: #FFFDF4;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 6px #FFFDF4;
+}
+
+.asset-hunger-fill {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  height: 0%;
+  max-height: calc(100% - 12px);
+  border-radius: 999px;
+  background: linear-gradient(180deg, #70CC54 0%, #F5D94D 58%, #F15D45 100%);
+  transition: height 0.45s cubic-bezier(.34,1.56,.64,1);
+}
+
+.asset-hunger-percent {
+  font-size: clamp(16px, 1.8vw, 26px);
+  font-weight: 1000;
+  color: #FFF;
+  -webkit-text-stroke: 5px #5A2C1A;
+  paint-order: stroke fill;
+}
+
+.asset-bg-shape {
+  position: absolute;
+  opacity: 0.22;
+  border-radius: 32px;
+  background: rgba(255,255,255,0.5);
+  border: 5px solid rgba(117,57,30,0.16);
+}
+.asset-bg-shape.window { right: 18%; top: 12%; width: 220px; height: 150px; }
+.asset-bg-shape.frame { left: 44%; top: 13%; width: 250px; height: 145px; }
+
+.asset-table {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: -38px;
+  width: min(1280px, 88vw);
+  height: min(560px, 58vh);
+  transform: translateX(-50%);
+}
+
+.asset-table-surface {
+  position: absolute;
+  inset: 0 0 7%;
+  border-radius: 42px 42px 18px 18px;
+  background:
+    radial-gradient(ellipse at 18% 72%, rgba(108,47,23,0.16) 0 8%, transparent 9%),
+    radial-gradient(ellipse at 74% 38%, rgba(108,47,23,0.14) 0 7%, transparent 8%),
+    repeating-linear-gradient(0deg, rgba(117,55,26,0.16) 0 4px, transparent 4px 54px),
+    linear-gradient(180deg, #E49A4E 0%, #CB7435 68%, #A94F29 100%);
+  border: 6px solid #6B2E1E;
+  box-shadow: 0 26px 0 #8E3F22, 0 36px 30px rgba(91,42,20,0.28);
+  overflow: hidden;
+}
+
+.asset-table-surface::before {
+  content: '';
+  position: absolute;
+  inset: 12% 3% 16%;
+  border-radius: 34px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 38px, rgba(100,47,24,0.18) 39px 42px),
+    radial-gradient(ellipse at 22% 72%, transparent 0 42px, rgba(99,47,24,0.18) 43px 46px, transparent 47px),
+    radial-gradient(ellipse at 78% 48%, transparent 0 38px, rgba(99,47,24,0.16) 39px 42px, transparent 43px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.asset-tray {
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  width: min(720px, 56vw);
+  height: min(310px, 32vh);
+  transform: translateX(-50%);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 16px 18px, rgba(255,255,255,0.13) 0 9px, transparent 10px) 0 0 / 32px 24px,
+    radial-gradient(circle at 32px 18px, rgba(43,96,126,0.28) 0 11px, transparent 12px) 0 0 / 32px 24px,
+    linear-gradient(180deg, #5D91B0, #416F91);
+  border: 5px solid #365A74;
+  box-shadow: inset 0 -10px 0 rgba(22,58,82,0.22), 0 20px 0 rgba(113,54,26,0.16);
+}
+
+.asset-main-plate {
+  position: absolute;
+  left: 50%;
+  top: 49%;
+  width: min(380px, 30vw);
+  aspect-ratio: 1.42;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at center, #FFFDF6 0 46%, #8FD4E0 47% 54%, #FFF5D7 55% 100%);
+  border: 5px solid #6B2E1E;
+  box-shadow: 0 18px 0 rgba(62,38,29,0.2), 0 24px 26px rgba(55,33,22,0.22);
+  cursor: pointer;
+  overflow: visible;
+}
+
+.asset-food {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 90%;
+  height: 78%;
+  transform: translate(-50%, -50%) scale(1);
+  transform-origin: center;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 0 rgba(91,42,20,0.12));
+  transition: transform 0.28s cubic-bezier(.34,1.56,.64,1), opacity 0.24s ease;
+  pointer-events: none;
+}
+
+.asset-food.bite-1 { --food-scale: 0.74; }
+.asset-food.bite-2 { --food-scale: 0.48; }
+.asset-food.bite-3 { --food-scale: 0.08; --food-opacity: 0; }
+
+.asset-glass,
+.asset-bread-basket,
+.asset-cutlery,
+.asset-stack {
+  position: absolute;
+  z-index: 2;
+}
+
+.asset-glass {
+  left: 9%;
+  top: 18%;
+  width: 78px;
+  height: 126px;
+  border-radius: 16px 16px 24px 24px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.88), rgba(166,229,238,0.7));
+  border: 5px solid #6B2E1E;
+  transform: rotate(-5deg);
+  box-shadow: 0 10px 0 rgba(91,42,20,0.14);
+}
+.asset-glass::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 10px;
+  height: 62%;
+  border-radius: 10px 10px 18px 18px;
+  background: linear-gradient(180deg, #FFD86D, #FF8A2A);
+}
+
+.asset-bread-basket {
+  right: 10%;
+  top: 14%;
+  width: 96px;
+  height: 68px;
+}
+
+.asset-bread-basket::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 3px;
+  height: 50px;
+  border-radius: 50%;
+  border: 5px solid #6B2E1E;
+  background:
+    radial-gradient(ellipse at 50% 36%, #FFF6D8 0 46%, #8FD4E0 47% 58%, #FFF1CC 59% 100%);
+  box-shadow: 0 8px 0 rgba(91,42,20,0.12);
+}
+
+.asset-bread-roll {
+  position: absolute;
+  bottom: 25px;
+  width: 30px;
+  height: 23px;
+  border-radius: 50%;
+  border: 4px solid #6B2E1E;
+  background: radial-gradient(ellipse at 36% 25%, #FFD982 0 18%, #EF8B3E 55%, #CC5E30 100%);
+  z-index: 2;
+}
+
+.asset-bread-roll::after {
+  content: '';
+  position: absolute;
+  left: 20%;
+  top: 38%;
+  width: 48%;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(107,46,30,0.36);
+  transform: rotate(-12deg);
+}
+
+.asset-bread-roll:nth-child(1) { left: 22px; transform: rotate(-10deg); }
+.asset-bread-roll:nth-child(2) { left: 39px; bottom: 31px; transform: rotate(3deg); }
+.asset-bread-roll:nth-child(3) { right: 18px; transform: rotate(12deg); }
+
+.asset-cutlery {
+  right: 6%;
+  top: 31%;
+  width: 164px;
+  height: 142px;
+  border-radius: 14px;
+  background:
+    repeating-linear-gradient(90deg, rgba(232,86,62,0.24) 0 9px, transparent 9px 30px),
+    repeating-linear-gradient(0deg, rgba(82,153,141,0.18) 0 8px, transparent 8px 32px),
+    linear-gradient(180deg, #FFF8E8, #EFD6B8);
+  border: 4px solid rgba(107,46,30,0.22);
+  box-shadow: 0 10px 0 rgba(91,42,20,0.12);
+}
+
+.asset-cutlery svg {
+  position: absolute;
+  top: 17px;
+  width: 50px;
+  height: 110px;
+  overflow: visible;
+  filter: drop-shadow(0 4px 0 rgba(91,42,20,0.1));
+}
+
+.asset-fork-svg { left: 38px; transform: rotate(-2deg); }
+.asset-knife-svg { right: 36px; transform: rotate(3deg); }
+
+.cutlery-fill { fill: #FFF9EA; }
+.cutlery-shade { fill: rgba(255,255,255,0.58); }
+.cutlery-stroke {
+  fill: none;
+  stroke: #6B2E1E;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.asset-stack {
+  left: -18%;
+  bottom: -4%;
+  width: 230px;
+  height: 148px;
+  transform: scale(0.92);
+  transform-origin: bottom left;
+}
+.asset-stacked-plate {
+  position: absolute;
+  left: calc(26px + var(--stack-shift, 0px));
+  bottom: calc(var(--stack-index, 0) * 8px);
+  width: 170px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, #FFFDF3 0 48%, #8FD4E0 49% 54%, #FFF4D2 55% 100%);
+  border: 4px solid #6B2E1E;
+  box-shadow: 0 8px 0 rgba(91,42,20,0.12);
+  transform: rotate(var(--plate-rotation, 0deg));
+  animation: stackedPlateDrop 0.38s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+.asset-stacked-plate::after {
+  content: '';
+  position: absolute;
+  left: 23%;
+  right: 23%;
+  top: 34%;
+  height: 22%;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.72);
+}
+
+@keyframes stackedPlateDrop {
+  from { opacity: 0; transform: translateY(-18px) scale(0.9) rotate(var(--plate-rotation, 0deg)); }
+  to { opacity: 1; transform: translateY(0) scale(1) rotate(var(--plate-rotation, 0deg)); }
+}
+
+.asset-eat-button {
+  position: absolute;
+  z-index: 5;
+  right: clamp(22px, 5vw, 96px);
+  bottom: clamp(16px, 3vh, 34px);
+  min-width: clamp(176px, 17vw, 245px);
+  height: clamp(60px, 7.2vh, 82px);
+  border: 6px solid #FFF;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #FF7565, #D83728);
+  box-shadow: 0 8px 0 #7B2A24, 0 18px 24px rgba(81,36,20,0.25);
+  color: #FFF;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 1000;
+  letter-spacing: 0;
+  text-shadow: 0 4px 0 rgba(91,28,22,0.55);
+  cursor: pointer;
+}
+
+.asset-eat-button:active {
+  transform: translateY(5px);
+  box-shadow: 0 3px 0 #7B2A24, 0 12px 18px rgba(81,36,20,0.2);
+}
+
+.asset-eat-button.is-hidden {
+  display: none;
+}
+
+.asset-memory-ripple {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 56%;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #FFFDF4;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+.asset-memory-ripple.play {
+  animation: assetFullRipple 1.05s cubic-bezier(.18,.84,.22,1) forwards;
+}
+@keyframes assetFullRipple {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+  16% { opacity: 1; }
+  78% { opacity: 1; transform: translate(-50%, -50%) scale(95); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(115); }
+}
+
+@media (max-width: 760px) {
+  .asset-hunger { transform: scale(0.76); transform-origin: top left; }
+  .asset-table { width: 96vw; height: 54vh; }
+  .asset-tray { width: 78vw; }
+  .asset-main-plate { width: min(250px, 46vw); }
+  .asset-glass { left: 8%; transform: scale(0.82) rotate(-5deg); }
+  .asset-bread-basket { right: 5%; transform: scale(0.78); }
+  .asset-stack { left: -15%; transform: scale(0.62); }
+  .asset-cutlery { display: none; }
+  .asset-eat-button { left: 50%; right: auto; transform: translateX(-50%); }
+  .asset-eat-button:active { transform: translateX(-50%) translateY(5px); }
+}
+
+/* PNG-based tasting scene */
+.asset-tasting-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 58%, rgba(255,255,255,0.84) 0%, rgba(255,255,255,0.52) 28%, rgba(255,255,255,0) 62%),
+    linear-gradient(180deg, #EF843A 0%, #F7B064 34%, #FFE4B4 66%, #FFFDF4 100%);
+}
+
+.asset-tasting-scene::before,
+.asset-bg-shape,
+.asset-hunger,
+.asset-table,
+.asset-tray,
+.asset-main-plate,
+.asset-glass,
+.asset-bread-basket,
+.asset-cutlery,
+.asset-stack {
+  display: none !important;
+}
+
+.asset-scene-foreground {
+  position: absolute;
+  left: 0;
+  bottom: -2%;
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.eating-stage {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(1560px, 116vw);
+  aspect-ratio: 16 / 9;
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.asset-food-hitarea {
+  position: absolute;
+  left: var(--food-left, 50%);
+  top: var(--food-top, 60%);
+  width: var(--food-width, 18%);
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.asset-food {
+  position: static;
+  left: auto;
+  top: auto;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 10px 8px rgba(80, 40, 18, 0.18));
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  transform: translateY(var(--food-y-offset, 0%)) scale(var(--food-scale, 1));
+  opacity: var(--food-opacity, 1);
+  transition: transform 0.28s cubic-bezier(.34,1.56,.64,1), opacity 0.24s ease;
+}
+
+.asset-food.bite-1 { --food-scale: 0.74; }
+.asset-food.bite-2 { --food-scale: 0.48; }
+.asset-food.bite-3 { --food-scale: 0.08; --food-opacity: 0; }
+
+.plate-progress {
+  position: absolute;
+  left: clamp(20px, 3vw, 48px);
+  bottom: clamp(110px, 18vh, 190px);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Nunito', sans-serif;
+  filter: drop-shadow(0 4px 0 rgba(255,255,255,0.56));
+}
+
+.plate-progress-stack {
+  position: relative;
+  width: 92px;
+  height: 220px;
+}
+
+.progress-plate {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--i, 0) * 9px);
+  width: 88px;
+  height: 27px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: linear-gradient(180deg, #FFFDF5, #E8EDF0);
+  border: 3px solid #5A2C1A;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.08);
+  animation: progressPlateDrop 0.32s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+.progress-plate::after {
+  content: '';
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  top: 24%;
+  height: 36%;
+  border-radius: 50%;
+  border: 2px solid rgba(90,44,26,0.35);
+}
+
+@keyframes progressPlateDrop {
+  from { opacity: 0; transform: translateX(-50%) translateY(-18px) scale(0.88); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+.plate-progress-percent {
+  font-weight: 1000;
+  font-size: clamp(18px, 2vw, 30px);
+  color: #FFF;
+  -webkit-text-stroke: 5px #5A2C1A;
+  paint-order: stroke fill;
+}
+
+.asset-eat-button {
+  position: absolute;
+  z-index: 5;
+  right: clamp(28px, 5vw, 76px);
+  bottom: clamp(18px, 4vh, 42px);
+  left: auto;
+  min-width: clamp(176px, 17vw, 245px);
+  height: clamp(60px, 7.2vh, 82px);
+  transform: none;
+  border: 6px solid #FFF;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #FF7565, #D83728);
+  box-shadow: 0 8px 0 #7B2A24, 0 18px 24px rgba(81,36,20,0.25);
+  color: #FFF;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 1000;
+  letter-spacing: 0;
+  text-shadow: 0 4px 0 rgba(91,28,22,0.55);
+  cursor: pointer;
+}
+
+.asset-eat-button:active {
+  transform: translateY(5px);
+  box-shadow: 0 3px 0 #7B2A24, 0 12px 18px rgba(81,36,20,0.2);
+}
+
+.asset-memory-ripple {
+  position: absolute;
+  z-index: 4;
+  left: var(--food-left, 50%);
+  top: var(--food-top, 60%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #FFFDF4;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.asset-memory-ripple.play {
+  animation: assetFullRipple 1.05s cubic-bezier(.18,.84,.22,1) forwards;
+}
+
+@media (max-width: 760px) {
+  .eating-stage {
+    bottom: 0;
+    width: min(1220px, 154vw);
+    transform: translateX(-50%);
+  }
+
+  .asset-food-hitarea {
+    top: var(--food-top-mobile, var(--food-top, 60%));
+    width: var(--food-width-mobile, var(--food-width, 18%));
+  }
+
+  .plate-progress {
+    left: clamp(12px, 3vw, 22px);
+    bottom: clamp(92px, 16vh, 150px);
+    gap: 8px;
+    transform: scale(0.78);
+    transform-origin: bottom left;
+  }
+
+  .asset-eat-button {
+    left: 50%;
+    right: auto;
+    bottom: clamp(14px, 3vh, 28px);
+    transform: translateX(-50%);
+  }
+
+  .asset-eat-button:active {
+    transform: translateX(-50%) translateY(5px);
+  }
+}
+</style>
+</head>
+<body>
+<audio id="bgMusic" src="Marimba Afternoon.mp3" preload="auto" loop></audio>
+<div class="mobile-blocker">Per prendere parte all'esperienza, aprire questa pagina da computer o laptop.</div>
+
+<div class="splash-screen" id="splashScreen" aria-label="Schermata iniziale Menu Identitario">
+  <div class="splash-bg-bubbles" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="splash-card">
+    <div class="splash-left">
+      <div class="splash-kicker">Public Speaking</div>
+      <h1 class="splash-title">Menu<br>Identitario</h1>
+      <p class="splash-subtitle">Ordina un piatto, assaggia un ricordo, esci con uno scontrino che racconta qualcosa di me.</p>
+
+      <div class="splash-actions">
+        <button class="splash-start" id="startExperienceBtn">Inizia ordine</button>
+        <div class="splash-hint">Clicca i piatti · siediti al tavolo · leggi il ricordo</div>
+      </div>
+    </div>
+
+    <div class="splash-right" aria-hidden="true">
+      <div class="splash-orbit splash-orbit-1">🥟</div>
+      <div class="splash-orbit splash-orbit-2">🍕</div>
+      <div class="splash-orbit splash-orbit-3">🍳</div>
+      <div class="splash-orbit splash-orbit-4">🍰</div>
+      <div class="splash-mii-badge">
+        <img src="mii-neutral.png" alt="" onerror="this.style.display='none'">
+      </div>
+      <div class="splash-receipt-mini">
+        <strong>MENU</strong>
+        <span>IDENTITARIO</span>
+        <i>ordine pronto</i>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<header class="topbar">
+  <div class="section-pill" id="sectionPill">Antipasti</div>
+
+  <div class="dots-row" id="dotsRow">
+    <!-- rendered by JS -->
+  </div>
+
+  <div class="topbar-arrows">
+    <button class="arrow-btn" id="btnPrev" title="Sezione precedente">&#9664;</button>
+    <button class="arrow-btn" id="btnNext" title="Sezione successiva">&#9654;</button>
+  </div>
+
+  <div class="topbar-spacer"></div>
+
+  <div class="bubble-anchor">
+    <div class="bubble" id="bubble"></div>
+  </div>
+</header>
+
+<main class="main">
+  <!-- Left: menu card -->
+  <div class="menu-card">
+    <div class="cat-header">
+      <div class="cat-title" id="catTitle">Antipasti</div>
+    </div>
+
+    <div class="cards-row" id="cardsRow">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+
+  <!-- Right: Mii -->
+  <div class="mii-panel">
+    <img class="mii-img" id="miiImg"
+         src="mii-neutral.png" alt="Mii di Alessandro"
+         onerror="this.style.background='rgba(0,0,0,0.05)'">
+  </div>
+</main>
+
+<div class="bottom-actions">
+  <div class="score-pill" id="scorePill">€0.00</div>
+  <button class="checkout-btn" id="checkoutBtn">Siediti a tavola</button>
+</div>
+
+<div class="table-overlay" id="tableOverlay">
+  <div class="table-overlay-card">
+    <div id="threeContainer"></div>
+    <div class="memory-visual-overlay" id="memoryVisualOverlay">
+      <div class="memory-visual-image" id="memoryVisualImage"></div>
+      <div class="memory-label" id="memoryLabel"></div>
+    </div>
+    <div class="table-overlay-ui">
+      <div class="table-overlay-panel">
+        <div class="table-overlay-kicker">Degustazione al tavolo</div>
+        <div class="table-overlay-title" id="currentDishTitle">Piatto in degustazione</div>
+        <div class="table-overlay-text" id="currentDishText">Siediti al booth: il piatto sta per arrivare.</div>
+        <div class="table-overlay-meta" id="currentDishMeta"></div>
+        <div class="table-overlay-bites" id="biteIndicator">Morso 0/3</div>
+        <div class="table-overlay-comment" id="dishCommentBox">
+          <div class="table-overlay-comment-title" id="dishCommentTitle"></div>
+          <div class="table-overlay-comment-text" id="dishCommentText"></div>
+        </div>
+      </div>
+      <div class="table-overlay-actions">
+        <button class="checkout-btn" id="nextDishBtn">Prossimo piatto</button>
+        <button class="checkout-btn" id="tableCheckoutBtn">Vai alla cassa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Checkout Overlay -->
+<div class="checkout-overlay" id="checkoutOverlay">
+  <!-- Loading screen -->
+  <div class="checkout-loading" id="checkoutLoading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Stampa scontrino in corso...</div>
+  </div>
+
+  <!-- Receipt container -->
+  <div class="receipt-container" id="receiptContainer">
+    <div class="receipt" id="receipt">
+      <div class="receipt-header">
+        <div class="receipt-title">Menu Identitario</div>
+        <div class="receipt-subtitle">Public Speaking<br>Ordine consumato al tavolo</div>
+        <div class="receipt-date" id="receiptDate"></div>
+      </div>
+      <div class="receipt-items" id="receiptItems">
+        <!-- rendered by JS -->
+      </div>
+      <div class="receipt-total">
+        <span class="receipt-total-label">Totale</span>
+        <span class="receipt-total-value" id="receiptTotal">€0.00</span>
+      </div>
+      <div class="receipt-barcode" aria-hidden="true"></div>
+      <div class="receipt-code" id="receiptCode">000000000000</div>
+      <div class="receipt-divider-dashed"></div>
+      <div class="receipt-chefnote">
+        <div class="receipt-chefnote-label">NOTE DI CUCINA</div>
+        <div class="receipt-chefnote-body">
+          Graphic designer, motion enthusiast, slow content believer.
+          Questo menu racconta me meglio di qualsiasi CV.
+        </div>
+      </div>
+      <div class="receipt-divider-dashed"></div>
+      <div class="receipt-contacts">
+        <div>ksw.ski</div>
+      </div>
+      <div id="receiptQR" class="receipt-qr-wrap"></div>
+    </div>
+    <button class="receipt-continue-btn" id="receiptContinueBtn" type="button">Continua</button>
+  </div>
+
+  <div class="final-screen" id="finalScreen" aria-label="Schermata finale di ringraziamento">
+    <div class="final-confetti-layer" id="finalConfetti" aria-hidden="true"></div>
+    <h2 class="final-thanks-title">Grazie</h2>
+    <div class="final-mii-scene" id="finalMiiScene">
+      <img class="final-mii-img" src="mii-happy.png" alt="Mii di Alessandro" onerror="this.src='mii-neutral.png'">
+      <div class="final-bubble">
+        Grazie per aver assaggiato questo menu.<br>
+        Dentro non c’erano solo piatti, ma pezzi di percorso.<br>
+        Un modo forse strano, ma sincero, per presentarmi.
+      </div>
+    </div>
+    <div class="final-signature" id="finalSignature" aria-hidden="true">
+      <svg class="final-signature-svg" viewBox="0 0 669.43 250.43" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <mask id="finalSignatureMask" maskUnits="userSpaceOnUse" x="0" y="0" width="669.43" height="250.43">
+            <rect x="0" y="0" width="669.43" height="250.43" fill="black"></rect>
+            <path class="final-signature-mask-path" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="54" d="M10 224 C34 168 55 88 77 14 C89 72 100 156 103 236 C88 191 58 157 28 142 C66 147 103 132 128 113"></path>
+            <path class="final-signature-mask-path" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="54" d="M130 132 C158 112 176 73 174 36 C171 8 146 14 138 45 C127 88 123 165 136 192 C149 220 181 199 201 166 C216 142 214 112 196 113 C173 114 164 156 170 184 C177 214 200 210 224 181"></path>
+            <path class="final-signature-mask-path" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="54" d="M236 118 C224 145 229 174 251 188 C280 207 313 161 304 121 C300 100 277 101 260 120 C238 145 240 182 264 188 C291 195 318 165 342 129"></path>
+            <path class="final-signature-mask-path" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="54" d="M356 125 C372 170 371 202 389 192 C404 184 409 152 419 126 C429 152 425 190 438 191 C457 192 467 151 478 125 C486 154 495 186 520 181 C542 176 556 145 558 116"></path>
+            <path class="final-signature-mask-path" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="54" d="M544 12 C529 79 527 148 540 188 C551 222 571 190 577 158 C583 129 594 124 598 153 C602 181 603 207 612 209 C620 210 629 180 634 145"></path>
+            <path class="final-signature-mask-path" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="54" d="M606 143 C620 174 647 177 659 146 C669 121 656 105 638 116 C614 130 606 174 624 193 C637 207 655 195 665 174"></path>
+          </mask>
+        </defs>
+        <image href="firma.svg" x="0" y="0" width="669.43" height="250.43" preserveAspectRatio="xMidYMid meet" mask="url(#finalSignatureMask)"></image>
+      </svg>
+    </div>
+    <button class="final-restart-btn" id="finalRestartBtn" type="button">Ricomincia</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ────────────────────────
+   MENU DATA
+──────────────────────── */
+const MENU = [
+  {
+    label: 'Antipasti', icon: '🥟',
+    items: [
+      {
+        name: 'Noodle Cinesi', price: 5.00, img: 'imgs/noodles-cinesi.png',
+        hideCardPlate: true,
+        selectionText: "Brodo bollente, bacchette che scivolano. Mi riporta dritto in quel terminal con l'aria condizionata rotta.",
+        emotion: 'excited',
+ memoryImg: 'imgs/memories/noodle-cinesi-memory.jpg',
+        comment: `Alle medie ho fatto un viaggio in Malesia e Thailandia. Avevo dodici anni ed era la prima volta che vedevo davvero il mondo. Non ricordo un granché, ma mi è rimasta addosso la sensazione che i confini fossero molto più larghi di quanto pensassi. Da allora non ho mai smesso di voler guardare oltre.`,
+        memory: {
+          gradient: 'linear-gradient(135deg, #E85D2A 0%, #F7A62A 35%, #2A4A8F 70%, #1A2A4F 100%)',
+          label: 'Kuala Lumpur e Bangkok quando avevo solo dodici anni.'
+        }
+      },
+      {
+        name: 'Involtini Primavera', price: 4.50, img: 'imgs/involtini.png',
+        selectionText: "Croccanti fuori, morbidi dentro. Strano come qualcosa di così diverso ti sembri familiare.",
+        emotion: 'thoughtful',
+ memoryImg: 'imgs/memories/involtini-primavera-memory.jpg',
+        comment: `La mia famiglia viene dalla Polonia. Qui in Italia eravamo solo noi quattro: i miei genitori, mio fratello e io. Poi anche lui si è trasferito. Crescendo impari a fare i conti con la distanza, a portarti dietro le persone anche quando non le vedi tutti i giorni.`,
+        memory: {
+          gradient: 'linear-gradient(180deg, #C8DFF0 0%, #E0EEF8 40%, #F0F6FF 70%, #D0E4F4 100%)',
+          label: 'La tua famiglia non è sempre dove abiti.'
+        }
+      },
+      {
+        name: 'Ravioli Cinesi', price: 6.00, img: 'imgs/ravioli.png',
+        selectionText: "Ne basta uno per riempirti la bocca e farti tornare in mente tutto il resto.",
+        emotion: 'neutral',
+ memoryImg: 'imgs/memories/ravioli-cinesi-memory.jpg',
+        comment: `Ho suonato il pianoforte alle medie, ed ero pure bravo. Però la musica classica mi stava stretta, come una stanza chiusa. A un certo punto ho smesso, senza troppi rimpianti. Ho capito presto che saper fare bene una cosa non serve a molto se non ti emoziona davvero.`,
+        memory: {
+          gradient: 'linear-gradient(160deg, #2A2A3A 0%, #3A3A4C 30%, #5C5C70 60%, #8A8A9E 100%)',
+          label: 'Ci sapevo fare, ma non era abbastanza.'
+        }
+      },
+    ]
+  },
+  {
+    label: 'Primi', icon: '🍕',
+    items: [
+      {
+        name: 'Pizza', price: 8.00, img: 'imgs/pizza.png',
+        selectionText: "Alla fine ordini sempre quella. Funziona sempre.",
+        emotion: 'proud',
+ memoryImg: 'imgs/memories/pizza-memory.jpg',
+        comment: `Alle medie i professori mi spingevano verso il liceo linguistico perché andavo bene nelle lingue. Io invece ho scelto lo scientifico. Non perché fossi un genio della matematica, non lo ero affatto. Semplicemente non volevo che fossero gli altri a decidere il mio percorso.`,
+        memory: {
+          gradient: 'linear-gradient(145deg, #C8200A 0%, #E84020 30%, #F06030 65%, #F8A040 100%)',
+          label: 'Ho scelto la mia ricetta, non quella degli altri.'
+        }
+      },
+      {
+        name: 'Tortellini', price: 7.50, img: 'imgs/tortelliniv.png',
+        selectionText: "In brodo o asciutti, non sbagliano mai.",
+        emotion: 'happy',
+ memoryImg: 'imgs/memories/tortellini-memory.jpg',
+        comment: `Mi sono iscritto a economia, un po' perché mi piaceva l'idea di dire che sarei diventato un economista. Non era la mia strada. Però lì ho conosciuto uno dei miei migliori amici e, tramite lui, ho iniziato a frequentare ragazzi del TAG. Sentirli parlare di ciò che studiavano mi metteva addosso una sensazione strana, una specie di invidia positiva.`,
+        memory: {
+          gradient: 'linear-gradient(160deg, #D4AA63 0%, #E8C878 35%, #C89A50 65%, #8A6A30 100%)',
+          label: 'La strada sbagliata che però valeva la pena fare.'
+        }
+      },
+      {
+        name: 'Lasagne', price: 9.00, img: 'imgs/lasagne.png',
+        selectionText: "Strato dopo strato, come certe cose che ti ricordi solo alla fine.",
+        emotion: 'happy',
+ memoryImg: 'imgs/memories/lasagne-memory.jpg',
+        comment: `Alle medie passavo il tempo su Photoshop a fare fotomontaggi assurdi. Mettevo me e i miei amici nelle situazioni più ridicole, accumulando livelli su livelli di assurdità costruite con una cura maniacale. Non sapevo ancora che quella roba si chiamasse design.`,
+        memory: {
+          gradient: 'linear-gradient(135deg, #7A2A9A 0%, #3A4AC8 25%, #2A8A7A 50%, #D8A030 75%, #C83030 100%)',
+          label: 'Facevo già design, solo che non lo sapevo.'
+        }
+      },
+    ]
+  },
+  {
+    label: 'Secondi', icon: '🍳',
+    items: [
+      {
+        name: 'Uova Occhio di Bue', price: 4.50, img: 'imgs/uova.png',
+        selectionText: "Tuorlo che si rompe, pane per scarpetta. Pratico, veloce, sempre buonissimo.",
+        emotion: 'neutral',
+ memoryImg: 'imgs/memories/uova-occhio-di-bue-memory.jpg',
+        comment: `Ho fatto karate per qualche anno. Non l'ho mai preso troppo sul serio, ed è probabilmente il motivo per cui ho smesso. Però mi ricordo bene la sensazione di stare in palestra a ripetere gli stessi movimenti, e capire quanto tempo ci vuole prima che una cosa ti diventi automatica.`,
+        memory: {
+          gradient: 'linear-gradient(180deg, #E8E4D8 0%, #D4D0C4 40%, #BCBAB0 70%, #A4A49C 100%)',
+          label: 'Uno sport carino, tutto sommato.'
+        }
+      },
+      {
+        name: 'Salmone', price: 12.00, img: 'imgs/salmone.png',
+        selectionText: "Sembra leggero ma ti sazia. Va controcorrente senza fare troppo rumore.",
+        emotion: 'thoughtful',
+ memoryImg: 'imgs/memories/salmone-memory.jpg',
+        comment: `Per un po' di anni ho prodotto basi musicali. Ero arrivato a un buon livello, ma finivo sempre a collaborare con persone poco motivate o inaffidabili, e dopo un po' il progetto crollava. Ho imparato che puoi anche sforzarti di nuotare controcorrente, ma se l'acqua intorno non scorre, stai solo facendo fatica sul posto.`,
+        memory: {
+          gradient: 'linear-gradient(145deg, #120820 0%, #221040 30%, #361068 60%, #501888 100%)',
+          label: 'Ero bravo, ma stavo nuotando nelle acque sbagliate.'
+        }
+      },
+      {
+        name: 'Panino Mortadella', price: 3.50, img: 'imgs/panino.png',
+        selectionText: "Due fette di pane, mortadella, niente di più.",
+        emotion: 'neutral',
+ memoryImg: 'imgs/memories/panino-mortadella-memory.jpg',
+        comment: `Trento è piccola, tranquilla e a tratti ti fa sentire chiuso in una bolla. Però è anche l'unico posto dove conosco il nome di ogni singola via e dove finisco sempre per tornare. Sarà pure una città che a volte ti sta stretta, ma resta casa tua, in quel modo un po' scomodo a cui non puoi proprio rinunciare.`,
+        memory: {
+          gradient: 'linear-gradient(160deg, #2A4A2A 0%, #4A6A3A 30%, #3A5C5C 60%, #8A7A6A 100%)',
+          label: 'Trento. Casa tua, nel modo più scomodo possibile.'
+        }
+      },
+    ]
+  },
+  {
+    label: 'Dolci', icon: '🍰',
+    items: [
+      {
+        name: 'Tiramisu', price: 5.00, img: 'imgs/tiramisu.png',
+        selectionText: "Caffè, mascarpone, savoiardi. Il sapore delle sere finite tardi.",
+        emotion: 'excited',
+ memoryImg: 'imgs/memories/tiramisu-memory.jpg',
+        comment: `Ho passato due anni incredibili al TAG. Eravamo le stesse ventiquattro persone tutti i giorni. All'inizio eravamo solo sconosciuti, poi siamo diventati amici, e alla fine qualcosa di più difficile da definire. Tra Olanda, Boston e Valencia abbiamo condiviso progetti, serate, litigi e risate. Oggi ci vediamo poco, ma mi basta pensarci per provare nostalgia.`,
+        memory: {
+          gradient: 'linear-gradient(135deg, #7A4A20 0%, #B07830 30%, #E4A840 60%, #FFD068 100%)',
+          label: 'Ventiquattro sconosciuti diventati qualcosa di molto di più.'
+        }
+      },
+      {
+        name: 'Crema Catalana', price: 4.50, img: 'imgs/crema.png',
+        hideCardPlate: true,
+        selectionText: "Rompi la crosta con il cucchiaio e sotto trovi tutto il resto.",
+        emotion: 'proud',
+ memoryImg: 'imgs/memories/crema-catalana-memory.jpg',
+        comment: `A un certo punto mi sono chiesto perché mai dovessi prima laurearmi in economia e solo dopo inseguire quello che volevo davvero. Perché non potevo andare dritto al TAG? Appena ho trovato il coraggio di fare quel salto, ho capito cosa mi piaceva fare. Certe scelte sembrano spaventose solo finché non le fai.`,
+        memory: {
+          gradient: 'linear-gradient(145deg, #8A3A08 0%, #C05818 35%, #F08828 65%, #F8B850 100%)',
+          label: 'La scelta più facile tra quelle che sembravano impossibili.'
+        }
+      },
+      {
+        name: 'Panna Cotta', price: 4.00, img: 'imgs/panna-cotta.png',
+        hideCardPlate: true,
+        selectionText: "Gnam!",
+        emotion: 'happy',
+ memoryImg: 'imgs/memories/panna-cotta-memory.jpg',
+        comment: `Insieme a Irene sto portando avanti Conventional, il nostro magazine indipendente. Sulla carta è un progetto di tesi, ma per noi è molto di più. È una cosa fragile, costruita a quattro mani su un'idea che potrebbe tranquillamente non funzionare. Però se dovesse funzionare significherebbe che vale davvero.`,
+        memory: {
+          gradient: 'linear-gradient(160deg, #F5EDE6 0%, #EDE0D4 30%, #D8C8BE 60%, #C8B4AE 100%)',
+          label: 'Conventional. Un progetto fragile che però sta in piedi.'
+        }
+      },
+    ]
+  },
+];
+
+const MII = {
+  neutral:    'mii-neutral.png',
+  happy:      'mii-happy.png',
+  excited:    'mii-excited.png',
+  thoughtful: 'mii-thoughtful.png',
+  proud:      'mii-proud.png',
+};
+
+const TASTING_FOOD_ASSETS = {
+  'Noodle Cinesi': 'imgs/cibo-illustrato/noodles.png',
+  'Involtini Primavera': 'imgs/cibo-illustrato/involtini.png',
+  'Ravioli Cinesi': 'imgs/cibo-illustrato/ravioli.png',
+  'Pizza': 'imgs/cibo-illustrato/pizza.png',
+  'Tortellini': 'imgs/cibo-illustrato/tortellini.png',
+  'Lasagne': 'imgs/cibo-illustrato/lasagne.png',
+  'Uova Occhio di Bue': 'imgs/cibo-illustrato/uova.png',
+  'Salmone': 'imgs/cibo-illustrato/salmone.png',
+  'Panino Mortadella': 'imgs/cibo-illustrato/panino.png',
+  'Tiramisu': 'imgs/cibo-illustrato/tiramisu.png',
+  'Crema Catalana': 'imgs/cibo-illustrato/cremacatalana.png',
+  'Panna Cotta': 'imgs/cibo-illustrato/pannacotta.png'
+};
+
+const TASTING_FOOD_LAYOUT = {
+  default: {
+    left: '50%',
+    top: '60%',
+    width: '22%',
+    yOffset: '9%'
+  },
+  'Noodle Cinesi': { left: '50%', top: '60%', width: '23%', yOffset: '9%' },
+  'Involtini Primavera': { left: '50%', top: '60%', width: '24%', yOffset: '12%' },
+  'Ravioli Cinesi': { left: '50%', top: '60%', width: '22%', yOffset: '10%' },
+  'Pizza': { left: '50%', top: '60%', width: '28%', yOffset: '9%' },
+  'Tortellini': { left: '50%', top: '60%', width: '23%', yOffset: '10%' },
+  'Lasagne': { left: '50%', top: '60%', width: '24%', yOffset: '10%' },
+  'Uova Occhio di Bue': { left: '50%', top: '60%', width: '23%', yOffset: '9%' },
+  'Salmone': { left: '50%', top: '60%', width: '25%', yOffset: '9%' },
+  'Panino Mortadella': { left: '50%', top: '60%', width: '25%', yOffset: '10%' },
+  'Tiramisu': { left: '50%', top: '60%', width: '19%', yOffset: '9%' },
+  'Crema Catalana': { left: '50%', top: '60%', width: '19%', yOffset: '9%' },
+  'Panna Cotta': { left: '50%', top: '60%', width: '18%', yOffset: '10%' }
+};
+
+/* ────────────────────────
+   STATE
+──────────────────────── */
+let currentCat  = 0;
+let cardSlideDirection = 'right';
+let cart = {};
+let bubbleTimer = null;
+let bubbleTypingTimer = null;
+let previousDotIdx = -1;
+let tastingQueue = [];
+let currentTastingItem = null;
+let biteCount = 0;
+const BITES_PER_FOOD = 3;
+let isBiteAnimating = false;
+let currentFoodScale = 1;
+let targetFoodScale = 1;
+let currentFoodBaseY = 0.2;
+let threeSceneInitialized = false;
+let threeScene = null;
+let threeCamera = null;
+let threeRenderer = null;
+let threeFoodMesh = null;
+let threePlateMesh = null;
+let threeAnimationId = null;
+let currentFoodMesh = null;
+let threeRaycaster = null;
+let threePointer = null;
+let activePlateGroup = null;
+let activeSupportGroup = null;
+let finishedPlatesGroup = null;
+let finishedPlateAnimations = [];
+let finishedPlateCount = 0;
+let isServingAnimation = false;
+let canInteractWithCurrentPlate = false;
+let activePlateLight = null;
+let activePlateLightTarget = 0;
+let plateArrivalBounce = 0;
+let servingTargetPosition = null;
+let memoryVisualLoadId = 0;
+let audioCtx = null;
+let bgMusicStarted = false;
+let bgMusicUnlockRegistered = false;
+let idleTimer = null;
+let finalScreenTimers = [];
+const BG_MUSIC_EVENTS = ['pointerdown', 'click', 'keydown', 'touchstart'];
+const SFX_SOURCES = {
+  bite: 'bite.mp3',
+  memory: 'arpa.mp3',
+  nextDish: 'ding.mp3',
+  applause: 'applausi.mp3'
+};
+const sfxPlayers = {};
+
+/* ────────────────────────
+   AUDIO
+──────────────────────── */
+function getAudioContext() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return null;
+  if (!audioCtx) audioCtx = new AudioContextClass();
+  if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+  return audioCtx;
+}
+
+function registerBackgroundMusicUnlock() {
+  if (bgMusicUnlockRegistered || bgMusicStarted) return;
+  bgMusicUnlockRegistered = true;
+
+  const unlockMusic = () => {
+    BG_MUSIC_EVENTS.forEach(eventName => {
+      document.removeEventListener(eventName, unlockMusic);
+    });
+    bgMusicUnlockRegistered = false;
+    playBackgroundMusic();
+  };
+
+  BG_MUSIC_EVENTS.forEach(eventName => {
+    document.addEventListener(eventName, unlockMusic, { once: true, passive: true });
+  });
+}
+
+function playBackgroundMusic() {
+  const bgMusic = document.getElementById('bgMusic');
+  if (!bgMusic || bgMusicStarted) return;
+
+  bgMusic.volume = 0.28;
+  bgMusic.loop = true;
+
+  if (typeof bgMusic.play !== 'function') {
+    registerBackgroundMusicUnlock();
+    return;
+  }
+
+  const playAttempt = bgMusic.play();
+  if (playAttempt && typeof playAttempt.then === 'function') {
+    playAttempt
+      .then(() => {
+        bgMusicStarted = true;
+      })
+      .catch(() => {
+        bgMusicStarted = false;
+        registerBackgroundMusicUnlock();
+      });
+  } else {
+    bgMusicStarted = true;
+  }
+}
+
+function getSfxPlayer(name) {
+  if (!SFX_SOURCES[name] || typeof Audio !== 'function') return null;
+  if (!sfxPlayers[name]) {
+    const audio = new Audio(SFX_SOURCES[name]);
+    audio.preload = 'auto';
+    sfxPlayers[name] = audio;
+  }
+  return sfxPlayers[name];
+}
+
+function preloadSfx() {
+  try {
+    Object.keys(SFX_SOURCES).forEach((name) => getSfxPlayer(name));
+  } catch (error) {}
+}
+
+function playSfx(name, volume = 0.5, startAt = 0) {
+  try {
+    const audio = getSfxPlayer(name);
+    if (!audio || typeof audio.play !== 'function') return;
+    audio.pause();
+    try {
+      audio.currentTime = Math.max(0, startAt);
+    } catch (error) {}
+    audio.volume = volume;
+    audio.loop = false;
+    const playAttempt = audio.play();
+    if (playAttempt && typeof playAttempt.catch === 'function') {
+      playAttempt.catch(() => {});
+    }
+  } catch (error) {}
+}
+
+function playTone(frequency, durationMs, gainValue, startOffset = 0) {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  const start = ctx.currentTime + startOffset;
+  const oscillator = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  oscillator.type = 'sine';
+  oscillator.frequency.setValueAtTime(frequency, start);
+  gain.gain.setValueAtTime(gainValue, start);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + durationMs / 1000);
+
+  oscillator.connect(gain);
+  gain.connect(ctx.destination);
+  oscillator.start(start);
+  oscillator.stop(start + durationMs / 1000);
+}
+
+function playHover() {
+  try {
+    playTone(220, 55, 0.05);
+  } catch (error) {}
+}
+
+function playSelect() {
+  try {
+    playTone(440, 80, 0.09, 0);
+    playTone(620, 80, 0.09, 0.09);
+  } catch (error) {}
+}
+
+function playBite() {
+  playSfx('bite', 0.55);
+}
+
+function playJingle() {
+  try {
+    [330, 440, 554, 660].forEach((frequency, i) => {
+      playTone(frequency, 110, 0.08, i * 0.14);
+    });
+  } catch (error) {}
+}
+
+/* ────────────────────────
+   STARBURST PATH HELPER
+──────────────────────── */
+function starPath(cx, cy, outerR, innerR, points) {
+  const step = Math.PI / points;
+  let d = '';
+  for (let i = 0; i < points * 2; i++) {
+    const r = (i % 2 === 0) ? outerR : innerR;
+    const a = i * step - Math.PI / 2;
+    const x = (cx + r * Math.cos(a)).toFixed(3);
+    const y = (cy + r * Math.sin(a)).toFixed(3);
+    d += (i === 0 ? 'M' : 'L') + x + ',' + y + ' ';
+  }
+  return d + 'Z';
+}
+
+const STAR = starPath(50, 50, 48, 36, 16);
+
+/* ────────────────────────
+   CREATE PRICE WITH BORDER
+──────────────────────── */
+function createPriceWithBorder(price) {
+  const text = `€${price.toFixed(2)}`;
+  const gradientId = `priceGradient${String(price).replace('.', '')}`;
+  return `
+    <svg class="price-svg" viewBox="0 0 190 64" preserveAspectRatio="xMaxYMid meet" aria-label="${text}">
+      <defs>
+        <linearGradient id="${gradientId}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#FFEDC8"/>
+          <stop offset="100%" stop-color="#FFE46D"/>
+        </linearGradient>
+      </defs>
+      <text x="184" y="46" text-anchor="end"
+            font-family="Nunito, sans-serif" font-weight="900" font-style="italic"
+            font-size="50" fill="#FF5D44" stroke="#FF5D44" stroke-width="12" stroke-linejoin="round" stroke-linecap="round">
+        ${text}
+      </text>
+      <text x="184" y="46" text-anchor="end"
+            font-family="Nunito, sans-serif" font-weight="900" font-style="italic"
+            font-size="50" fill="url(#${gradientId})" stroke="none">
+        ${text}
+      </text>
+    </svg>
+  `;
+}
+
+/* ────────────────────────
+   RENDER DOTS
+──────────────────────── */
+function renderDots() {
+  const dotsRow = document.getElementById('dotsRow');
+  dotsRow.innerHTML = MENU.map((cat, i) => `
+    <div class="dot ${i === currentCat ? 'active' : ''}"
+         data-cat-idx="${i}" title="${cat.label}">${cat.icon}</div>
+  `).join('');
+
+  dotsRow.querySelectorAll('.dot').forEach(dot => {
+    dot.onclick = () => goCategory(Number(dot.dataset.catIdx));
+  });
+}
+
+/* ────────────────────────
+   RENDER CARDS
+──────────────────────── */
+function renderCards() {
+  const cat = MENU[currentCat];
+  const cardsRow = document.getElementById('cardsRow');
+
+  document.getElementById('catTitle').textContent     = cat.label;
+  document.getElementById('sectionPill').textContent  = cat.label;
+
+  cardsRow.innerHTML = cat.items.map((item, i) => `
+    <div class="item-card" data-idx="${i}" onclick="selectItem(${i})">
+
+      <button class="btn-remove" onclick="removeItem(event, ${i})">− 1</button>
+      <div class="cart-badge"></div>
+
+      <div class="card-img food-card-image-stack ${item.hideCardPlate ? 'no-menu-plate' : ''}">
+        ${item.hideCardPlate ? '' : '<img class="food-card-plate" src="imgs/piattoo.png" alt="" aria-hidden="true">'}
+        <img class="food-card-food" src="${item.img}" alt="${item.name}"
+             onerror="this.style.display='none'; this.parentElement.classList.add('food-img-missing')">
+      </div>
+
+      <div class="card-star-zone">
+        <svg class="star-svg" viewBox="0 0 100 100" preserveAspectRatio="none"
+             xmlns="http://www.w3.org/2000/svg" overflow="visible">
+          <defs>
+            <linearGradient id="sg${i}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stop-color="#FFD800"/>
+              <stop offset="100%" stop-color="#FF9200"/>
+            </linearGradient>
+          </defs>
+          <path d="${STAR}" fill="url(#sg${i})" stroke="#FFEE70" stroke-width="1.2"/>
+        </svg>
+
+        <div class="star-text-content">
+          <span class="card-name">${item.name.replace(' ', '<br>')}</span>
+          <div class="price-container">
+            ${createPriceWithBorder(item.price)}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  `).join('');
+  cardsRow.dataset.direction = cardSlideDirection;
+
+  document.querySelectorAll('.item-card').forEach(card => {
+    card.addEventListener('mouseenter', playHover);
+  });
+
+  updateCartUI();
+}
+
+/* ────────────────────────
+   CART LOGIC
+──────────────────────── */
+function selectItem(idx) {
+  playSelect();
+
+  const key = `${currentCat}-${idx}`;
+  const currentQty = cart[key] || 0;
+
+  if (currentQty >= 9) {
+    showBubble("Hai raggiunto il limite! Massimo 9 porzioni per questo piatto. 😅");
+    setMii('thoughtful');
+    return;
+  }
+
+  cart[key] = currentQty + 1;
+
+  const item = MENU[currentCat].items[idx];
+  showBubble(item.selectionText || item.name);
+  setMii(item.emotion);
+
+  updateCartUI();
+}
+
+function removeItem(event, idx) {
+  event.stopPropagation();
+  const key = `${currentCat}-${idx}`;
+
+  if (cart[key] > 0) {
+    cart[key]--;
+    if (cart[key] === 0) delete cart[key];
+    setMii('thoughtful');
+    updateCartUI();
+  }
+}
+
+function updateCartUI() {
+  let sum = 0;
+  for (let key in cart) {
+    const [c, i] = key.split('-');
+    sum += MENU[c].items[i].price * cart[key];
+  }
+
+  const pill = document.getElementById('scorePill');
+  const newScoreText = `€${sum.toFixed(2)}`;
+  if (pill.textContent !== newScoreText) {
+    pill.textContent = newScoreText;
+    pill.classList.remove('bump');
+    void pill.offsetWidth;
+    pill.classList.add('bump');
+  }
+
+  document.querySelectorAll('.item-card').forEach((card, i) => {
+    const key = `${currentCat}-${i}`;
+    const qty = cart[key] || 0;
+    const badge = card.querySelector('.cart-badge');
+
+    if (qty > 0) {
+      card.classList.add('in-cart');
+      badge.textContent = qty > 1 ? `x${qty}` : '1';
+    } else {
+      card.classList.remove('in-cart');
+    }
+  });
+}
+
+/* ────────────────────────
+   CHECKOUT
+──────────────────────── */
+function buildTastingQueueFromCart() {
+  tastingQueue = [];
+
+  Object.keys(cart).forEach(key => {
+    const [catIndex, itemIndex] = key.split('-').map(Number);
+    const item = MENU[catIndex]?.items[itemIndex];
+    if (!item) return;
+
+    tastingQueue.push({
+      name: item.name,
+      price: item.price,
+      comment: item.comment,
+      emotion: item.emotion,
+      img: item.img,
+      memoryImg: item.memoryImg,
+      memory: item.memory,
+      memoryTitle: item.memoryTitle,
+      memoryText: item.memoryText,
+      catIndex,
+      itemIndex,
+      quantity: cart[key]
+    });
+  });
+}
+
+function updateTastingOverlayContent(title, text, meta = '') {
+  document.getElementById('currentDishTitle').textContent = title;
+  document.getElementById('currentDishText').textContent = text;
+  document.getElementById('currentDishMeta').textContent = meta;
+}
+
+function updateBiteIndicator() {
+  document.getElementById('biteIndicator').textContent = `Morso ${biteCount}/${BITES_PER_FOOD}`;
+}
+
+function hideDishComment() {
+  const box = document.getElementById('dishCommentBox');
+  box.classList.remove('show');
+  document.getElementById('dishCommentTitle').textContent = '';
+  document.getElementById('dishCommentText').textContent = '';
+}
+
+function showDishComment() {
+  if (!currentTastingItem) return;
+
+  document.getElementById('dishCommentTitle').textContent = '';
+  document.getElementById('dishCommentText').textContent = currentTastingItem.memoryText || currentTastingItem.comment;
+  document.getElementById('dishCommentBox').classList.add('show');
+}
+
+function resetMemoryVisual() {
+  memoryVisualLoadId += 1;
+  const overlay = document.getElementById('memoryVisualOverlay');
+  const image = document.getElementById('memoryVisualImage');
+  document.getElementById('tableOverlay')?.classList.remove('memory-mode');
+  document.getElementById('tasting2DScene')?.classList.remove('ripple-out');
+  overlay.classList.remove('show');
+  image.style.backgroundImage = '';
+  document.getElementById('memoryLabel').textContent = '';
+}
+
+function setMemoryVisualFromCurrentItem() {
+  const image = document.getElementById('memoryVisualImage');
+  const loadId = ++memoryVisualLoadId;
+  const candidates = [currentTastingItem?.memoryImg].filter(Boolean);
+
+  const gradient = currentTastingItem?.memory?.gradient ||
+    'linear-gradient(135deg, #8C4A12, #2B1A10)';
+  image.style.background = gradient;
+  image.style.backgroundSize = 'cover';
+  image.style.backgroundPosition = 'center';
+  image.style.filter = 'saturate(0.88) brightness(0.95)';
+  image.style.transform = 'scale(1.04)';
+
+  if (!candidates.length) return;
+  const probe = new Image();
+  probe.onload = () => {
+    if (loadId !== memoryVisualLoadId) return;
+    image.style.backgroundImage = `url("${candidates[0]}")`;
+  };
+  probe.src = candidates[0];
+}
+
+function showMemoryVisual() {
+  document.getElementById('memoryLabel').textContent =
+    currentTastingItem?.memory?.label || '';
+  document.getElementById('tableOverlay')?.classList.add('memory-mode');
+  document.getElementById('tasting2DScene')?.classList.add('ripple-out');
+  setTimeout(() => {
+    document.getElementById('memoryVisualOverlay').classList.add('show');
+  }, 180);
+}
+
+/* ────────────────────────
+   3D SCENE LOGIC (TOON STYLE)
+──────────────────────── */
+function createToonMaterial(color, options = {}) {
+  const materialType = options.unlit ? THREE.MeshBasicMaterial : THREE.MeshLambertMaterial;
+  return new materialType({
+    color,
+    transparent: !!options.transparent,
+    opacity: options.opacity ?? 1
+  });
+}
+
+function addMesh3D(parent, geometry, color, position, rotation = [0, 0, 0], scale = [1, 1, 1], options = {}) {
+  const mesh = new THREE.Mesh(geometry, createToonMaterial(color, options));
+  mesh.position.set(position[0], position[1], position[2]);
+  mesh.rotation.set(rotation[0], rotation[1], rotation[2]);
+  mesh.scale.set(scale[0], scale[1], scale[2]);
+  mesh.castShadow = false;
+  mesh.receiveShadow = false;
+  parent.add(mesh);
+  return mesh;
+}
+
+function createSimpleGuest(color, headColor, hairColor) {
+  const guest = new THREE.Group();
+  addMesh3D(guest, new THREE.CapsuleGeometry(0.16, 0.28, 8, 16), color, [0, 0.18, 0]);
+  addMesh3D(guest, new THREE.SphereGeometry(0.17, 24, 16), headColor, [0, 0.52, 0]);
+  addMesh3D(guest, new THREE.SphereGeometry(0.19, 24, 16), hairColor, [0, 0.62, -0.015], [0, 0, 0], [1, 0.62, 0.92]);
+  return guest;
+}
+
+function buildRestaurant3D() {
+  const room = new THREE.Group();
+
+  addMesh3D(room, new THREE.BoxGeometry(11.8, 4.4, 0.08), 0xF1A765, [0, 1.75, -4.2], [0, 0, 0], [1, 1, 1], { unlit: true });
+  addMesh3D(room, new THREE.BoxGeometry(11.8, 0.72, 0.12), 0xD78342, [0, 0.38, -4.08]);
+  addMesh3D(room, new THREE.BoxGeometry(12.4, 0.06, 8.2), 0xE0934E, [0, -0.05, -0.58]);
+
+  for (let i = -5; i <= 5; i++) {
+    addMesh3D(room, new THREE.BoxGeometry(0.012, 0.01, 7.2), 0xC87A43, [i * 0.7, -0.005, -0.18], [0, 0, 0.17]);
+  }
+
+  addMesh3D(room, new THREE.BoxGeometry(1.55, 0.9, 0.06), 0xDB8A4C, [0, 2.24, -4.0]);
+  addMesh3D(room, new THREE.BoxGeometry(1.18, 0.62, 0.05), 0xF2C879, [0, 2.25, -3.95]);
+  addMesh3D(room, new THREE.BoxGeometry(0.76, 0.12, 0.06), 0xD78342, [0, 2.25, -3.9]);
+
+  addMesh3D(room, new THREE.BoxGeometry(0.86, 0.76, 0.06), 0xD78342, [1.48, 2.35, -4.0]);
+  addMesh3D(room, new THREE.BoxGeometry(0.68, 0.58, 0.05), 0xF7E2A8, [1.48, 2.35, -3.95]);
+  addMesh3D(room, new THREE.BoxGeometry(0.06, 0.72, 0.07), 0xD78342, [1.48, 2.35, -3.9]);
+  addMesh3D(room, new THREE.BoxGeometry(0.82, 0.06, 0.07), 0xD78342, [1.48, 2.35, -3.9]);
+
+  return room;
+}
+
+function buildMealTable3D() {
+  const group = new THREE.Group();
+
+  addMesh3D(group, new THREE.BoxGeometry(5.9, 0.28, 3.05), 0xE7C983, [0, 0.33, 0.95]);
+  addMesh3D(group, new THREE.BoxGeometry(5.96, 0.1, 3.1), 0x7B3321, [0, 0.16, 0.95]);
+  addMesh3D(group, new THREE.BoxGeometry(0.22, 1.2, 0.22), 0x9B4A28, [-2.45, -0.42, 1.95]);
+  addMesh3D(group, new THREE.BoxGeometry(0.22, 1.2, 0.22), 0x9B4A28, [2.45, -0.42, 1.95]);
+
+  addMesh3D(group, new THREE.BoxGeometry(2.85, 0.09, 1.38), 0xD87838, [0, 0.54, 0.92]);
+  addMesh3D(group, new THREE.BoxGeometry(2.45, 0.05, 1.04), 0xEAA34F, [0, 0.61, 0.92]);
+
+  addMesh3D(group, new THREE.CylinderGeometry(0.18, 0.24, 0.76, 32), 0xAEE8ED, [-1.06, 0.98, 0.6], [0.12, 0, -0.08], [1, 1, 1]);
+  addMesh3D(group, new THREE.CylinderGeometry(0.15, 0.2, 0.48, 32), 0xFFA12F, [-1.06, 0.83, 0.6], [0.12, 0, -0.08], [0.92, 1, 0.92]);
+
+  addMesh3D(group, new THREE.BoxGeometry(0.72, 0.035, 0.92), 0xF2D9B7, [1.08, 0.665, 1.05], [0, -0.08, 0]);
+  addMesh3D(group, new THREE.BoxGeometry(0.07, 0.055, 0.85), 0xC9D2D8, [1.0, 0.72, 1.05], [0, -0.1, -0.08]);
+  addMesh3D(group, new THREE.BoxGeometry(0.07, 0.055, 0.82), 0xC9D2D8, [1.2, 0.72, 1.05], [0, -0.1, -0.08]);
+  addMesh3D(group, new THREE.SphereGeometry(0.12, 20, 12), 0xC9D2D8, [1.17, 0.735, 0.66], [0, 0, 0], [1.0, 0.14, 1.2]);
+
+  addMesh3D(group, new THREE.BoxGeometry(0.075, 0.055, 0.86), 0xC9D2D8, [-1.15, 0.66, 1.18], [0, 0.16, 0.08]);
+  addMesh3D(group, new THREE.BoxGeometry(0.2, 0.05, 0.12), 0xC9D2D8, [-1.22, 0.67, 0.72], [0, 0.16, 0.08]);
+
+  finishedPlatesGroup = new THREE.Group();
+  finishedPlatesGroup.position.set(1.9, 0.64, 1.02);
+  group.add(finishedPlatesGroup);
+
+  return group;
+}
+
+function createPlate3D(options = {}) {
+  const group = new THREE.Group();
+  const plate = addMesh3D(
+    group,
+    new THREE.CylinderGeometry(0.68, 0.72, 0.08, 32),
+    0xEAD7B2,
+    [0, 0, 0],
+    [0, 0, 0],
+    [1, 1, 1],
+    options.clickOnly ? { transparent: true, opacity: 0 } : {}
+  );
+  if (!options.clickOnly) {
+    addMesh3D(group, new THREE.CylinderGeometry(0.52, 0.54, 0.03, 32), 0xF2E3C2, [0, 0.055, 0]);
+    addMesh3D(group, new THREE.TorusGeometry(0.55, 0.025, 10, 64), 0x8ED2DE, [0, 0.072, 0], [Math.PI / 2, 0, 0]);
+  }
+  group.userData.clickable = plate;
+  return group;
+}
+
+function drawFoodTexture(item) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 360;
+  const ctx = canvas.getContext('2d');
+  const name = (item?.name || '').toLowerCase();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  function ellipse(x, y, rx, ry, fill, stroke = '#7B4B2C', line = 10) {
+    ctx.beginPath();
+    ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+    ctx.fillStyle = fill;
+    ctx.fill();
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = line;
+      ctx.stroke();
+    }
+  }
+
+  function roundRect(x, y, w, h, r, fill, stroke = '#7B4B2C', line = 9) {
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, r);
+    ctx.fillStyle = fill;
+    ctx.fill();
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = line;
+      ctx.stroke();
+    }
+  }
+
+  if (name.includes('ravioli') || name.includes('involtini')) {
+    const pieces = name.includes('involtini') ? 3 : 4;
+    for (let i = 0; i < pieces; i++) {
+      const x = 128 + i * (260 / Math.max(1, pieces - 1));
+      const y = 172 + (i % 2 ? 18 : -8);
+      ellipse(x, y, 78, 42, name.includes('involtini') ? '#DCA553' : '#E9C97C', '#A36A32', 12);
+      ctx.strokeStyle = '#C28F45';
+      ctx.lineWidth = 9;
+      ctx.beginPath();
+      ctx.moveTo(x - 42, y - 4);
+      ctx.quadraticCurveTo(x, y - 28, x + 42, y - 4);
+      ctx.stroke();
+    }
+  } else if (name.includes('noodle')) {
+    for (let i = 0; i < 12; i++) {
+      ctx.strokeStyle = i % 2 ? '#F8D66B' : '#EAB84F';
+      ctx.lineWidth = 16;
+      ctx.beginPath();
+      ctx.moveTo(88, 136 + i * 8);
+      ctx.bezierCurveTo(170, 70 + i * 10, 266, 230 - i * 7, 420, 134 + i * 6);
+      ctx.stroke();
+    }
+    ellipse(268, 122, 28, 20, '#79B95C', null);
+    ellipse(318, 186, 24, 18, '#79B95C', null);
+  } else if (name.includes('pizza')) {
+    ellipse(256, 178, 170, 110, '#E4B34F', '#9C5A2A', 12);
+    ellipse(256, 178, 132, 82, '#C94E3E', null);
+    [[208,150],[285,142],[318,195],[230,214]].forEach(([x,y]) => ellipse(x, y, 25, 18, '#8D3E35', null));
+  } else if (name.includes('salmone')) {
+    roundRect(116, 118, 280, 116, 28, '#F28B6F', '#9D523C', 12);
+    for (let i = 0; i < 5; i++) {
+      ctx.strokeStyle = '#FFD3B8';
+      ctx.lineWidth = 12;
+      ctx.beginPath();
+      ctx.moveTo(150 + i * 46, 124);
+      ctx.lineTo(178 + i * 42, 222);
+      ctx.stroke();
+    }
+  } else if (name.includes('uova')) {
+    ellipse(246, 180, 170, 86, '#FFF3DF', '#A36A32', 10);
+    ellipse(275, 176, 54, 38, '#F0B22C', null);
+  } else if (name.includes('tiramisu') || name.includes('lasagne')) {
+    roundRect(126, 110, 260, 142, 24, name.includes('tiramisu') ? '#8B5A33' : '#D69A55', '#7B4B2C', 10);
+    roundRect(144, 88, 224, 56, 18, name.includes('tiramisu') ? '#EAD9B8' : '#C34F3F', null);
+  } else {
+    ellipse(256, 176, 150, 84, '#F4D8A2', '#9C6333', 10);
+    ellipse(294, 132, 34, 24, '#D94D5C', null);
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function createMealFood3D(item) {
+  const group = new THREE.Group();
+  const foodPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.18, 0.82),
+    new THREE.MeshBasicMaterial({ map: drawFoodTexture(item), transparent: true, side: THREE.DoubleSide })
+  );
+  foodPlane.rotation.x = -Math.PI / 2;
+  foodPlane.position.y = 0.115;
+  group.add(foodPlane);
+
+  return group;
+}
+
+function disposeObject3D(object) {
+  if (!object) return;
+  object.traverse?.(node => {
+    if (node.geometry) node.geometry.dispose();
+    if (node.material) {
+      if (Array.isArray(node.material)) node.material.forEach(material => material.dispose());
+      else node.material.dispose();
+    }
+  });
+}
+
+function resetMemoryVisual() {
+  memoryVisualLoadId += 1;
+  document.getElementById('tableOverlay')?.classList.remove('memory-mode');
+  const overlay = document.getElementById('memoryVisualOverlay');
+  const image = document.getElementById('memoryVisualImage');
+  const ripple = document.getElementById('memoryWhiteRipple');
+  overlay.classList.remove('show');
+  image.style.backgroundImage = '';
+  document.getElementById('memoryLabel').textContent = '';
+  if (ripple) {
+    ripple.classList.remove('play');
+    void ripple.offsetWidth;
+  }
+}
+
+function showMemoryVisual() {
+  const overlay = document.getElementById('memoryVisualOverlay');
+  const ripple = document.getElementById('memoryWhiteRipple');
+  document.getElementById('memoryLabel').textContent =
+    currentTastingItem?.memory?.label || '';
+  document.getElementById('tableOverlay')?.classList.add('memory-mode');
+  if (ripple) {
+    ripple.classList.remove('play');
+    void ripple.offsetWidth;
+    ripple.classList.add('play');
+  }
+  setTimeout(() => overlay.classList.add('show'), 520);
+}
+
+function resetDiningSceneSession() {
+  if (activePlateGroup && threeScene) {
+    threeScene.remove(activePlateGroup);
+    disposeObject3D(activePlateGroup);
+  }
+  activePlateGroup = null;
+  currentFoodMesh = null;
+  threeFoodMesh = null;
+  threePlateMesh = null;
+  finishedPlateCount = 0;
+  canInteractWithCurrentPlate = false;
+  isServingAnimation = false;
+  currentFoodScale = 1;
+  targetFoodScale = 1;
+  if (finishedPlatesGroup) {
+    [...finishedPlatesGroup.children].forEach(child => {
+      finishedPlatesGroup.remove(child);
+      disposeObject3D(child);
+    });
+  }
+  document.getElementById('threeEatButton')?.classList.remove('show');
+  resetMemoryVisual();
+}
+
+function init3DScene() {
+  if (threeSceneInitialized) return;
+
+  const container = document.getElementById('threeContainer');
+  container.innerHTML = '';
+  const width = Math.max(container.clientWidth, 1);
+  const height = Math.max(container.clientHeight, 1);
+
+  threeScene = new THREE.Scene();
+  threeScene.background = new THREE.Color(0xEFA767);
+  threeScene.fog = new THREE.Fog(0xD98A4E, 7.2, 12.5);
+
+  threeCamera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
+  threeCamera.position.set(0, 1.72, 5.05);
+  threeCamera.lookAt(0, 0.92, -0.02);
+
+  threeRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'default' });
+  threeRenderer.setPixelRatio(1);
+  threeRenderer.setSize(width, height);
+  if ('outputColorSpace' in threeRenderer && THREE.SRGBColorSpace) {
+    threeRenderer.outputColorSpace = THREE.SRGBColorSpace;
+  } else if ('outputEncoding' in threeRenderer && THREE.sRGBEncoding) {
+    threeRenderer.outputEncoding = THREE.sRGBEncoding;
+  }
+  if (THREE.ColorManagement) THREE.ColorManagement.enabled = true;
+  container.appendChild(threeRenderer.domElement);
+
+  const eatButton = document.createElement('button');
+  eatButton.id = 'threeEatButton';
+  eatButton.className = 'three-eat-button';
+  eatButton.type = 'button';
+  eatButton.innerHTML = '<span class="three-eat-face"></span><span>MANGIA</span>';
+  eatButton.addEventListener('pointerdown', handleFoodPointerDown);
+  container.appendChild(eatButton);
+
+  const ripple = document.createElement('div');
+  ripple.id = 'memoryWhiteRipple';
+  ripple.className = 'memory-white-ripple';
+  container.appendChild(ripple);
+
+  const warmWash = document.createElement('div');
+  warmWash.style.cssText = 'position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 48%, transparent 54%, rgba(112,52,24,0.16) 100%);';
+  container.appendChild(warmWash);
+
+  threeRaycaster = new THREE.Raycaster();
+  threePointer = new THREE.Vector2();
+  threeRenderer.domElement.addEventListener('pointerdown', handleFoodPointerDown);
+
+  threeScene.add(buildRestaurant3D());
+  threeScene.add(buildMealTable3D());
+
+  threeScene.add(new THREE.AmbientLight(0xF2C08A, 0.36));
+  const keyLight = new THREE.DirectionalLight(0xFFE0A6, 0.68);
+  keyLight.position.set(-2.4, 5.2, 4.5);
+  threeScene.add(keyLight);
+  const fillLight = new THREE.DirectionalLight(0xD97845, 0.18);
+  fillLight.position.set(3.4, 2.8, 2.8);
+  threeScene.add(fillLight);
+  const hemiLight = new THREE.HemisphereLight(0xF0B06F, 0x7B4528, 0.16);
+  threeScene.add(hemiLight);
+
+  window.addEventListener('resize', handle3DResize);
+  threeSceneInitialized = true;
+  start3DAnimationLoop();
+}
+
+function start3DAnimationLoop() {
+  if (!threeSceneInitialized || threeAnimationId) return;
+  animate3DScene();
+}
+
+function stop3DAnimationLoop() {
+  if (!threeAnimationId) return;
+  cancelAnimationFrame(threeAnimationId);
+  threeAnimationId = null;
+}
+
+function animate3DScene() {
+  if (!threeSceneInitialized) return;
+  threeAnimationId = requestAnimationFrame(animate3DScene);
+  if (!document.getElementById('tableOverlay').classList.contains('active')) {
+    stop3DAnimationLoop();
+    return;
+  }
+
+  if (activePlateGroup && isServingAnimation && servingTargetPosition) {
+    activePlateGroup.position.lerp(servingTargetPosition, 0.18);
+    activePlateGroup.rotation.y += (0 - activePlateGroup.rotation.y) * 0.16;
+    if (activePlateGroup.position.distanceTo(servingTargetPosition) < 0.025) {
+      activePlateGroup.position.copy(servingTargetPosition);
+      activePlateGroup.rotation.y = 0;
+      isServingAnimation = false;
+      canInteractWithCurrentPlate = true;
+      document.getElementById('threeEatButton')?.classList.add('show');
+      updateTastingOverlayContent(currentTastingItem.name, 'Il piatto è pronto. Premi MANGIA o clicca il piatto per assaggiare.', document.getElementById('currentDishMeta').textContent);
+    }
+  }
+
+  if (currentFoodMesh) {
+    currentFoodScale += (targetFoodScale - currentFoodScale) * 0.18;
+    
+    // Effetto wobble (rimbalzo) durante il morso
+    if (isBiteAnimating) {
+      currentFoodMesh.rotation.y += 0.25;
+      currentFoodMesh.rotation.z = Math.sin(performance.now() * 0.03) * 0.1 * (1 - currentFoodScale);
+    } else {
+      currentFoodMesh.rotation.z += (0 - currentFoodMesh.rotation.z) * 0.1;
+      currentFoodMesh.rotation.y += 0.003; // Lenta rotazione a riposo
+    }
+    
+    currentFoodMesh.scale.setScalar(currentFoodScale);
+    
+    if (isBiteAnimating && Math.abs(currentFoodScale - targetFoodScale) < 0.02) {
+      currentFoodScale = targetFoodScale;
+      currentFoodMesh.scale.setScalar(currentFoodScale);
+      currentFoodMesh.rotation.z = 0;
+      isBiteAnimating = false;
+      if (biteCount >= BITES_PER_FOOD) finishCurrentFood();
+    }
+  }
+
+  threeRenderer.render(threeScene, threeCamera);
+}
+
+function handle3DResize() {
+  if (!threeSceneInitialized || !threeRenderer || !threeCamera) return;
+  const container = document.getElementById('threeContainer');
+  const width = Math.max(container.clientWidth, 1);
+  const height = Math.max(container.clientHeight, 1);
+  threeCamera.aspect = width / height;
+  threeCamera.updateProjectionMatrix();
+  threeRenderer.setPixelRatio(1);
+  threeRenderer.setSize(width, height);
+}
+
+function spawnBiteParticles() {
+  const target = document.getElementById('threeEatButton') || threeRenderer?.domElement;
+  if (!target) return;
+  const rect = target.getBoundingClientRect();
+  const colors = ['#FFD86A', '#FF8B78', '#77CFC5', '#FFF7E8', '#8EC565'];
+  for (let i = 0; i < 12; i++) {
+    const size = 8 + Math.random() * 8;
+    const angle = Math.random() * Math.PI * 2;
+    const magnitude = 48 + Math.random() * 76;
+    const particle = document.createElement('span');
+    particle.className = 'food-bite-spark';
+    particle.style.position = 'fixed';
+    particle.style.left = `${rect.left + rect.width / 2 - size / 2}px`;
+    particle.style.top = `${rect.top + rect.height / 2 - size / 2}px`;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${Math.max(7, size * 0.62)}px`;
+    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.zIndex = '300';
+    particle.style.pointerEvents = 'none';
+    particle.style.transition = 'transform 560ms ease-out, opacity 560ms ease-out';
+    document.body.appendChild(particle);
+    setTimeout(() => {
+      particle.style.transform = `translate(${Math.cos(angle) * magnitude}px, ${Math.sin(angle) * magnitude}px) rotate(${Math.random() * 80 - 40}deg)`;
+      particle.style.opacity = '0';
+    }, 12);
+    setTimeout(() => particle.remove(), 620);
+  }
+}
+
+function handleFoodPointerDown(event) {
+  const overlay = document.getElementById('tableOverlay');
+  if (!overlay.classList.contains('active') || !canInteractWithCurrentPlate) return;
+  event.preventDefault();
+  if (event.currentTarget?.id === 'threeEatButton') {
+    registerBite();
+    return;
+  }
+  if (!currentFoodMesh || !threeRenderer || !threeRaycaster || !threePointer) return;
+  const rect = threeRenderer.domElement.getBoundingClientRect();
+  threePointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  threePointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  threeRaycaster.setFromCamera(threePointer, threeCamera);
+  const hits = [
+    ...threeRaycaster.intersectObject(currentFoodMesh, true),
+    ...(threePlateMesh ? threeRaycaster.intersectObject(threePlateMesh, true) : [])
+  ];
+  if (hits.length) registerBite();
+}
+
+function registerBite() {
+  if (!currentFoodMesh || !currentTastingItem || !canInteractWithCurrentPlate || isServingAnimation || isBiteAnimating || biteCount >= BITES_PER_FOOD) return;
+  biteCount += 1;
+  spawnBiteParticles();
+  playBite();
+  isBiteAnimating = true;
+  updateBiteIndicator();
+  targetFoodScale = biteCount === 1 ? 0.72 : biteCount === 2 ? 0.46 : 0.04;
+}
+
+function finishCurrentFood() {
+  canInteractWithCurrentPlate = false;
+  isServingAnimation = false;
+  document.getElementById('threeEatButton')?.classList.remove('show');
+
+  if (currentFoodMesh && activePlateGroup) {
+    activePlateGroup.remove(currentFoodMesh);
+    disposeObject3D(currentFoodMesh);
+    currentFoodMesh = null;
+    threeFoodMesh = null;
+  }
+
+  if (activePlateGroup && finishedPlatesGroup) {
+    const stackPlate = createPlate3D();
+    stackPlate.position.set(0, finishedPlateCount * 0.075, 0);
+    stackPlate.scale.setScalar(0.46);
+    stackPlate.rotation.y = finishedPlateCount % 2 ? 0.08 : -0.08;
+    finishedPlatesGroup.add(stackPlate);
+    finishedPlateCount += 1;
+    threeScene.remove(activePlateGroup);
+    disposeObject3D(activePlateGroup);
+  }
+
+  activePlateGroup = null;
+  threePlateMesh = null;
+  updateTastingOverlayContent(
+    currentTastingItem.name,
+    'Hai finito il piatto. Ora puoi leggere il ricordo e passare oltre.',
+    document.getElementById('currentDishMeta').textContent
+  );
+  showMemoryVisual();
+  showDishComment();
+  document.getElementById('nextDishBtn').style.display = 'inline-flex';
+}
+
+function spawnNextFood() {
+  init3DScene();
+  const nextBtn = document.getElementById('nextDishBtn');
+  const checkoutBtn = document.getElementById('tableCheckoutBtn');
+
+  if (tastingQueue.length === 0) {
+    currentTastingItem = null;
+    updateTastingOverlayContent('Uff, sono proprio pieno.', 'La degustazione è finita. Quando vuoi possiamo andare alla cassa.');
+    resetMemoryVisual();
+    hideDishComment();
+    biteCount = 0;
+    isBiteAnimating = false;
+    canInteractWithCurrentPlate = false;
+    updateBiteIndicator();
+    document.getElementById('threeEatButton')?.classList.remove('show');
+    nextBtn.style.display = 'none';
+    checkoutBtn.style.display = 'inline-flex';
+    return;
+  }
+
+  if (activePlateGroup && threeScene) {
+    threeScene.remove(activePlateGroup);
+    disposeObject3D(activePlateGroup);
+  }
+
+  currentTastingItem = tastingQueue.shift();
+  if (completedTastingDishes > 0) {
+    playSfx('nextDish', 0.48);
+  }
+  biteCount = 0;
+  isBiteAnimating = false;
+  canInteractWithCurrentPlate = false;
+  resetMemoryVisual();
+  setMemoryVisualFromCurrentItem();
+  hideDishComment();
+  updateBiteIndicator();
+  currentFoodScale = 1;
+  targetFoodScale = 1;
+
+  activePlateGroup = new THREE.Group();
+  const plate = createPlate3D();
+  currentFoodMesh = createMealFood3D(currentTastingItem);
+  currentFoodMesh.position.set(0, 0.08, 0);
+  plate.add(currentFoodMesh);
+  activePlateGroup.add(plate);
+  activePlateGroup.position.set(-2.35, 0.68, 0.95);
+  activePlateGroup.rotation.y = -0.34;
+  activePlateGroup.scale.setScalar(1.04);
+  threePlateMesh = plate.userData.clickable;
+  threeScene.add(activePlateGroup);
+  threeFoodMesh = currentFoodMesh;
+  servingTargetPosition = new THREE.Vector3(0, 0.68, 0.95);
+  isServingAnimation = true;
+
+  const serveMeta = currentTastingItem.quantity > 1
+    ? `x ${currentTastingItem.quantity} nel conto`
+    : `€${currentTastingItem.price.toFixed(2)}`;
+  updateTastingOverlayContent(currentTastingItem.name, 'Il piatto sta arrivando sul tavolo.', serveMeta);
+  nextBtn.style.display = 'none';
+  checkoutBtn.style.display = 'none';
+}
+
+let totalTastingDishes = 0;
+let completedTastingDishes = 0;
+
+function buildTastingQueueFromCart() {
+  tastingQueue = [];
+  Object.keys(cart).forEach(key => {
+    const [catIndex, itemIndex] = key.split('-').map(Number);
+    const item = MENU[catIndex]?.items[itemIndex];
+    if (!item) return;
+    const quantity = Math.max(1, cart[key] || 1);
+    tastingQueue.push({
+      name: item.name,
+      price: item.price,
+      comment: item.comment,
+      emotion: item.emotion,
+      img: item.img,
+      tastingAsset: item.tastingAsset,
+      memoryImg: item.memoryImg,
+      memory: item.memory,
+      memoryTitle: item.memoryTitle,
+      memoryText: item.memoryText,
+      catIndex,
+      itemIndex,
+      quantity,
+      portionIndex: 1,
+      portionTotal: 1
+    });
+  });
+}
+
+function createNoodleAssetDataUrl() {
+  const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440">
+  <defs>
+    <linearGradient id="bowlSide" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9AD8D4"/>
+      <stop offset="1" stop-color="#5EB2B7"/>
+    </linearGradient>
+    <linearGradient id="broth" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F69A45"/>
+      <stop offset="1" stop-color="#CF6531"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="360" cy="310" rx="258" ry="60" fill="#6B2E1E" opacity=".18"/>
+  <path d="M134 238 C154 334 238 378 360 378 C482 378 566 334 586 238 Z" fill="url(#bowlSide)" stroke="#6B2E1E" stroke-width="16" stroke-linejoin="round"/>
+  <path d="M168 276 C220 318 500 318 552 276" fill="none" stroke="#3E9197" stroke-width="14" stroke-linecap="round" opacity=".45"/>
+  <ellipse cx="360" cy="226" rx="252" ry="112" fill="#FFF2CC" stroke="#6B2E1E" stroke-width="15"/>
+  <ellipse cx="360" cy="238" rx="208" ry="76" fill="url(#broth)"/>
+  <ellipse cx="360" cy="222" rx="164" ry="42" fill="#FFE8A6" opacity=".35"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M184 220 C250 164 326 244 394 188 C460 132 512 180 552 218" stroke="#7A3B21" stroke-width="25"/>
+    <path d="M184 220 C250 164 326 244 394 188 C460 132 512 180 552 218" stroke="#FFD96A" stroke-width="16"/>
+    <path d="M176 252 C258 196 316 284 388 232 C468 174 516 226 560 256" stroke="#7A3B21" stroke-width="24"/>
+    <path d="M176 252 C258 196 316 284 388 232 C468 174 516 226 560 256" stroke="#F3B847" stroke-width="15"/>
+    <path d="M210 198 C292 252 354 168 430 218 C486 254 526 244 560 214" stroke="#7A3B21" stroke-width="23"/>
+    <path d="M210 198 C292 252 354 168 430 218 C486 254 526 244 560 214" stroke="#FFE177" stroke-width="14"/>
+    <path d="M216 286 C292 236 348 304 414 258 C470 220 520 250 548 286" stroke="#7A3B21" stroke-width="22"/>
+    <path d="M216 286 C292 236 348 304 414 258 C470 220 520 250 548 286" stroke="#F7C356" stroke-width="14"/>
+    <path d="M236 232 C300 184 356 230 414 196 C468 164 512 182 544 204" stroke="#FFF3A4" stroke-width="5" opacity=".82"/>
+    <path d="M214 258 C300 296 386 222 474 272 C502 288 528 292 550 284" stroke="#FFF3A4" stroke-width="5" opacity=".72"/>
+  </g>
+  <g stroke="#6B2E1E" stroke-width="5" stroke-linejoin="round">
+    <path d="M278 210 c22 -18 50 -14 68 3 c-26 8 -47 15 -68 -3Z" fill="#6BB75C"/>
+    <path d="M438 248 c24 -16 49 -9 62 10 c-25 5 -44 8 -62 -10Z" fill="#6BB75C"/>
+    <rect x="330" y="242" width="42" height="24" rx="9" fill="#F7DF9A" transform="rotate(-8 351 254)"/>
+    <rect x="404" y="212" width="40" height="22" rx="8" fill="#F7DF9A" transform="rotate(12 424 223)"/>
+    <ellipse cx="292" cy="255" rx="18" ry="13" fill="#F05A45"/>
+    <ellipse cx="472" cy="223" rx="17" ry="12" fill="#F05A45"/>
+  </g>
+  <g fill="#FFF5CA" opacity=".9">
+    <rect x="312" y="190" width="22" height="7" rx="3.5" transform="rotate(16 323 194)"/>
+    <rect x="384" y="205" width="22" height="7" rx="3.5" transform="rotate(-20 395 209)"/>
+    <rect x="456" y="260" width="22" height="7" rx="3.5" transform="rotate(26 467 264)"/>
+    <rect x="266" y="272" width="22" height="7" rx="3.5" transform="rotate(-12 277 276)"/>
+  </g>
+</svg>`.trim();
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function createFoodAssetDataUrl(item) {
+  const name = (item?.name || '').toLowerCase();
+  if (name.includes('noodle')) return createNoodleAssetDataUrl();
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 720;
+  canvas.height = 440;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  const ellipse = (x, y, rx, ry, fill, stroke = '#6B2E1E', line = 14) => {
+    ctx.beginPath();
+    ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+    ctx.fillStyle = fill;
+    ctx.fill();
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = line;
+      ctx.stroke();
+    }
+  };
+  const roundRect = (x, y, w, h, r, fill, stroke = '#6B2E1E', line = 14) => {
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, r);
+    ctx.fillStyle = fill;
+    ctx.fill();
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = line;
+      ctx.stroke();
+    }
+  };
+
+  const curve = (points, color, width = 14) => {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.beginPath();
+    ctx.moveTo(points[0][0], points[0][1]);
+    for (let i = 1; i < points.length - 1; i += 2) {
+      ctx.quadraticCurveTo(points[i][0], points[i][1], points[i + 1][0], points[i + 1][1]);
+    }
+    ctx.stroke();
+  };
+  const leaf = (x, y, rotation = 0, scale = 1, fill = '#6FB35D') => {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.scale(scale, scale);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 28, 12, 0, 0, Math.PI * 2);
+    ctx.fillStyle = fill;
+    ctx.fill();
+    ctx.strokeStyle = '#47743F';
+    ctx.lineWidth = 5;
+    ctx.stroke();
+    ctx.restore();
+  };
+  const plateShadow = () => {
+    ctx.save();
+    ctx.globalAlpha = 0.2;
+    ellipse(360, 285, 245, 58, '#6B2E1E', null);
+    ctx.restore();
+  };
+  const sesame = (seeds) => {
+    seeds.forEach(([x, y, r]) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(r);
+      roundRect(-10, -3, 20, 6, 4, '#FFF3C7', null);
+      ctx.restore();
+    });
+  };
+  const highlight = (x, y, rx, ry, alpha = 0.45) => {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ellipse(x, y, rx, ry, '#FFFBEA', null);
+    ctx.restore();
+  };
+  const sauceDots = (dots, color = '#B94334') => {
+    dots.forEach(([x, y, r]) => ellipse(x, y, r, r * 0.72, color, '#7C2E25', 5));
+  };
+
+  if (name.includes('uova')) {
+    plateShadow();
+    roundRect(150, 230, 190, 82, 28, '#D99A54', '#8A4A28', 13);
+    roundRect(175, 206, 170, 70, 26, '#F2CF8F', null);
+    ellipse(360, 230, 138, 78, '#FFF8EA', '#7D4125', 12);
+    ellipse(390, 222, 46, 34, '#F3B52F', '#B97920', 8);
+    ellipse(470, 236, 118, 70, '#FFF8EA', '#7D4125', 12);
+    ellipse(445, 228, 42, 32, '#F3B52F', '#B97920', 8);
+    leaf(245, 184, -0.4, 0.82);
+    leaf(515, 178, 0.32, 0.78);
+    sesame([[360,185,-0.2],[490,190,0.34],[430,278,-0.1]]);
+  } else if (name.includes('noodle')) {
+    plateShadow();
+    ellipse(360, 276, 260, 92, '#9F5A2F', '#6B2E1E', 16);
+    ellipse(360, 228, 238, 104, '#FFF0C7', '#6B2E1E', 13);
+    ellipse(360, 238, 194, 74, '#D97834', null);
+    ctx.save();
+    ctx.globalAlpha = 0.28;
+    ellipse(360, 228, 168, 38, '#FFF4B6', null);
+    ctx.restore();
+    const noodleLines = [
+      [[178,222],[252,168],[332,224],[440,164],[550,216]],
+      [[184,250],[270,198],[338,255],[430,201],[548,248]],
+      [[205,198],[292,254],[392,184],[518,236]],
+      [[220,276],[306,218],[382,284],[506,220]],
+      [[230,232],[310,176],[400,236],[516,190]],
+      [[214,262],[320,302],[456,250],[548,284]],
+      [[236,210],[330,246],[430,210],[520,266]],
+      [[188,236],[278,278],[376,218],[494,270]]
+    ];
+    noodleLines.forEach((line, i) => {
+      curve(line, '#8A4A27', 22);
+      curve(line, i % 2 ? '#FFD767' : '#F0B842', 15);
+      curve(line, 'rgba(255,246,176,0.82)', 4);
+    });
+    sauceDots([[292,204,20],[430,212,19],[348,266,16]], '#F05A45');
+    [[315,220],[392,242],[462,254]].forEach(([x, y]) => roundRect(x - 18, y - 10, 36, 20, 8, '#F6E2A4', '#9B6330', 4));
+    leaf(255, 250, -0.4, 0.72, '#69B55A');
+    leaf(458, 252, 0.28, 0.72, '#69B55A');
+    sesame([[315,198,0.2],[388,205,-0.3],[455,232,0.45],[278,255,-0.15]]);
+    curve([[178,160],[365,193],[572,151]], '#6B2E1E', 10);
+    curve([[182,148],[370,181],[574,139]], '#F2D19A', 6);
+    curve([[190,292],[360,332],[532,292]], '#6B2E1E', 9);
+    curve([[205,288],[360,318],[518,288]], '#D28A42', 5);
+  } else if (name.includes('ravioli')) {
+    plateShadow();
+    [[242,235,-0.18],[322,207,0.08],[405,235,0.14],[488,213,-0.14]].forEach(([x, y, r], idx) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(r);
+      ellipse(0, 0, 82, 48, '#EACB7A', '#8A4A28', 12);
+      ellipse(0, 4, 55, 28, '#F2D990', null);
+      for (let j = -3; j <= 3; j++) {
+        curve([[j * 13, -30], [j * 10, -8], [j * 14, 20]], '#C08A3F', 4);
+      }
+      curve([[-46,-3],[-18,-30],[18,-30],[46,-3]], '#8A4A28', 5);
+      highlight(-18, -13, 22, 8, idx % 2 ? 0.35 : 0.5);
+      ctx.restore();
+    });
+    roundRect(480, 268, 78, 44, 16, '#B94334', '#7C2E25', 8);
+    highlight(498, 282, 22, 8, 0.32);
+    leaf(215, 175, -0.4, 0.78);
+    leaf(520, 172, 0.42, 0.74);
+  } else if (name.includes('involtini')) {
+    plateShadow();
+    [[250,230,-0.12],[360,215,0.08],[470,236,0.16]].forEach(([x, y, r]) => {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(r);
+      roundRect(-95, -32, 190, 64, 28, '#DCA553', '#814220', 12);
+      roundRect(-78, -20, 156, 18, 9, '#F7D08B', null);
+      curve([[-65,20],[-18,3],[40,18]], '#A7632A', 7);
+      curve([[-38,-2],[2,14],[54,-2]], '#F9DE9C', 5);
+      ctx.restore();
+    });
+    roundRect(520, 174, 72, 48, 16, '#C94E3E', '#7C2E25', 8);
+    highlight(540, 188, 18, 7, 0.34);
+    leaf(190, 178, -0.5, 0.75);
+  } else if (name.includes('pizza')) {
+    plateShadow();
+    ellipse(360, 230, 238, 132, '#E6A84C', '#7C3E22', 15);
+    ellipse(360, 230, 198, 101, '#C84E3A', null);
+    ellipse(360, 230, 168, 82, '#F4D062', null);
+    sauceDots([[285,194,28],[372,186,26],[470,238,30],[326,270,24],[414,266,24]], '#8D3E35');
+    [[252,232],[506,208],[365,246]].forEach(([x,y]) => leaf(x, y, 0.4, 0.58, '#5FAE58'));
+    [[315,225],[432,214],[390,286],[255,260]].forEach(([x,y]) => ellipse(x, y, 18, 10, '#FFF0B6', null));
+  } else if (name.includes('tortellini')) {
+    plateShadow();
+    for (let i = 0; i < 7; i++) {
+      const x = 220 + (i % 4) * 88;
+      const y = 210 + Math.floor(i / 4) * 58 + (i % 2) * 12;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate((i - 3) * 0.12);
+      ellipse(0, 0, 54, 38, '#E8C66E', '#8A4A28', 11);
+      ellipse(0, 4, 28, 16, '#C98A3E', null);
+      curve([[-34,-8],[-10,-28],[20,-18],[34,-4]], '#F4D987', 7);
+      ctx.restore();
+    }
+    leaf(508, 180, 0.32, 0.74);
+  } else if (name.includes('salmone')) {
+    plateShadow();
+    roundRect(190, 158, 320, 142, 38, '#F28B6F', '#8F4938', 15);
+    roundRect(205, 172, 286, 34, 18, '#FFB094', null);
+    for (let i = 0; i < 6; i++) curve([[226 + i * 46,172],[250 + i * 42,222],[270 + i * 41,286]], '#FFD3B8', 10);
+    roundRect(455, 246, 100, 44, 18, '#F5F1DF', '#7D4125', 8);
+    ellipse(500, 256, 14, 8, '#F2C95B', null);
+    leaf(205, 304, -0.4, 0.82);
+    leaf(540, 196, 0.38, 0.76);
+  } else if (name.includes('panino')) {
+    plateShadow();
+    ellipse(360, 204, 190, 76, '#D89545', '#7D4125', 14);
+    roundRect(195, 210, 330, 58, 25, '#F6C979', '#7D4125', 12);
+    roundRect(215, 230, 292, 42, 14, '#D66D8C', null);
+    roundRect(225, 250, 270, 36, 16, '#FFF0B3', null);
+    ellipse(360, 288, 175, 45, '#C47B38', '#7D4125', 12);
+    sesame([[300,176,-0.15],[360,162,0.12],[420,178,0.24]]);
+  } else if (name.includes('lasagne')) {
+    plateShadow();
+    roundRect(190, 172, 340, 122, 24, '#B85436', '#6B2E1E', 13);
+    roundRect(205, 140, 310, 62, 18, '#F1C478', '#6B2E1E', 9);
+    roundRect(205, 202, 310, 38, 12, '#F7E0A1', null);
+    roundRect(205, 250, 310, 34, 14, '#D0603F', null);
+    for (let i = 0; i < 5; i++) curve([[230 + i * 55,150],[250 + i * 52,168],[272 + i * 50,150]], '#FFF0B6', 5);
+    sauceDots([[250,222,12],[352,229,10],[462,220,12]], '#9C3F2D');
+    leaf(506, 146, 0.35, 0.72);
+  } else if (name.includes('tiramisu')) {
+    plateShadow();
+    roundRect(205, 162, 310, 142, 28, '#8B5A33', '#6B2E1E', 14);
+    roundRect(224, 128, 272, 62, 20, '#EAD9B8', '#6B2E1E', 9);
+    roundRect(224, 214, 272, 42, 14, '#EAD9B8', null);
+    roundRect(224, 255, 272, 28, 14, '#684026', null);
+    [[270,145],[320,160],[388,140],[448,164],[420,184],[292,184]].forEach(([x,y]) => ellipse(x, y, 9, 5, '#6A3E25', null));
+  } else if (name.includes('crema')) {
+    plateShadow();
+    roundRect(202, 174, 316, 105, 32, '#F1D4A1', '#7D4125', 14);
+    ellipse(360, 171, 160, 48, '#A65A29', '#7D4125', 9);
+    ellipse(360, 166, 126, 34, '#C9762D', null);
+    curve([[248,160],[330,138],[470,166]], '#F6B954', 11);
+    curve([[260,178],[350,158],[455,184]], '#7C3C22', 6);
+    ellipse(495, 130, 28, 20, '#D84C45', '#7D2E25', 6);
+  } else if (name.includes('panna')) {
+    plateShadow();
+    ellipse(360, 268, 160, 52, '#F3E3D3', '#7D4125', 10);
+    roundRect(258, 138, 204, 150, 36, '#FFF6EA', '#7D4125', 13);
+    ellipse(360, 138, 104, 36, '#FFFDF6', '#7D4125', 8);
+    ellipse(360, 138, 70, 22, '#C74851', null);
+    curve([[308,146],[360,128],[413,146]], '#F07379', 8);
+    ellipse(396, 118, 28, 20, '#D94D5C', '#7D2E25', 6);
+    highlight(315, 186, 42, 20, 0.32);
+  } else {
+    plateShadow();
+    ellipse(360, 220, 220, 112, '#F4D8A2', '#7D4125', 14);
+    ellipse(405, 160, 42, 30, '#D94D5C', null);
+  }
+  return canvas.toDataURL('image/png');
+}
+
+function getTastingFoodAsset(item) {
+  return TASTING_FOOD_ASSETS[item?.name] || item?.tastingAsset || item?.img || '';
+}
+
+function applyTastingFoodLayout(item) {
+  const hitarea = document.getElementById('assetPlateButton');
+  const stage = document.getElementById('eatingStage');
+  if (!hitarea) return;
+  const layout = { ...TASTING_FOOD_LAYOUT.default, ...(TASTING_FOOD_LAYOUT[item?.name] || {}) };
+  [hitarea, stage].filter(Boolean).forEach((el) => {
+    el.style.setProperty('--food-left', layout.left);
+    el.style.setProperty('--food-top', layout.top);
+    el.style.setProperty('--food-width', layout.width);
+    if (layout.topMobile) el.style.setProperty('--food-top-mobile', layout.topMobile);
+    else el.style.removeProperty('--food-top-mobile');
+    if (layout.widthMobile) el.style.setProperty('--food-width-mobile', layout.widthMobile);
+    else el.style.removeProperty('--food-width-mobile');
+  });
+  if (layout.yOffset) hitarea.style.setProperty('--food-y-offset', layout.yOffset);
+  else hitarea.style.removeProperty('--food-y-offset');
+}
+
+function updatePlateProgress() {
+  const text = document.getElementById('assetHungerPercent');
+  const pct = Math.min(100, Math.round((completedTastingDishes / Math.max(1, totalTastingDishes)) * 100));
+  if (text) text.textContent = `${pct}%`;
+}
+
+function addFinishedPlateToScene(index) {
+  const stack = document.getElementById('assetPlateStack');
+  if (!stack) return;
+  const plate = document.createElement('span');
+  plate.className = 'progress-plate';
+  plate.style.setProperty('--i', Math.min(index - 1, 13));
+  stack.appendChild(plate);
+}
+
+function createAssetTastingMarkup() {
+  return `
+    <div class="asset-tasting-scene" id="assetTastingScene">
+      <div class="eating-stage" id="eatingStage">
+        <img class="asset-scene-foreground" src="imgs/foreground.png" alt="" aria-hidden="true">
+
+        <button class="asset-food-hitarea" id="assetPlateButton" type="button" aria-label="Assaggia il piatto">
+          <img class="asset-food" id="assetFood" alt="">
+        </button>
+
+        <div class="asset-memory-ripple" id="assetMemoryRipple"></div>
+      </div>
+
+      <div class="plate-progress" id="plateProgress">
+        <div class="plate-progress-stack" id="assetPlateStack"></div>
+        <div class="plate-progress-percent" id="assetHungerPercent">0%</div>
+      </div>
+
+      <button class="asset-eat-button" id="assetEatButton" type="button">MANGIA</button>
+    </div>`;
+}
+
+function init3DScene() {
+  if (threeSceneInitialized) return;
+  const container = document.getElementById('threeContainer');
+  container.innerHTML = createAssetTastingMarkup();
+  document.getElementById('assetPlateButton')?.addEventListener('pointerdown', handleFoodPointerDown);
+  document.getElementById('assetEatButton')?.addEventListener('pointerdown', handleFoodPointerDown);
+  threeSceneInitialized = true;
+}
+
+function start3DAnimationLoop() {}
+function stop3DAnimationLoop() {}
+function handle3DResize() {}
+function disposeObject3D() {}
+
+function resetMemoryVisual() {
+  memoryVisualLoadId += 1;
+  document.getElementById('tableOverlay')?.classList.remove('memory-mode');
+  const overlay = document.getElementById('memoryVisualOverlay');
+  const image = document.getElementById('memoryVisualImage');
+  const ripple = document.getElementById('assetMemoryRipple');
+  overlay.classList.remove('show');
+  image.style.backgroundImage = '';
+  document.getElementById('memoryLabel').textContent = '';
+  ripple?.classList.remove('play');
+}
+
+function showMemoryVisual() {
+  const overlay = document.getElementById('memoryVisualOverlay');
+  const ripple = document.getElementById('assetMemoryRipple');
+  document.getElementById('memoryLabel').textContent = currentTastingItem?.memory?.label || '';
+  document.getElementById('tableOverlay')?.classList.add('memory-mode');
+  playSfx('memory', 0.52);
+  if (ripple) {
+    ripple.classList.remove('play');
+    void ripple.offsetWidth;
+    ripple.classList.add('play');
+  }
+  setTimeout(() => overlay.classList.add('show'), 520);
+}
+
+function resetDiningSceneSession() {
+  init3DScene();
+  totalTastingDishes = tastingQueue.length;
+  completedTastingDishes = 0;
+  finishedPlateCount = 0;
+  canInteractWithCurrentPlate = false;
+  isServingAnimation = false;
+  currentFoodMesh = document.getElementById('assetFood');
+  const food = document.getElementById('assetFood');
+  if (food) {
+    food.classList.remove('bite-1', 'bite-2', 'bite-3');
+    food.className = 'asset-food';
+    food.style.removeProperty('--food-scale');
+    food.style.removeProperty('--food-opacity');
+    food.removeAttribute('src');
+  }
+  const stack = document.getElementById('assetPlateStack');
+  if (stack) stack.innerHTML = '';
+  updatePlateProgress();
+}
+
+function spawnBiteParticles() {
+  const target = document.getElementById('assetEatButton');
+  if (!target) return;
+  const rect = target.getBoundingClientRect();
+  const colors = ['#FFD86A', '#FF806D', '#77CFC5', '#FFF7E8', '#8EC565'];
+  for (let i = 0; i < 10; i++) {
+    const size = 8 + Math.random() * 8;
+    const angle = Math.random() * Math.PI * 2;
+    const magnitude = 46 + Math.random() * 70;
+    const particle = document.createElement('span');
+    particle.className = 'food-bite-spark';
+    particle.style.position = 'fixed';
+    particle.style.left = `${rect.left + rect.width / 2 - size / 2}px`;
+    particle.style.top = `${rect.top + rect.height / 2 - size / 2}px`;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${Math.max(7, size * 0.62)}px`;
+    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.zIndex = '300';
+    particle.style.pointerEvents = 'none';
+    particle.style.transition = 'transform 560ms ease-out, opacity 560ms ease-out';
+    document.body.appendChild(particle);
+    setTimeout(() => {
+      particle.style.transform = `translate(${Math.cos(angle) * magnitude}px, ${Math.sin(angle) * magnitude}px) rotate(${Math.random() * 80 - 40}deg)`;
+      particle.style.opacity = '0';
+    }, 12);
+    setTimeout(() => particle.remove(), 620);
+  }
+}
+
+function handleFoodPointerDown(event) {
+  const overlay = document.getElementById('tableOverlay');
+  if (!overlay.classList.contains('active') || !canInteractWithCurrentPlate) return;
+  event.preventDefault();
+  registerBite();
+}
+
+function registerBite() {
+  const food = document.getElementById('assetFood');
+  if (!food || !currentTastingItem || !canInteractWithCurrentPlate || isServingAnimation || isBiteAnimating || biteCount >= BITES_PER_FOOD) return;
+  biteCount += 1;
+  spawnBiteParticles();
+  playBite();
+  isBiteAnimating = true;
+  updateBiteIndicator();
+  food.classList.remove('bite-1', 'bite-2', 'bite-3');
+  void food.offsetWidth;
+  food.classList.add(`bite-${biteCount}`);
+  setTimeout(() => {
+    isBiteAnimating = false;
+    if (biteCount >= BITES_PER_FOOD) finishCurrentFood();
+  }, 300);
+}
+
+function finishCurrentFood() {
+  canInteractWithCurrentPlate = false;
+  completedTastingDishes += 1;
+  finishedPlateCount = completedTastingDishes;
+  updatePlateProgress();
+  addFinishedPlateToScene(completedTastingDishes);
+  updateTastingOverlayContent(
+    currentTastingItem.name,
+    'Hai finito il piatto. Ora puoi leggere il ricordo e passare oltre.',
+    document.getElementById('currentDishMeta').textContent
+  );
+  showMemoryVisual();
+  showDishComment();
+  document.getElementById('nextDishBtn').style.display = 'inline-flex';
+}
+
+function spawnNextFood() {
+  init3DScene();
+  const nextBtn = document.getElementById('nextDishBtn');
+  const checkoutBtn = document.getElementById('tableCheckoutBtn');
+  const food = document.getElementById('assetFood');
+
+  if (tastingQueue.length === 0) {
+    currentTastingItem = null;
+    updateTastingOverlayContent('Uff, sono proprio pieno.', 'La degustazione è finita. Quando vuoi possiamo andare alla cassa.');
+    resetMemoryVisual();
+    hideDishComment();
+    biteCount = 0;
+    isBiteAnimating = false;
+    canInteractWithCurrentPlate = false;
+    updateBiteIndicator();
+    nextBtn.style.display = 'none';
+    checkoutBtn.style.display = 'inline-flex';
+    document.getElementById('assetEatButton')?.classList.add('is-hidden');
+    return;
+  }
+
+  currentTastingItem = tastingQueue.shift();
+  if (completedTastingDishes > 0) {
+    playSfx('nextDish', 0.48);
+  }
+  biteCount = 0;
+  isBiteAnimating = false;
+  canInteractWithCurrentPlate = true;
+  resetMemoryVisual();
+  setMemoryVisualFromCurrentItem();
+  hideDishComment();
+  updateBiteIndicator();
+
+  if (food) {
+    food.classList.remove('bite-1', 'bite-2', 'bite-3');
+    food.className = 'asset-food';
+    food.style.removeProperty('--food-scale');
+    food.style.removeProperty('--food-opacity');
+    food.removeAttribute('src');
+  }
+  applyTastingFoodLayout(currentTastingItem);
+  if (food) {
+    food.src = getTastingFoodAsset(currentTastingItem);
+    food.alt = currentTastingItem.name;
+  }
+  document.getElementById('assetEatButton')?.classList.remove('is-hidden');
+
+  const serveMeta = currentTastingItem.portionTotal > 1
+    ? `${currentTastingItem.portionIndex}/${currentTastingItem.portionTotal} porzioni`
+    : `€${currentTastingItem.price.toFixed(2)}`;
+  updateTastingOverlayContent(currentTastingItem.name, 'Premi MANGIA per assaggiare il piatto.', serveMeta);
+  nextBtn.style.display = 'none';
+  checkoutBtn.style.display = 'none';
+}
+
+function startTasting() {
+  if (Object.keys(cart).length === 0) {
+    showBubble("Il carrello è vuoto! Aggiungi qualcosa di buono. 😋");
+    setMii('thoughtful');
+    return;
+  }
+
+  buildTastingQueueFromCart();
+  document.getElementById('tableOverlay').classList.add('active');
+  init3DScene();
+  start3DAnimationLoop();
+  resetDiningSceneSession();
+  handle3DResize();
+  spawnNextFood();
+  hideBubble();
+}
+
+function showReceipt() {
+  document.getElementById('tableOverlay').classList.remove('active');
+  stop3DAnimationLoop();
+
+  const overlay = document.getElementById('checkoutOverlay');
+  const loading = document.getElementById('checkoutLoading');
+  const receiptContainer = document.getElementById('receiptContainer');
+  const receipt = document.getElementById('receipt');
+  const continueBtn = document.getElementById('receiptContinueBtn');
+  const finalScreen = document.getElementById('finalScreen');
+
+  overlay.classList.add('active');
+  loading.classList.remove('hidden');
+  receiptContainer.classList.remove('active');
+  receipt.className = 'receipt';
+  receipt.removeAttribute('style');
+  if (continueBtn) continueBtn.classList.remove('show');
+  if (finalScreen) {
+    finalScreen.classList.remove('active', 'show-mii', 'show-signature', 'show-restart');
+  }
+  clearFinalConfetti();
+  clearFinalTimers();
+
+  hideBubble();
+
+  setTimeout(() => {
+    loading.classList.add('hidden');
+    receiptContainer.classList.add('active');
+    renderReceipt();
+
+    setTimeout(() => {
+      startReceiptWave();
+    }, 100);
+  }, 2000);
+}
+
+function renderReceipt() {
+  const receipt = document.getElementById('receipt');
+  const itemsContainer = document.getElementById('receiptItems');
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('it-IT', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  document.getElementById('receiptDate').textContent = dateStr;
+
+  let total = 0;
+  itemsContainer.innerHTML = '';
+
+  for (let key in cart) {
+    const [c, i] = key.split('-');
+    const item = MENU[c].items[i];
+    const qty = cart[key];
+    const subtotal = item.price * qty;
+    total += subtotal;
+
+    const itemEl = document.createElement('div');
+    itemEl.className = 'receipt-item';
+    itemEl.innerHTML = `
+      <div class="receipt-item-info">
+        <span class="receipt-item-name">${item.name}</span>
+        <span class="receipt-item-qty">Quantità: ${qty}</span>
+      </div>
+      <span class="receipt-item-price">€${subtotal.toFixed(2)}</span>
+    `;
+    itemsContainer.appendChild(itemEl);
+  }
+
+  document.getElementById('receiptTotal').textContent = `€${total.toFixed(2)}`;
+
+  document.getElementById('receiptCode').textContent =
+    String(Date.now()).slice(-12).replace(/(\d{4})(?=\d)/g, '$1 ');
+
+  const qrContainer = document.getElementById('receiptQR');
+  if (qrContainer) {
+    qrContainer.innerHTML = '';
+    if (typeof QRCode !== 'undefined') {
+      new QRCode(qrContainer, {
+        text: 'https://ksw.ski',
+        width: 76, height: 76,
+        colorDark: '#111111', colorLight: '#fbf7e8',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+  }
+
+  receipt.className = 'receipt';
+  receipt.removeAttribute('style');
+}
+
+function startReceiptWave() {
+  const receipt = document.getElementById('receipt');
+  const continueBtn = document.getElementById('receiptContinueBtn');
+
+  receipt.classList.add('wave-1');
+
+  setTimeout(() => {
+    receipt.classList.remove('wave-1');
+    receipt.classList.add('wave-2');
+  }, 500);
+
+  setTimeout(() => {
+    receipt.classList.remove('wave-2');
+    receipt.classList.add('wave-3');
+  }, 1000);
+
+  setTimeout(() => {
+    receipt.classList.remove('wave-3');
+    receipt.classList.add('wave-4');
+  }, 1500);
+
+  setTimeout(() => {
+    receipt.classList.remove('wave-4');
+    receipt.classList.add('complete');
+    playJingle();
+
+    setTimeout(() => {
+      continueBtn?.classList.add('show');
+      startReceiptAutoScroll(receipt);
+    }, 300);
+  }, 2000);
+}
+
+function startReceiptAutoScroll(receipt) {
+  let stopped = false;
+  let timerId = null;
+
+  const stopAutoScroll = () => {
+    stopped = true;
+    if (timerId) clearInterval(timerId);
+    receipt.removeEventListener('wheel', stopAutoScroll);
+    receipt.removeEventListener('touchstart', stopAutoScroll);
+    receipt.removeEventListener('pointerdown', stopAutoScroll);
+    receipt.removeEventListener('keydown', stopAutoScroll);
+  };
+
+  receipt.addEventListener('wheel', stopAutoScroll, { passive: true });
+  receipt.addEventListener('touchstart', stopAutoScroll, { passive: true });
+  receipt.addEventListener('pointerdown', stopAutoScroll, { passive: true });
+  receipt.addEventListener('keydown', stopAutoScroll);
+
+  setTimeout(() => {
+    if (stopped || receipt.scrollHeight <= receipt.clientHeight + 4) return;
+
+    timerId = setInterval(() => {
+      if (stopped) {
+        clearInterval(timerId);
+        return;
+      }
+      receipt.scrollTop += 1;
+      if (receipt.scrollTop >= receipt.scrollHeight - receipt.clientHeight - 2) {
+        stopAutoScroll();
+      }
+    }, 28);
+  }, 1200);
+}
+
+function clearFinalTimers() {
+  finalScreenTimers.forEach(timerId => clearTimeout(timerId));
+  finalScreenTimers = [];
+}
+
+function resetFinalSignature() {
+  document.querySelectorAll('.final-signature-mask-path').forEach((path) => {
+    if (typeof path.getTotalLength !== 'function') return;
+    const length = path.getTotalLength();
+    path.style.transition = 'none';
+    path.style.strokeDasharray = `${length}`;
+    path.style.strokeDashoffset = `${length}`;
+  });
+}
+
+function animateFinalSignature() {
+  const finalScreen = document.getElementById('finalScreen');
+  const paths = Array.from(document.querySelectorAll('.final-signature-mask-path'));
+  if (!finalScreen || paths.length === 0) {
+    finalScreen?.classList.add('show-restart');
+    return;
+  }
+
+  resetFinalSignature();
+  finalScreen.classList.add('show-signature');
+
+  let delay = 0;
+  paths.forEach((path, index) => {
+    const duration = index === 0 ? 620 : 500;
+    finalScreenTimers.push(setTimeout(() => {
+      path.style.transition = `stroke-dashoffset ${duration}ms cubic-bezier(.2,.72,.25,1)`;
+      path.style.strokeDashoffset = '0';
+    }, delay));
+    delay += Math.round(duration * 0.68);
+  });
+
+  finalScreenTimers.push(setTimeout(() => {
+    finalScreen.classList.add('show-restart');
+  }, delay + 420));
+}
+
+function clearFinalConfetti() {
+  const confettiLayer = document.getElementById('finalConfetti');
+  if (confettiLayer) confettiLayer.innerHTML = '';
+}
+
+function launchFinalConfetti() {
+  const confettiLayer = document.getElementById('finalConfetti');
+  if (!confettiLayer) return;
+
+  confettiLayer.innerHTML = '';
+  const colors = ['#FFE36D', '#FF5D44', '#FFAB00', '#FF7565', '#77CFC5', '#FFF3CC'];
+  const count = 84;
+
+  for (let i = 0; i < count; i++) {
+    const confetti = document.createElement('span');
+    confetti.className = 'final-confetti';
+    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.85;
+    const burst = 90 + Math.random() * 220;
+    const fall = 520 + Math.random() * 420;
+    const drift = (Math.random() - 0.5) * 560;
+    const size = 7 + Math.random() * 11;
+
+    confetti.style.setProperty('--c', colors[Math.floor(Math.random() * colors.length)]);
+    confetti.style.setProperty('--w', `${size}px`);
+    confetti.style.setProperty('--h', `${size * (0.8 + Math.random() * 1.2)}px`);
+    confetti.style.setProperty('--r', Math.random() > 0.74 ? '999px' : '3px');
+    confetti.style.setProperty('--burst-x', `${Math.cos(angle) * burst}px`);
+    confetti.style.setProperty('--burst-y', `${Math.sin(angle) * burst * 0.62}px`);
+    confetti.style.setProperty('--fall-x', `${Math.cos(angle) * burst + drift}px`);
+    confetti.style.setProperty('--fall-y', `${fall}px`);
+    confetti.style.setProperty('--rot', `${Math.random() * 900 - 450}deg`);
+    confetti.style.setProperty('--dur', `${4.2 + Math.random() * 2.3}s`);
+    confetti.style.setProperty('--delay', `${Math.random() * 0.08}s`);
+    confettiLayer.appendChild(confetti);
+  }
+}
+
+function showFinalScreen() {
+  const receiptContainer = document.getElementById('receiptContainer');
+  const continueBtn = document.getElementById('receiptContinueBtn');
+  const finalScreen = document.getElementById('finalScreen');
+  if (!finalScreen) return;
+
+  clearFinalTimers();
+  resetFinalSignature();
+  receiptContainer?.classList.remove('active');
+  continueBtn?.classList.remove('show');
+  finalScreen.classList.remove('show-mii', 'show-signature', 'show-restart');
+  finalScreen.classList.add('active');
+
+  finalScreenTimers.push(setTimeout(() => {
+    launchFinalConfetti();
+    finalScreenTimers.push(setTimeout(() => {
+      playSfx('applause', 0.55);
+    }, 5));
+  }, 70));
+
+  finalScreenTimers.push(setTimeout(() => {
+    finalScreen.classList.add('show-mii');
+  }, 1450));
+
+  finalScreenTimers.push(setTimeout(() => {
+    animateFinalSignature();
+  }, 3000));
+}
+
+function restartOrder() {
+  const overlay = document.getElementById('checkoutOverlay');
+  const receipt = document.getElementById('receipt');
+  const receiptContainer = document.getElementById('receiptContainer');
+  const continueBtn = document.getElementById('receiptContinueBtn');
+  const finalScreen = document.getElementById('finalScreen');
+  const splash = document.getElementById('splashScreen');
+
+  clearFinalTimers();
+  clearFinalConfetti();
+  resetFinalSignature();
+  finalScreen?.classList.remove('active', 'show-mii', 'show-signature', 'show-restart');
+  continueBtn?.classList.remove('show');
+  receipt.classList.remove('complete');
+  receipt.removeAttribute('style');
+  receipt.scrollTop = 0;
+  document.getElementById('checkoutLoading')?.classList.add('hidden');
+  document.getElementById('tableOverlay')?.classList.remove('active', 'memory-mode');
+  document.getElementById('memoryVisualOverlay')?.classList.remove('show');
+  document.getElementById('nextDishBtn').style.display = 'none';
+  document.getElementById('tableCheckoutBtn').style.display = 'none';
+  document.getElementById('assetEatButton')?.classList.remove('is-hidden');
+
+  setTimeout(() => {
+    overlay.classList.remove('active');
+    receiptContainer.classList.remove('active');
+
+    cart = {};
+    currentCat = 0;
+    previousDotIdx = -1;
+    cardSlideDirection = 'right';
+    tastingQueue = [];
+    currentTastingItem = null;
+    biteCount = 0;
+    isBiteAnimating = false;
+    canInteractWithCurrentPlate = false;
+    isServingAnimation = false;
+    totalTastingDishes = 0;
+    completedTastingDishes = 0;
+    finishedPlateCount = 0;
+    const plateStack = document.getElementById('assetPlateStack');
+    if (plateStack) plateStack.innerHTML = '';
+    updateBiteIndicator();
+    updatePlateProgress();
+    hideDishComment();
+    hideBubble();
+
+    updateCartUI();
+    renderDots();
+    renderCards();
+    setMii('neutral');
+    if (splash) {
+      splash.style.display = 'grid';
+      void splash.offsetWidth;
+      splash.classList.remove('hidden');
+    }
+  }, 400);
+}
+
+/* ────────────────────────
+   CATEGORY NAVIGATION
+──────────────────────── */
+function goCategory(idx) {
+  if (idx === currentCat) return;
+
+  previousDotIdx = currentCat;
+  const n = MENU.length;
+  const forward = ((idx - currentCat + n) % n) <= n / 2;
+  cardSlideDirection = forward ? 'right' : 'left';
+  currentCat = idx;
+
+  const pill = document.getElementById('sectionPill');
+  pill.classList.remove('switching');
+  void pill.offsetWidth;
+  pill.classList.add('switching');
+
+  const dots = document.querySelectorAll('.dot');
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentCat);
+  });
+
+  hideBubble();
+  renderCards();
+  setMii('neutral');
+}
+
+document.getElementById('btnPrev').onclick = () => goCategory((currentCat - 1 + MENU.length) % MENU.length);
+document.getElementById('btnNext').onclick = () => goCategory((currentCat + 1) % MENU.length);
+document.getElementById('checkoutBtn').onclick = startTasting;
+document.getElementById('nextDishBtn').onclick = spawnNextFood;
+document.getElementById('tableCheckoutBtn').onclick = showReceipt;
+document.getElementById('receiptContinueBtn').onclick = showFinalScreen;
+document.getElementById('finalRestartBtn').onclick = restartOrder;
+
+/* ────────────────────────
+   BUBBLE
+──────────────────────── */
+function showBubble(text) {
+  const b = document.getElementById('bubble');
+  clearInterval(bubbleTypingTimer);
+  b.textContent = '';
+  b.classList.remove('show');
+  void b.offsetWidth;
+  b.classList.add('show');
+
+  let index = 0;
+  const writeBubble = () => {
+    b.textContent = text.slice(0, index);
+
+    if (index < text.length) {
+      const cursor = document.createElement('span');
+      cursor.className = 'bubble-cursor';
+      cursor.textContent = '▌';
+      b.appendChild(cursor);
+      index += 1;
+      return;
+    }
+
+    clearInterval(bubbleTypingTimer);
+    bubbleTypingTimer = null;
+  };
+
+  writeBubble();
+  bubbleTypingTimer = setInterval(writeBubble, 22);
+  clearTimeout(bubbleTimer);
+  bubbleTimer = setTimeout(hideBubble, 15000);
+}
+
+function hideBubble() {
+  const b = document.getElementById('bubble');
+  b.classList.remove('show');
+  clearInterval(bubbleTypingTimer);
+  bubbleTypingTimer = null;
+  clearTimeout(bubbleTimer);
+}
+
+/* ────────────────────────
+   MII
+──────────────────────── */
+function setMii(emotion) {
+  const img = document.getElementById('miiImg');
+  const src = MII[emotion] || MII.neutral;
+  const popMii = () => {
+    img.classList.remove('mii-idle');
+    img.classList.remove('mii-pop');
+    void img.offsetWidth;
+    img.classList.add('mii-pop');
+    setTimeout(() => img.classList.remove('mii-pop'), 420);
+  };
+
+  if (!img.src.endsWith(src)) {
+    img.style.opacity = '0';
+    setTimeout(() => {
+      img.src = src;
+      img.style.opacity = '1';
+      popMii();
+    }, 130);
+  }
+}
+
+function resetMiiIdleTimer() {
+  const img = document.getElementById('miiImg');
+  if (!img) return;
+  img.classList.remove('mii-idle');
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    img.classList.add('mii-idle');
+  }, 7000);
+}
+
+['pointerdown', 'click', 'keydown', 'touchstart'].forEach(eventName => {
+  document.addEventListener(eventName, () => {
+    try {
+      getAudioContext();
+      preloadSfx();
+      playBackgroundMusic();
+    } catch (error) {}
+  }, { once: true, passive: true });
+});
+
+['mousemove', 'click', 'keydown'].forEach(eventName => {
+  document.addEventListener(eventName, resetMiiIdleTimer, { passive: true });
+});
+
+/* ────────────────────────
+   KEYBOARD
+──────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'Tab') {
+    e.preventDefault();
+    goCategory((currentCat + 1) % MENU.length);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    goCategory((currentCat - 1 + MENU.length) % MENU.length);
+  }
+});
+
+
+function startExperience() {
+  const splash = document.getElementById('splashScreen');
+  if (!splash) return;
+  try { getAudioContext(); } catch (error) {}
+  preloadSfx();
+  playBackgroundMusic();
+  playSelect();
+  splash.classList.add('hidden');
+  setTimeout(() => {
+    splash.style.display = 'none';
+    showBubble('Ciao! Sono Alessandro, benvenuto nel mio menu. 🍽️ Ordina ciò che vuoi — ogni piatto racconta qualcosa di me.');
+  }, 480);
+}
+
+const startExperienceBtn = document.getElementById('startExperienceBtn');
+if (startExperienceBtn) {
+  startExperienceBtn.addEventListener('click', startExperience);
+}
+
+/* ────────────────────────
+   INIT
+──────────────────────── */
+renderDots();
+renderCards();
+resetMiiIdleTimer();
+preloadSfx();
+playBackgroundMusic();
+
+</script>
+</body>
+</html>
