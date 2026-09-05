@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#211e17"/>
+  <g fill="none" stroke="#d8ceb6" opacity=".7">
+    <circle cx="325" cy="76" r="230"/><circle cx="325" cy="76" r="178"/><circle cx="325" cy="76" r="126"/>
+    <path d="M5 202 395 46M61 0l259 400M0 83l400 238"/>
+  </g>
+  <g fill="#d8ceb6">
+    <circle cx="73" cy="92" r="3"/><circle cx="119" cy="58" r="2"/><circle cx="178" cy="120" r="3"/><circle cx="242" cy="61" r="2"/><circle cx="288" cy="146" r="3"/><circle cx="348" cy="110" r="2"/><circle cx="216" cy="218" r="3"/><circle cx="326" cy="245" r="2"/>
+  </g>
+  <text x="20" y="334" fill="#f0ece4" font-family="sans-serif" font-size="30">Readings for</text>
+  <text x="20" y="368" fill="#f0ece4" font-family="sans-serif" font-size="30">inner clarity.</text>
+</svg>

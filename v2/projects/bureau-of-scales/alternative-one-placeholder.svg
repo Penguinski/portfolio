@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400">
+  <rect width="300" height="400" fill="#33231b"/>
+  <path d="M29 32c50 12 65-19 103 16 30-27 56 12 93-2-7 53 34 68 1 111 29 43-8 70 3 112-50-4-68 39-111 8-36 31-65 1-105 11 7-52-27-70 2-111-30-39 6-70-2-115Z" fill="#9ba260"/>
+  <path d="M132 390c8-95 2-190 11-286" stroke="#cabd77" stroke-width="6" fill="none"/>
+  <text x="93" y="270" fill="#f0e8dc" font-family="serif" font-size="30" font-style="italic">Bureau</text>
+  <text x="111" y="300" fill="#f0e8dc" font-family="serif" font-size="30" font-style="italic">of Scales</text>
+</svg>

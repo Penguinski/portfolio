@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="270" height="400" viewBox="0 0 270 400">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#477387"/><stop offset=".55" stop-color="#1e5269"/><stop offset="1" stop-color="#18394b"/>
+    </linearGradient>
+  </defs>
+  <rect width="270" height="400" fill="url(#sky)"/>
+  <path d="M0 40c66 20 113-21 168-2s73 14 102 3M0 91c80-19 119 23 189 1 33-10 55-11 81-4M0 145c54 13 100-11 161 3 46 11 78 3 109-8" fill="none" stroke="#82a4b3" stroke-width="7" opacity=".3"/>
+  <path d="M158 191c34-22 50-6 57 15-23 19-42 17-57-15Z" fill="#21181b"/>
+  <g fill="#f3ece4" font-family="sans-serif" font-size="21">
+    <text x="16" y="309">SOME SIGNS</text><text x="16" y="332">ONLY APPEAR</text><text x="16" y="355">FROM A</text><text x="16" y="378">DISTANCE.</text>
+  </g>
+</svg>
