@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#282828">
+    <meta name="description" content="Alessandro Kosowski is a graphic designer based in Trento, Italy, working across visual identities, editorial design, websites, motion and 3D.">
+    <title>About me — Alessandro Kosowski</title>
+    <link rel="canonical" href="https://ksw.ski/about/">
+    <meta property="og:title" content="About me — Alessandro Kosowski">
+    <meta property="og:description" content="Alessandro Kosowski is a graphic designer based in Trento, Italy, working across visual identities, editorial design, websites, motion and 3D.">
+    <meta property="og:url" content="https://ksw.ski/about/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://ksw.ski/social/about-alessandro-kosowski.jpg">
+    <meta property="og:image:alt" content="Portrait of Alessandro Kosowski.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About me — Alessandro Kosowski">
+    <meta name="twitter:description" content="Alessandro Kosowski is a graphic designer based in Trento, Italy, working across visual identities, editorial design, websites, motion and 3D.">
+    <meta name="twitter:image" content="https://ksw.ski/social/about-alessandro-kosowski.jpg">
+    <meta name="twitter:image:alt" content="Portrait of Alessandro Kosowski.">
+    <link rel="icon" href="/icon.ico" type="image/x-icon">
+    <link rel="preload" href="/fonts/Large-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/FamiljenGrotesk-Regular.ttf" as="font" type="font/ttf" crossorigin>
+    <script>
+      document.documentElement.classList.add('reveal-enabled');
+      const navigationType = performance.getEntriesByType('navigation')[0]?.type;
+      if (navigationType !== 'back_forward'
+        && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('initial-intro-pending');
+        window.__portfolioIntroFallback = window.setTimeout(() => {
+          if (typeof window.__finishPortfolioIntro === 'function') {
+            window.__finishPortfolioIntro('fallback');
+          } else {
+            document.documentElement.classList.remove('initial-intro-pending', 'reveal-enabled');
+          }
+        }, 3500);
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/styles-D6VA2fPk.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/styles-B-hzpGfH.css">
+  </head>
+  <body class="about-page">
+    <a class="skip-link" href="#about">Skip to about</a>
+    <header class="site-header">
+      <nav class="page-grid" aria-label="Main navigation">
+        <a class="nav-item nav-item--inactive" data-transition-id="nav:work" href="/">Work</a>
+        <a class="nav-item" data-transition-id="nav:about" href="/about/" aria-current="page">About me</a>
+      </nav>
+    </header>
+    <main id="about" class="about page-grid" tabindex="-1">
+      <h1 class="about-title">Alessandro Kosowski</h1>
+      <div class="about-biography">
+        <p>Graphic designer based in Trento, Italy, with Polish roots. I work on visual identities, editorial design and websites, as well as motion and 3D.</p>
+        <p>Among my most formative experiences are a graphic design internship at Graffiti Studio in Riva del Garda and working in print production at Gèscom Impresión Digital in Valencia.</p>
+      </div>
+      <address class="about-contact">
+        <a href="mailto:alessandro.kosowski@gmail.com">alessandro.kosowski@gmail.com</a>
+        <a href="https://instagram.com/ksw.sk">instagram.com/ksw.sk</a>
+      </address>
+      <figure class="about-portrait">
+        <img src="/about/alessandro-kosowski.jpg" alt="Portrait of Alessandro Kosowski." width="1792" height="2390">
+      </figure>
+    </main>
+  </body>
+</html>
