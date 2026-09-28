@@ -29,7 +29,11 @@ stagger and existing movement animations.
 
 The served CSS/JS bundles are currently the repository's source of truth. The
 readable settings module is imported by `assets/styles-D6VA2fPk.js`; scroll
-reveals consume its delay through `--reveal-delay` in the shared stylesheet.
+reveals pass their delay through `--reveal-delay` to `assets/scroll-reveal.js`.
+That module owns an explicit opacity/blur/transform animation, preventing hidden
+CSS transitions and viewport changes from shortening the visible reveal in Safari.
+The initial introduction and page transition masks keep their existing animation
+engine. Transition overlays use the same font antialiasing as the original body.
 
 On touch devices, a successful email copy displays “Email copied” for two
 seconds before returning to the address, using opacity/blur without changing
