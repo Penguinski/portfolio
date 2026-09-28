@@ -1,6 +1,7 @@
 // Delegate to document because internal navigation replaces the About markup.
 const copyAttempts = new WeakMap();
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const touchControls = window.matchMedia('(hover: none), (pointer: coarse)');
 
 function copyWithSelection(text) {
   const activeElement = document.activeElement;
@@ -60,7 +61,9 @@ document.addEventListener('click', async event => {
     // Start the clipboard request directly within the user gesture, before any visual delay.
     await copyEmail(button.dataset.copyEmail);
     if (!button.isConnected) return;
-    const delay = reducedMotion.matches ? 0 : Math.max(0, 160 - (performance.now() - startedAt));
+    const delay = reducedMotion.matches || touchControls.matches
+      ? 0
+      : Math.max(0, 160 - (performance.now() - startedAt));
     attempt.timer = window.setTimeout(() => {
       if (!button.isConnected) return;
       attempt.pending = false;

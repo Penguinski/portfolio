@@ -58,9 +58,6 @@
 @media (hover: hover) {
   .about-contact-action:hover .about-contact-icons { opacity: 1; filter: blur(0); }
 }
-@media (hover: none), (pointer: coarse) {
-  .about-contact-icons { opacity: 1; filter: blur(0); }
-}
 .about-contact-action[data-copy-state="copied"] .about-contact-icon--copy {
   opacity: 0;
   filter: blur(var(--reveal-blur));
@@ -68,6 +65,15 @@
 .about-contact-action[data-copy-state="copied"] .about-contact-icon--check {
   opacity: 1;
   filter: blur(0);
+}
+@media (hover: none), (pointer: coarse) {
+  /* Touch shows only the confirmation, never the hover hint or Instagram arrow. */
+  .about-contact .about-contact-action:not([data-copy-state="copied"]) .about-contact-icons {
+    opacity: 0;
+    filter: blur(var(--reveal-blur));
+  }
+  .about-contact-icon--copy { display: none; }
+  .about-contact-icon--check { opacity: 1; filter: blur(0); }
 }
 html.initial-intro-pending .about-contact-icons,
 html.is-page-transitioning .about-contact-icons {
