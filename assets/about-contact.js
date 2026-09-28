@@ -74,7 +74,7 @@ document.addEventListener('click', async event => {
         delete button.dataset.copyState;
         if (status) status.textContent = '';
         copyAttempts.delete(button);
-      }, 1500);
+      }, touchControls.matches ? 2000 : 1500);
     }, delay);
   } catch {
     attempt.pending = false;

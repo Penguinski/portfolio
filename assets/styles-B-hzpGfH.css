@@ -67,13 +67,24 @@
   filter: blur(0);
 }
 @media (hover: none), (pointer: coarse) {
-  /* Touch shows only the confirmation, never the hover hint or Instagram arrow. */
-  .about-contact .about-contact-action:not([data-copy-state="copied"]) .about-contact-icons {
+  /* A written confirmation replaces the email without changing its layout width. */
+  .about-contact-icons { display: none; }
+  [data-copy-email] .about-contact-label {
+    transition: opacity 250ms var(--reveal-easing), filter 250ms var(--reveal-easing);
+  }
+  [data-copy-email]::after {
+    content: "Email copied";
+    position: absolute;
+    inset: 0 auto auto 0;
+    pointer-events: none;
     opacity: 0;
     filter: blur(var(--reveal-blur));
+    transition: opacity 250ms var(--reveal-easing), filter 250ms var(--reveal-easing);
   }
-  .about-contact-icon--copy { display: none; }
-  .about-contact-icon--check { opacity: 1; filter: blur(0); }
+  [data-copy-email][data-copy-state="copied"] .about-contact-label { opacity: 0; filter: blur(var(--reveal-blur)); }
+  [data-copy-email][data-copy-state="copied"]::after { opacity: 1; filter: blur(0); }
+  html.is-page-transitioning [data-copy-email] .about-contact-label { opacity: 1; filter: none; transition: none; }
+  html.is-page-transitioning [data-copy-email]::after { opacity: 0; transition: none; }
 }
 html.initial-intro-pending .about-contact-icons,
 html.is-page-transitioning .about-contact-icons {
@@ -82,5 +93,39 @@ html.is-page-transitioning .about-contact-icons {
   transition: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .about-contact-icons, .about-contact-icon { transition: none; filter: none !important; }
+  .about-contact-icons, .about-contact-icon, [data-copy-email] .about-contact-label, [data-copy-email]::after { transition: none; filter: none !important; }
 }
+
+
+/* Delay only elements entering together; all timings live in motion-settings.js. */
+html.reveal-enabled main :is(.project-title,img,p,figcaption) {
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.motion-tuning-panel {
+  position: fixed;
+  z-index: 2147483645;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  width: min(300px, calc(100vw - 24px));
+  padding: 16px;
+  border: 1px solid #666;
+  border-radius: 10px;
+  background: #282828f5;
+  color: #ddd;
+  font: 14px/1.4 var(--body-font);
+  box-shadow: 0 4px 24px #0005;
+  display: grid;
+  gap: 10px;
+}
+.motion-tuning-panel label { display: block; }
+.motion-tuning-panel input[type="range"] { display: block; width: 100%; margin: 4px 0 0; }
+.motion-tuning-panel input { accent-color: #ddd; }
+.motion-tuning-panel output { float: right; }
+.motion-tuning-panel div { display: flex; flex-wrap: wrap; gap: 8px; }
+.motion-tuning-panel button {
+  background: #ddd; color: #282828; border: 0; border-radius: 4px;
+  padding: 8px; font: inherit; cursor: pointer;
+}
+.motion-tuning-panel :focus-visible { outline: 2px solid #ddd; outline-offset: 3px; }
+html.initial-intro-pending .motion-tuning-panel,
+html.is-page-transitioning .motion-tuning-panel { visibility: hidden; }
