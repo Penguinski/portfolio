@@ -2,8 +2,8 @@
 export const motionSettings = {
   stagger: {
     enabled: true,
-    stepMs: 45,
-    maxDelayMs: 300,
+    stepMs: 75,
+    maxDelayMs: 475,
     rowTolerancePx: 2,
   },
 };

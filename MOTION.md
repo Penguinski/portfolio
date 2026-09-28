@@ -12,8 +12,8 @@ Published settings are at the top of `assets/motion-settings.js`:
 | Setting | Default | Meaning |
 | --- | --- | --- |
 | `enabled` | `true` | Set `false` to return to simultaneous entry. |
-| `stepMs` | `45` | Preferred interval between elements. |
-| `maxDelayMs` | `300` | Maximum delay before the final element starts. |
+| `stepMs` | `75` | Preferred interval between elements. |
+| `maxDelayMs` | `475` | Maximum delay before the final element starts. |
 | `rowTolerancePx` | `2` | Treat nearly identical top coordinates as one row. |
 
 Elements enter from top to bottom, then left to right within each row. Lines
