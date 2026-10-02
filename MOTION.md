@@ -38,3 +38,21 @@ engine. Transition overlays use the same font antialiasing as the original body.
 On touch devices, a successful email copy displays “Email copied” for two
 seconds before returning to the address, using opacity/blur without changing
 the control's size. Desktop retains its copy/check icons.
+
+## Navigation continuity
+
+Internal navigation prepares shared destination images (or the page hero) while the current page is still
+visible. The exit/shared/entry timings and scroll reveals are unchanged. Image
+and font failures are non-fatal; once destination HTML is available, an animation
+failure settles the destination in the same document instead of reloading it.
+Native navigation remains the fallback for unavailable HTML and reduced motion.
+
+Each pushed history entry stores its previous portfolio entry. Reloading a project
+or About can therefore retain the existing Back to Work behavior and restore the
+previous Work scroll position without a separate persistent history database.
+
+Run the transaction regression tests with:
+
+```sh
+node --test tests/navigation-continuity.test.mjs
+```
